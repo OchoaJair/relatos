@@ -40,10 +40,23 @@ export default function Draw() {
   const totalFrames = 8;
   const [isPlaying, setIsPlaying] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [framesDrawn, setFramesDrawn] = useState(Array(totalFrames).fill(false));
   const intervalRef = useRef(null);
   const ffmpegRef = useRef(null);
 
   const getCurrentCanvas = () => fabricCanvasRef.current[currentFrame];
+
+  // Verificar si todos los frames tienen dibujos
+  const areAllFramesDrawn = () => {
+    // Verificar si hay contenido en cada canvas
+    for (let i = 0; i < totalFrames; i++) {
+      const canvas = fabricCanvasRef.current[i];
+      if (!canvas || canvas.getObjects().length === 0) {
+        return false;
+      }
+    }
+    return true;
+  };
 
   useEffect(() => {
     const maxWidth = 700;
@@ -89,6 +102,22 @@ export default function Draw() {
 
       fabricCanvas.freeDrawingBrush = brush;
 
+      // Agregar listeners para detectar cambios en el canvas
+      const updateFrameStatus = () => {
+        // Usar un timeout para asegurarnos de que los cambios se hayan aplicado
+        setTimeout(() => {
+          setFramesDrawn(prev => {
+            const newFramesDrawn = [...prev];
+            newFramesDrawn[index] = fabricCanvas.getObjects().length > 0;
+            return newFramesDrawn;
+          });
+        }, 0);
+      };
+
+      fabricCanvas.on('path:created', updateFrameStatus);
+      fabricCanvas.on('object:removed', updateFrameStatus);
+      fabricCanvas.on('canvas:cleared', updateFrameStatus);
+
       fabricCanvasRef.current[index] = fabricCanvas;
     };
 
@@ -103,7 +132,9 @@ export default function Draw() {
 
   const clearCanvas = () => {
     const canvas = getCurrentCanvas();
-    if (canvas) canvas.clear();
+    if (canvas) {
+      canvas.clear();
+    }
   };
 
   const selectTool = (selectedTool) => {
@@ -491,7 +522,7 @@ export default function Draw() {
             <div className={styles.drawOptionsElementsButtons}>
               <button
                 onClick={downloadVideo}
-                disabled={isProcessing}
+                disabled={isProcessing || !areAllFramesDrawn()}
                 className={styles.downloadButton}
               >
                 {isProcessing ? "Procesando..." : "Descargar MP4"}
