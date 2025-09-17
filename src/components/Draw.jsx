@@ -114,6 +114,11 @@ export default function Draw() {
             newFramesDrawn[index] = fabricCanvas.getObjects().length > 0;
             return newFramesDrawn;
           });
+          
+          // Marcar que se ha comenzado a dibujar si aún no se ha hecho
+          if (!hasStartedDrawing && fabricCanvas.getObjects().length > 0) {
+            setHasStartedDrawing(true);
+          }
         }, 0);
       };
 
@@ -137,6 +142,13 @@ export default function Draw() {
     const canvas = getCurrentCanvas();
     if (canvas) {
       canvas.clear();
+      // Verificar si todos los frames están vacíos para reiniciar hasStartedDrawing
+      const allFramesEmpty = fabricCanvasRef.current.every(
+        (c) => !c || c.getObjects().length === 0
+      );
+      if (allFramesEmpty) {
+        setHasStartedDrawing(false);
+      }
     }
   };
 
@@ -407,6 +419,16 @@ export default function Draw() {
                   ref={(el) => (canvasRef.current[i] = el)}
                   style={{ display: "block" }}
                 />
+                {/* Feedback contextual en el lienzo */}
+                {!hasStartedDrawing && i === currentFrame && (
+                  <div className={styles.canvasOverlay}>
+                    <p className={styles.canvasHint}>
+                      Dibuja sobre la silueta para crear tu animación
+                    </p>
+                    {/* Ejemplo de trazo que desaparece al comenzar a dibujar */}
+                    <div className={styles.exampleStroke}></div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -547,17 +569,47 @@ export default function Draw() {
           </aside>
         </section>
       </aside>
-      <aside className={styles.frames}>
-        {console.log("Renderizando frames y botón de descarga")}
-        {Array.from({ length: totalFrames }).map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentFrame(i)}
-            className={clsx({ [styles.frameSelect]: currentFrame === i })}
-          >
-            <img src={frames[i]} alt="" />
-          </button>
-        ))}
+      <aside className={styles.framesContainer}>
+        {/* Barra de progreso */}
+        <div className={styles.progressSection}>
+          <p className={styles.progressText}>
+            Fotograma {currentFrame + 1} de {totalFrames} completado
+          </p>
+          <div className={styles.progressBar}>
+            {Array.from({ length: totalFrames }).map((_, i) => (
+              <div
+                key={i}
+                className={clsx(styles.progressSegment, {
+                  [styles.completed]: framesDrawn[i],
+                  [styles.current]: i === currentFrame,
+                })}
+              >
+                {framesDrawn[i] && (
+                  <span className={styles.checkMark}>✓</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Fotogramas */}
+        <div className={styles.frames}>
+          {Array.from({ length: totalFrames }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentFrame(i)}
+              className={clsx(styles.frameButton, {
+                [styles.frameSelect]: currentFrame === i,
+                [styles.frameCompleted]: framesDrawn[i],
+              })}
+            >
+              <img src={frames[i]} alt={`Fotograma ${i + 1}`} />
+              {framesDrawn[i] && (
+                <div className={styles.frameCheck}>✓</div>
+              )}
+            </button>
+          ))}
+        </div>
       </aside>
     </>
   );
