@@ -226,9 +226,9 @@
 }
 
 .downloadButton {
-  background-color: #4caf50;
-  border: none;
-  color: white;
+  border: 1px solid black !important;
+  border-radius: 500px !important;
+  color: black;
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
@@ -238,10 +238,7 @@
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.3s;
-}
-
-.downloadButton:hover:not(:disabled) {
-  background-color: #45a049;
+  font-size: 16px;
 }
 
 .downloadButton:disabled {

@@ -1,9 +1,9 @@
 .bosqueContainer {
   width: 100%;
-  height: 250px;
+  height: 400px;
   position: relative;
-  overflow: visible;
-  margin: 20px 0;
+  overflow: hidden;
+  margin: 0;
   /* Eliminar el fondo */
   background: transparent;
 }

@@ -33,9 +33,9 @@ export default function Draw() {
   const canvasRef = useRef([]);
   const fabricCanvasRef = useRef([]);
   const [tool, setTool] = useState("pencil");
-  const [brushType, setBrushType] = useState("spray");
-  const [brushSize, setBrushSize] = useState(1);
-  const [brushOpacity, setBrushOpacity] = useState(0.25);
+  const [brushType, setBrushType] = useState("pencil");
+  const [brushSize, setBrushSize] = useState(2);
+  const [brushOpacity, setBrushOpacity] = useState(0.4);
   const [currentFrame, setCurrentFrame] = useState(0);
   const totalFrames = 8;
   const [isPlaying, setIsPlaying] = useState(false);

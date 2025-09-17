@@ -5,7 +5,7 @@ const Bosque = ({ treeImage }) => {
   // Crear múltiples copias del árbol sin efecto de profundidad y mismo tamaño
   const renderTrees = () => {
     const trees = [];
-    const numTrees = 30; // Número de árboles
+    const numTrees = 20; // Número de árboles
     const treeSize = 400; // Tamaño más grande para todos los árboles
 
     // Asegurar que siempre haya árboles en los bordes

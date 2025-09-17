@@ -86,6 +86,11 @@
   transform: translateY(-50%);
   left: 0;
   z-index: 200;
+  pointer-events: none;
+}
+
+.navButtons a {
+  pointer-events: auto;
 }
 
 .resumeTrees {
@@ -265,7 +270,7 @@
 .forest {
   position: absolute;
   width: 100%;
-  top: 75%;
+  top: 60%;
   right: 0;
 }
 
