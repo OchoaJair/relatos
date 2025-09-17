@@ -1,0 +1,24 @@
+@import "@fontsource-variable/bitter";
+
+.button {
+  all: unset;
+  display: flex;
+  width: 80%;
+  font-family: "bitter";
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  padding: 0.3em 0;
+  margin: 0 1em;
+  transition: all 0.25s ease-in-out;
+  color: #f1f1f1;
+  justify-content: center;
+  font-size: 28px;
+  white-space: nowrap;
+}
+
+.button:hover {
+  color: #c7c7c7;
+  padding: 0.1em 0;
+  transition: all 0.25s ease-in-out;
+  cursor: pointer;
+}

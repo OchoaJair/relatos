@@ -1,0 +1,29 @@
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 546px;
+}
+
+.navList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navListItem {
+  font-size: 13px;
+  color: #5b5f5e;
+  font-weight: 500;
+  padding-bottom: 0px;
+  border-bottom: solid 2px;
+  cursor: pointer;
+}
+
+.selected {
+  color: #2b2d2c;
+  font-weight: 700;
+}

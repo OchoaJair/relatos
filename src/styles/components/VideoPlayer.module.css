@@ -1,0 +1,96 @@
+.videoPlayerContainer {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.videoWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  margin-top: 20px;
+  margin-left: 40px;
+}
+
+.videoContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.videoElement {
+  width: 85%;
+  background-color: #000;
+}
+
+.subtitleOverlay {
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  right: 15%;
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  margin: 0;
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.jumpButtons {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.jumpButton {
+  padding: 8px 12px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.jumpButton:hover {
+  background-color: #0b7dda;
+}
+
+.subtitleControls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.subtitleToggle {
+  padding: 8px 12px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.subtitleToggle:hover {
+  background-color: #45a049;
+}
+
+.languageSelector {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
