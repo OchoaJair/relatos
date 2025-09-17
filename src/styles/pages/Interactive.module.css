@@ -125,6 +125,12 @@ a {
   pointer-events: auto;
 }
 
+.riversHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 @media screen and (width >= 768px) {
   .waves {
     top: calc(100% - 90px);

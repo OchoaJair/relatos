@@ -24,7 +24,6 @@ const AnimatedRivers = () => {
     "#5b8ea6",
     "#39a8b4",
     "#2893d6",
-    "#1400e6",
     "#2844a1",
     "#69cbd6",
     "rgb(43, 125, 138)",
@@ -139,13 +138,11 @@ const AnimatedRivers = () => {
   return (
     <div
       style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
         width: "100%",
         height: "100%",
         overflow: "hidden",
         zIndex: 9999999, // Aseguramos que esté detrás de todos los elementos
+        pointerEvents: "none", // Evitamos que intercepte eventos del mouse
       }}
     >
       <canvas

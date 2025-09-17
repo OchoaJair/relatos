@@ -31,7 +31,9 @@ function Interactive() {
 
   return (
     <div className={styles.root}>
-      <AnimatedRivers />
+      <div className={styles.riversHeader}>
+        <AnimatedRivers />
+      </div>
       <header className={styles.header}>
         <BurgerButton />
         <Link to="/">

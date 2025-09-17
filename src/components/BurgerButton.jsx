@@ -1,6 +1,9 @@
 import { useState } from "react";
 import styles from "../styles/components/BurgerButton.module.css";
 import { Link } from "react-router-dom";
+import iconHome from "../assets/iconHome.svg";
+import iconPlay from "../assets/iconPlay.svg";
+import iconDraw from "../assets/iconDraw.svg";
 
 function BurgerButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,19 +29,19 @@ function BurgerButton() {
           <ul>
             <li>
               <Link to="/" onClick={toggleMenu}>
-                <img src="/src/assets/iconHome.svg" alt="icono de casa" />
+                <img src={iconHome} alt="icono de casa" />
                 Inicio
               </Link>
             </li>
             <li>
               <Link to="/Interactive" onClick={toggleMenu}>
-                <img src="/src/assets/iconPlay.svg" alt="Icono de play" />
+                <img src={iconPlay} alt="Icono de play" />
                 Relatos
               </Link>
             </li>
             <li>
               <Link to="/participa" onClick={toggleMenu}>
-                <img src="/src/assets/iconDraw.svg" alt="icono de dibujo" />
+                <img src={iconDraw} alt="icono de dibujo" />
                 Participa
               </Link>
             </li>
