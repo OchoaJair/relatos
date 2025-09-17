@@ -20,13 +20,25 @@
 .drawAside {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   color: #5b5f5e;
   font-family: "bitter";
 }
 
+.instructionStep {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.stepNumber {
+  font-size: 24px;
+  font-weight: bold;
+}
+
 .drawAside p {
   font-size: 19px;
+  margin: 0;
 }
 
 .drawAside bold {
@@ -75,15 +87,19 @@
   gap: 30px;
 }
 
-.drawOptionsElements p {
-  width: 110px;
-  text-wrap: nowrap;
+.toolGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.drawOptionsElements {
-  display: flex;
-  align-items: center;
-  gap: 30px;
+.toolGroupTitle {
+  width: 110px;
+  text-wrap: nowrap;
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #5b5f5e;
 }
 
 .drawOptionsElementsButtons {
@@ -113,6 +129,21 @@
   background-size: 100% 80%;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.ctaButton {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
 .drawOptionsElementsButtons button,

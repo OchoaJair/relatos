@@ -43,6 +43,7 @@ export default function Draw() {
   const [framesDrawn, setFramesDrawn] = useState(
     Array(totalFrames).fill(false)
   );
+  const [hasStartedDrawing, setHasStartedDrawing] = useState(false);
   const intervalRef = useRef(null);
   const ffmpegRef = useRef(null);
 
@@ -374,14 +375,18 @@ export default function Draw() {
       <div className={styles.draw}>
         <h1>Participa</h1>
         <aside className={styles.drawAside}>
-          <p>
-            <strong>Paso 1.</strong> Dibuja uno por uno los 8 fotogramas de la
-            animación.
-          </p>
-          <p>
-            <strong>Paso 2.</strong> Descarga y compártelo en las redes sociales
-            con el <strong>#relatosdereconciliacion</strong>.
-          </p>
+          <div className={styles.instructionStep}>
+            <span className={styles.stepNumber}>1️⃣</span>
+            <p><strong>Dibuja</strong> sobre cada fotograma (uno por uno).</p>
+          </div>
+          <div className={styles.instructionStep}>
+            <span className={styles.stepNumber}>2️⃣</span>
+            <p><strong>Previsualiza</strong> tu animación.</p>
+          </div>
+          <div className={styles.instructionStep}>
+            <span className={styles.stepNumber}>3️⃣</span>
+            <p><strong>Descarga y comparte</strong> con el hashtag <strong>#relatosdereconciliacion</strong>.</p>
+          </div>
         </aside>
       </div>
       <aside className={styles.drawSection}>
@@ -407,128 +412,137 @@ export default function Draw() {
           </div>
         </section>
         <section className={styles.drawOptions}>
+          {/* Herramientas de dibujo */}
           <aside className={styles.drawOptionsElements}>
-            <p>Dibujar / Borrar</p>
-            <div className={styles.drawOptionsElementsButtons}>
-              <button onClick={() => selectTool("pencil")}>
-                <img
-                  src={iconBrush}
-                  alt="Pincel"
-                  className={clsx({ [styles.selected]: tool === "pencil" })}
-                />
-              </button>
-              <button onClick={() => selectTool("eraser")}>
-                <img
-                  src={iconEraser}
-                  alt="Borrador"
-                  className={clsx({
-                    [styles.selected]: tool === "eraser",
-                  })}
-                />
-              </button>
-              <button onClick={clearCanvas}>
-                <img src={iconClearAll} alt="Borrar todo" />
-              </button>
+            <div className={styles.toolGroup}>
+              <h3 className={styles.toolGroupTitle}>Pincel / Goma</h3>
+              <div className={styles.drawOptionsElementsButtons}>
+                <button onClick={() => selectTool("pencil")}>
+                  <img
+                    src={iconBrush}
+                    alt="Pincel"
+                    className={clsx({ [styles.selected]: tool === "pencil" })}
+                  />
+                </button>
+                <button onClick={() => selectTool("eraser")}>
+                  <img
+                    src={iconEraser}
+                    alt="Borrador"
+                    className={clsx({
+                      [styles.selected]: tool === "eraser",
+                    })}
+                  />
+                </button>
+                <button onClick={clearCanvas}>
+                  <img src={iconClearAll} alt="Borrar todo" />
+                </button>
+              </div>
             </div>
           </aside>
 
+          {/* Tipos de pincel */}
           <aside className={styles.drawOptionsElements}>
-            <p>Pincel</p>
-            <div className={styles.drawOptionsElementsButtons_pencil}>
-              <button onClick={() => changeBrush("pencil")}>
-                <img
-                  src={pencil1}
-                  alt="Pincel lápiz"
-                  className={clsx({
-                    [styles.selected]: brushType === "pencil",
-                  })}
-                />
-              </button>
-              <button onClick={() => changeBrush("spray")}>
-                <img
-                  src={pencil3}
-                  alt="Pincel spray"
-                  className={clsx({
-                    [styles.selected]: brushType === "spray",
-                  })}
-                />
-              </button>
-              <button onClick={() => changeBrush("circle")}>
-                <img
-                  src={pencil2}
-                  alt="Pincel círculo"
-                  className={clsx({
-                    [styles.selected]: brushType === "circle",
-                  })}
-                />
-              </button>
+            <div className={styles.toolGroup}>
+              <h3 className={styles.toolGroupTitle}>Tipo de Pincel</h3>
+              <div className={styles.drawOptionsElementsButtons_pencil}>
+                <button onClick={() => changeBrush("pencil")}>
+                  <img
+                    src={pencil1}
+                    alt="Pincel lápiz"
+                    className={clsx({
+                      [styles.selected]: brushType === "pencil",
+                    })}
+                  />
+                </button>
+                <button onClick={() => changeBrush("spray")}>
+                  <img
+                    src={pencil3}
+                    alt="Pincel spray"
+                    className={clsx({
+                      [styles.selected]: brushType === "spray",
+                    })}
+                  />
+                </button>
+                <button onClick={() => changeBrush("circle")}>
+                  <img
+                    src={pencil2}
+                    alt="Pincel círculo"
+                    className={clsx({
+                      [styles.selected]: brushType === "circle",
+                    })}
+                  />
+                </button>
+              </div>
             </div>
           </aside>
 
+          {/* Tamaño del pincel */}
           <aside className={styles.drawOptionsElements}>
-            <p>Tamaño</p>
-            <div
-              className={styles.drawOptionsElementsButtons_slider}
-              style={{
-                backgroundImage: `url(${slider2})`,
-              }}
-            >
-              <input
-                type="range"
-                min="1"
-                max="50"
-                value={brushSize}
-                onChange={handleBrushSizeChange}
-                className={styles.slider}
-              />
-            </div>
-          </aside>
-
-          <aside className={styles.drawOptionsElements}>
-            <p>Opacidad</p>
-            <div
-              className={styles.drawOptionsElementsButtons_slider}
-              style={{
-                backgroundImage: `url(${slider1})`,
-              }}
-            >
-              <input
-                type="range"
-                min="0.1"
-                max="0.25"
-                step="0.01"
-                value={brushOpacity}
-                onChange={handleBrushOpacityChange}
-                className={styles.slider}
-              />
-            </div>
-          </aside>
-
-          <aside className={styles.drawOptionsElements}>
-            <p>Vista previa</p>
-            <div className={styles.drawOptionsElementsButtons}>
-              <button
-                className={styles.drawOptionsElementsButtons_play}
-                onClick={startPreview}
+            <div className={styles.toolGroup}>
+              <h3 className={styles.toolGroupTitle}>Tamaño</h3>
+              <div
+                className={styles.drawOptionsElementsButtons_slider}
+                style={{
+                  backgroundImage: `url(${slider2})`,
+                }}
               >
-                <img
-                  src={isPlaying ? iconPause : iconPlay}
-                  alt="Play/Pause icon"
+                <input
+                  type="range"
+                  min="1"
+                  max="50"
+                  value={brushSize}
+                  onChange={handleBrushSizeChange}
+                  className={styles.slider}
                 />
-              </button>
+              </div>
             </div>
           </aside>
 
+          {/* Opacidad del pincel */}
           <aside className={styles.drawOptionsElements}>
-            <p>Descargar</p>
-            <div className={styles.drawOptionsElementsButtons}>
-              <button
-                onClick={downloadVideo}
-                disabled={isProcessing || !areAllFramesDrawn()}
-                className={styles.downloadButton}
+            <div className={styles.toolGroup}>
+              <h3 className={styles.toolGroupTitle}>Opacidad</h3>
+              <div
+                className={styles.drawOptionsElementsButtons_slider}
+                style={{
+                  backgroundImage: `url(${slider1})`,
+                }}
               >
-                {isProcessing ? "Procesando..." : "Descargar MP4"}
-              </button>
+                <input
+                  type="range"
+                  min="0.1"
+                  max="0.25"
+                  step="0.01"
+                  value={brushOpacity}
+                  onChange={handleBrushOpacityChange}
+                  className={styles.slider}
+                />
+              </div>
+            </div>
+          </aside>
+
+          {/* Controles de animación */}
+          <aside className={styles.drawOptionsElements}>
+            <div className={styles.toolGroup}>
+              <h3 className={styles.toolGroupTitle}>Animación</h3>
+              <div className={styles.drawOptionsElementsButtons}>
+                <button
+                  className={styles.drawOptionsElementsButtons_play}
+                  onClick={startPreview}
+                >
+                  <img
+                    src={isPlaying ? iconPause : iconPlay}
+                    alt="Play/Pause icon"
+                  />
+                </button>
+                <button
+                  onClick={downloadVideo}
+                  disabled={isProcessing || !areAllFramesDrawn()}
+                  className={clsx(styles.downloadButton, styles.ctaButton)}
+                >
+                  {isProcessing ? "Procesando..." : "Descargar MP4"}
+                </button>
+              </div>
             </div>
           </aside>
         </section>
