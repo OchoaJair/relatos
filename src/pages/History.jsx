@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useData } from "../context/DataContext";
 import { Link } from "react-router-dom";
 import VideoPlayer from "../components/VideoPlayer";
-import styles from "../styles/pages/History.module.css";
+import styles from "../styles/pages/history.module.css";
 import BurgerButton from "../components/BurgerButton.jsx";
 import Draw from "../components/Draw.jsx";
 
