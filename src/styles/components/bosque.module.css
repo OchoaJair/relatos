@@ -19,6 +19,7 @@
   position: absolute;
   bottom: 0;
   transition: opacity 0.3s ease;
+  object-fit: contain; /* Asegurar que las imágenes se ajusten correctamente */
 }
 
 /* Eliminar el efecto de niebla */
