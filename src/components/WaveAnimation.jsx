@@ -75,11 +75,23 @@ const WaveAnimation = ({
     // Si se pasan colores explícitamente, usar esos
     waveColors = colors;
   } else if (violenceTypes && violenceTypes.length > 0) {
-    // Si se proporcionan tipos de violencia, usar los colores correspondientes
-    // Por ahora, usamos el primer tipo de violencia para determinar los colores
-    // En el futuro, podríamos combinar colores de múltiples tipos de violencia
-    const primaryViolenceType = violenceTypes[0];
-    waveColors = violenceTypeColors[primaryViolenceType] || violenceTypeColors['default'];
+    // Si se proporcionan tipos de violencia, combinar los colores de todos los tipos
+    const combinedColors = [];
+    
+    // Recopilar colores de todos los tipos de violencia presentes
+    violenceTypes.forEach(typeId => {
+      if (violenceTypeColors[typeId]) {
+        combinedColors.push(...violenceTypeColors[typeId]);
+      }
+    });
+    
+    // Si se encontraron colores específicos de violencia, usarlos
+    // Si no, usar los colores por defecto
+    if (combinedColors.length > 0) {
+      waveColors = combinedColors;
+    } else {
+      waveColors = violenceTypeColors['default'];
+    }
   }
 
   // Generar un array de colores si se necesitan más olas de las que hay en el array de colores
