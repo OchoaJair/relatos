@@ -175,7 +175,7 @@ function History() {
       </main>
 
       <div className={styles.waves}>
-        <WaveAnimation numWaves={7} height="80px" />
+        <WaveAnimation numWaves={7} height="80px" violenceTypes={item.violencia} />
       </div>
 
       <div className={styles.forest}>
