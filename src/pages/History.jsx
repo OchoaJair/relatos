@@ -21,42 +21,26 @@ import docsPaper from "../assets/docs-papel.webp";
 import polaroid from "../assets/polaroid.webp";
 
 // Videos
-import videoAcacia from "../assets/videos/Acacia Final.webm";
-import videoAlamo from "../assets/videos/Alamo Final.webm";
-import videoAraucaria from "../assets/videos/Araucaria Final.webm";
-import videoEsperanza from "../assets/videos/Esperanza Final.webm";
-import videoFloramarillo from "../assets/videos/Floramarillo Final.webm";
-import videoGustavo from "../assets/videos/Gustavo Final1.webm";
-import videoJazmin from "../assets/videos/Jazmin Final.webm";
-import videoMagnolia from "../assets/videos/Magnolia Final.webm";
-import videoNatali from "../assets/videos/Natali Final.webm";
-import videoOlga from "../assets/videos/Olga Final.webm";
-import videoSauco from "../assets/videos/Sauco Final.webm";
-import videoUrapan from "../assets/videos/Urapan Final.webm";
-import videoVictor from "../assets/videos/Victor Final.webm";
-import videoVirgelina from "../assets/videos/Virgelina Final.webm";
-import videoYovana from "../assets/videos/Yovana-Final.webm";
-import videoZilbaro from "../assets/videos/Zilbaro Final.webm";
-
 const trees = [tree1, tree2, tree3, tree4, tree5, tree6, tree7, tree8, tree9];
 
-const videos = {
-  acacia: videoAcacia,
-  alamo: videoAlamo,
-  araucaria: videoAraucaria,
-  esperanza: videoEsperanza,
-  floramarillo: videoFloramarillo,
-  gustavo: videoGustavo,
-  jazmin: videoJazmin,
-  magnolia: videoMagnolia,
-  natali: videoNatali,
-  olga: videoOlga,
-  sauco: videoSauco,
-  urapan: videoUrapan,
-  victor: videoVictor,
-  virgelina: videoVirgelina,
-  yovana: videoYovana,
-  zilbaro: videoZilbaro,
+// URLs de videos en Bunny.net (ficticias para preparación)
+const videoUrls = {
+  acacia: "https://bunnycdn.com/path/to/acacia-final.webm",
+  alamo: "https://bunnycdn.com/path/to/alamo-final.webm",
+  araucaria: "https://bunnycdn.com/path/to/araucaria-final.webm",
+  "des-esperanza": "https://bunnycdn.com/path/to/esperanza-final.webm",
+  floramarillo: "https://bunnycdn.com/path/to/floramarillo-final.webm",
+  gustavo: "https://bunnycdn.com/path/to/gustavo-final1.webm",
+  jazmin: "https://bunnycdn.com/path/to/jazmin-final.webm",
+  magnolia: "https://bunnycdn.com/path/to/magnolia-final.webm",
+  "natalia-puerto": "https://bunnycdn.com/path/to/natali-final.webm",
+  olga: "https://bunnycdn.com/path/to/olga-final.webm",
+  sauco: "https://bunnycdn.com/path/to/sauco-final.webm",
+  urapan: "https://bunnycdn.com/path/to/urapan-final.webm",
+  victor: "https://bunnycdn.com/path/to/victor-final.webm",
+  "virgelina-chara": "https://bunnycdn.com/path/to/virgelina-final.webm",
+  yovana: "https://bunnycdn.com/path/to/yovana-final.webm",
+  zilbaro: "https://bunnycdn.com/path/to/zilbaro-final.webm",
 };
 
 function History() {
@@ -73,7 +57,7 @@ function History() {
   console.log("ID del item:", id);
   console.log("Índice actual:", currentIndex);
 
-  const videoUrl = videos[id] || ""; // Obtiene la URL del video basado en el slug
+  const videoUrl = videoUrls[id] || ""; // Obtiene la URL del video basado en el slug
 
   const galleryPhotos = [];
   for (const items in item.gallery) {
