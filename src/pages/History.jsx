@@ -140,11 +140,15 @@ function History() {
         </section>
 
         {/* Mostrar el VideoPlayer con la URL dinámica */}
-        {videoUrl && (
-          <section className={styles.videoContainer}>
+        <section className={styles.videoContainer}>
+          {videoUrl ? (
             <VideoPlayer videoUrl={videoUrl} videoId={id} />
-          </section>
-        )}
+          ) : (
+            <div className={styles.videoPlaceholder}>
+              <p>Video no disponible para este ítem</p>
+            </div>
+          )}
+        </section>
 
         <section className={styles.videoSummary}>
           <aside className={styles.videoSummary_text}>
