@@ -3,11 +3,11 @@ import styles from "../styles/pages/Interactive.module.css";
 import BurgerButton from "../components/BurgerButton.jsx";
 import Filters from "../components/Filters.jsx";
 import Draw from "../components/Draw.jsx";
-import Waves from "../components/Waves.jsx";
 import StoryPoint from "../components/StoryPoint.jsx";
 import AnimatedRivers from "../components/AnimatedRivers.jsx";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import WaveAnimation from "../components/WaveAnimation";
 
 //imágenes
 import relatosLogoNegro from "../assets/RelatosLogo.svg";
@@ -84,7 +84,7 @@ function Interactive() {
           ))}
       </main>
       <section className={styles.waves}>
-        <Waves count={selectedItems.length || data.length} />
+        <WaveAnimation numWaves={10} />
       </section>
       <section className={styles.draw}>
         <Draw />
