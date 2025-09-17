@@ -1,0 +1,107 @@
+﻿1
+00:00:13,160 --> 00:00:41,720
+agua
+
+2
+00:00:42,160 --> 00:00:58,160
+familia, raiz, tiempo
+
+3
+00:00:58,160 --> 00:01:26,120
+raiz, tiempo, agua
+
+4
+00:01:26,240 --> 00:01:46,720
+agua, raiz, tiempo, territorio
+
+5
+00:01:46,880 --> 00:01:54,040
+raiz, familia
+
+6
+00:01:54,240 --> 00:02:08,960
+familia, raiz, tiempo
+
+7
+00:02:09,200 --> 00:02:32,280
+raiz, tiempo, territorio
+
+8
+00:02:32,360 --> 00:02:43,360
+familia, territorio,  agua
+
+9
+00:02:43,480 --> 00:02:55,160
+raiz, agua
+
+10
+00:02:55,280 --> 00:03:04,920
+raiz, territorio
+
+11
+00:03:05,080 --> 00:03:16,080
+raiz, territorio, familia, tiempo
+
+12
+00:03:16,240 --> 00:03:23,160
+tiempo, agua
+
+13
+00:03:23,160 --> 00:03:40,720
+agua, tiempo
+
+14
+00:03:41,000 --> 00:03:53,120
+agua, raiz, territorio
+
+15
+00:03:53,240 --> 00:04:00,280
+agua, tiempo
+
+16
+00:04:00,600 --> 00:04:34,760
+territorio, familia, agua
+
+17
+00:04:35,080 --> 00:04:50,000
+familia
+
+18
+00:04:50,000 --> 00:05:04,440
+familia, agua
+
+19
+00:05:04,680 --> 00:05:19,760
+tiempo, agua
+
+20
+00:05:19,920 --> 00:05:46,800
+tiempo, territorio, agua
+
+21
+00:05:46,920 --> 00:06:09,320
+raiz, agua
+
+22
+00:06:09,480 --> 00:06:19,960
+familia, agua
+
+23
+00:06:20,040 --> 00:06:27,760
+reconciliacion, territorio
+
+24
+00:06:28,000 --> 00:06:40,760
+tiempo, territorio, agua
+
+25
+00:06:40,960 --> 00:06:50,360
+agua
+
+26
+00:06:50,600 --> 00:07:10,720
+reconciliacion, territorio, agua
+
+27
+00:07:10,920 --> 00:07:31,640
+familia, reconciliacion

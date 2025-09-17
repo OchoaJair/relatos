@@ -1,0 +1,63 @@
+﻿1
+00:00:13,280 --> 00:00:24,560
+rotoscopia, animacion tradicional
+
+2
+00:00:25,080 --> 00:00:32,040
+animacion tradicional
+
+3
+00:00:32,520 --> 00:00:42,280
+rotoscopia, animacion tradicional
+
+4
+00:00:43,480 --> 00:00:50,400
+animacion 2D
+
+5
+00:00:51,000 --> 00:01:04,120
+animacion tradicional
+
+6
+00:01:04,440 --> 00:01:19,200
+animacion tradicional, rotoscopia
+
+7
+00:01:19,200 --> 00:01:36,360
+rotoscopia
+
+8
+00:01:36,600 --> 00:01:47,360
+animacion tradicional
+
+9
+00:01:48,080 --> 00:01:59,320
+rotoscopia
+
+10
+00:01:59,680 --> 00:02:33,920
+3d
+
+11
+00:02:35,840 --> 00:02:51,040
+rotoscopia
+
+12
+00:02:51,040 --> 00:02:54,640
+rotoscopia, animacion tradicional
+
+13
+00:02:54,680 --> 00:03:06,880
+animacion tradicional
+
+14
+00:03:07,080 --> 00:03:34,560
+animacion directa
+
+15
+00:03:35,040 --> 00:03:49,920
+rotoscopia
+
+16
+00:03:50,200 --> 00:04:00,080
+animacion digital

@@ -1,0 +1,115 @@
+﻿1
+00:00:15,160 --> 00:00:47,040
+tecnica mixta
+
+2
+00:00:47,040 --> 00:00:59,680
+rotoscopia
+
+3
+00:00:59,840 --> 00:01:08,480
+animacion tradicional
+
+4
+00:01:08,480 --> 00:01:18,520
+cut out digital, animacion tradicional
+
+5
+00:01:18,800 --> 00:01:23,400
+rotoscopia
+
+6
+00:01:23,520 --> 00:01:43,120
+cut out digital, animacion tradicional
+
+7
+00:01:43,320 --> 00:01:55,720
+animacion tradicional
+
+8
+00:01:55,720 --> 00:02:01,280
+video
+
+9
+00:02:01,280 --> 00:02:06,480
+3d
+
+10
+00:02:06,640 --> 00:02:14,560
+animacion tradicional
+
+11
+00:02:14,560 --> 00:02:25,360
+cut out digital, animacion tradicional
+
+12
+00:02:25,520 --> 00:02:34,560
+animacion tradicional
+
+13
+00:02:34,560 --> 00:02:46,200
+animacion directa
+
+14
+00:02:46,520 --> 00:03:09,880
+animacion tradicional
+
+15
+00:03:10,040 --> 00:03:12,480
+rotoscopia
+
+16
+00:03:12,480 --> 00:03:24,760
+animacion tradicional
+
+17
+00:03:24,760 --> 00:03:42,720
+rotoscopia
+
+18
+00:03:44,440 --> 00:04:37,320
+rotoscopia, animacion tradicional
+
+19
+00:04:37,320 --> 00:04:46,320
+rotoscopia
+
+20
+00:04:46,320 --> 00:05:13,280
+animacion  tradicional
+
+21
+00:05:14,200 --> 00:05:21,240
+rotoscopia
+
+22
+00:05:21,240 --> 00:05:35,120
+animacion tradicional
+
+23
+00:05:35,120 --> 00:05:48,040
+rotoscopia
+
+24
+00:05:48,040 --> 00:06:11,080
+cut out digital
+
+25
+00:06:11,200 --> 00:06:18,920
+rotoscopia
+
+26
+00:06:18,920 --> 00:06:38,240
+rotoscopia, animacion tradicional
+
+27
+00:06:38,720 --> 00:06:42,720
+cut out digital
+
+28
+00:06:42,720 --> 00:07:31,000
+animacion tradicional, rotoscopia
+
+29
+00:07:31,000 --> 00:08:04,600
+3d

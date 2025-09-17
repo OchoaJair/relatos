@@ -1,0 +1,83 @@
+﻿1
+00:00:28,520 --> 00:00:56,240
+animacion tradicional
+
+2
+00:00:56,240 --> 00:01:05,800
+rotoscopia, animacion tradicional
+
+3
+00:01:08,240 --> 00:01:23,840
+cut out digital
+
+4
+00:01:24,160 --> 00:01:26,160
+3d
+
+5
+00:01:26,560 --> 00:01:36,720
+rotoscopia, cut out digital
+
+6
+00:01:37,200 --> 00:01:45,280
+animacion digital
+
+7
+00:01:45,920 --> 00:01:53,720
+cut out digital, animacion tradicional
+
+8
+00:01:54,000 --> 00:02:06,280
+animacion directa
+
+9
+00:02:06,480 --> 00:02:13,440
+animacion tradicional, animacion digital
+
+10
+00:02:13,920 --> 00:02:28,840
+animacion directa
+
+11
+00:02:30,320 --> 00:02:42,880
+rotoscopia, animacion directa
+
+12
+00:02:43,760 --> 00:03:15,760
+animacion directa
+
+13
+00:03:17,360 --> 00:03:46,160
+3d
+
+14
+00:03:46,560 --> 00:03:51,960
+rotoscopia, animacion digital
+
+15
+00:03:54,840 --> 00:04:24,800
+animacion tradicional
+
+16
+00:04:26,480 --> 00:04:42,320
+rotoscopia, animacion directa
+
+17
+00:04:43,640 --> 00:05:09,320
+cut out digital, rotoscopia
+
+18
+00:05:10,520 --> 00:05:30,160
+rotoscopia, animacion digital
+
+19
+00:05:32,480 --> 00:05:46,200
+animacion directa, cut out digital
+
+20
+00:05:49,440 --> 00:06:14,520
+animacion directa, animacion tradicional
+
+21
+00:06:14,800 --> 00:06:47,760
+cut out digital, animacion directa

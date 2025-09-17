@@ -1,0 +1,43 @@
+﻿1
+00:00:27,560 --> 00:00:46,720
+3d, cut out digital, animacion digital
+
+2
+00:00:46,840 --> 00:00:57,680
+animacion tradicional, rotoscopia
+
+3
+00:00:57,680 --> 00:01:27,480
+animacion digital
+
+4
+00:01:27,680 --> 00:01:37,960
+3d, rotoscopia, animacion digital
+
+5
+00:01:38,560 --> 00:02:10,720
+cut out digital, animacion digital
+
+6
+00:02:11,160 --> 00:02:38,040
+3d
+
+7
+00:02:39,160 --> 00:03:05,200
+animacion tradicional, rotoscopia
+
+8
+00:03:05,200 --> 00:03:31,280
+rotoscopia
+
+9
+00:03:31,280 --> 00:03:38,280
+rotoscopia, animacion tradicional
+
+10
+00:03:38,680 --> 00:03:43,840
+rotoscopia, animacion directa
+
+11
+00:03:44,080 --> 00:04:50,560
+rotoscopia, animacion tradicional

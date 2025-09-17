@@ -1,0 +1,63 @@
+﻿1
+00:00:23,600 --> 00:00:31,360
+tiempo, territorio, agua, raiz
+
+2
+00:00:31,360 --> 00:00:36,680
+tiempo, agua, familia, raiz
+
+3
+00:00:36,720 --> 00:00:54,720
+tiempo, agua
+
+4
+00:00:54,720 --> 00:01:02,160
+tiempo, agua, territorio
+
+5
+00:01:02,160 --> 00:01:09,920
+tiempo, agua
+
+6
+00:01:09,920 --> 00:01:14,120
+territorio,tiempo
+
+7
+00:01:14,160 --> 00:01:18,120
+agua, familia, territorio
+
+8
+00:01:18,120 --> 00:01:25,600
+familia, agua
+
+9
+00:01:25,600 --> 00:01:42,560
+agua
+
+10
+00:01:42,640 --> 00:01:54,320
+familia, agua
+
+11
+00:01:54,320 --> 00:02:27,120
+familia, agua
+
+12
+00:02:27,120 --> 00:02:41,520
+familia, territorio, tiempo
+
+13
+00:02:42,000 --> 00:03:20,560
+familia, tiempo, agua
+
+14
+00:03:20,880 --> 00:04:39,760
+agua, tiempo, reconciliacion, familia
+
+15
+00:04:39,760 --> 00:04:52,080
+reconciliacion, agua
+
+16
+00:04:52,080 --> 00:05:01,920
+agua
