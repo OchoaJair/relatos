@@ -91,14 +91,13 @@ const VideoPlayer = ({ videoUrl, videoId }) => {
 
         <div className={styles.controls}>
           <div className={styles.jumpButtons}>
-            <h3>Saltar a:</h3>
             {jumpPoints.map((point, index) => (
               <button
                 key={index}
                 onClick={() => handleJump(point.time)}
                 className={styles.jumpButton}
               >
-                {point.label} ({point.time}s)
+                {point.label}
               </button>
             ))}
           </div>

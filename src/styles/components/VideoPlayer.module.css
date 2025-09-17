@@ -7,6 +7,7 @@
 }
 
 .videoWrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -44,6 +45,9 @@
 }
 
 .controls {
+  position: absolute;
+  right: 2.5%;
+  top: 0;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -52,6 +56,7 @@
 .jumpButtons {
   margin-top: 15px;
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   gap: 10px;
 }

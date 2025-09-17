@@ -52,6 +52,8 @@ function History() {
   const nextItem = data[(currentIndex + 1) % data.length];
   const prevItem = data[(currentIndex - 1 + data.length) % data.length];
 
+  console.log(item);
+
   // Imprimir el item en consola para depuración
   console.log("Item actual:", item);
   console.log("ID del item:", id);
