@@ -33,14 +33,16 @@ export default function Draw() {
   const canvasRef = useRef([]);
   const fabricCanvasRef = useRef([]);
   const [tool, setTool] = useState("pencil");
-  const [brushType, setBrushType] = useState("pencil");
-  const [brushSize, setBrushSize] = useState(2);
-  const [brushOpacity, setBrushOpacity] = useState(0.4);
+  const [brushType, setBrushType] = useState("spray");
+  const [brushSize, setBrushSize] = useState(1);
+  const [brushOpacity, setBrushOpacity] = useState(0.3);
   const [currentFrame, setCurrentFrame] = useState(0);
   const totalFrames = 8;
   const [isPlaying, setIsPlaying] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [framesDrawn, setFramesDrawn] = useState(Array(totalFrames).fill(false));
+  const [framesDrawn, setFramesDrawn] = useState(
+    Array(totalFrames).fill(false)
+  );
   const intervalRef = useRef(null);
   const ffmpegRef = useRef(null);
 
@@ -106,7 +108,7 @@ export default function Draw() {
       const updateFrameStatus = () => {
         // Usar un timeout para asegurarnos de que los cambios se hayan aplicado
         setTimeout(() => {
-          setFramesDrawn(prev => {
+          setFramesDrawn((prev) => {
             const newFramesDrawn = [...prev];
             newFramesDrawn[index] = fabricCanvas.getObjects().length > 0;
             return newFramesDrawn;
@@ -114,9 +116,9 @@ export default function Draw() {
         }, 0);
       };
 
-      fabricCanvas.on('path:created', updateFrameStatus);
-      fabricCanvas.on('object:removed', updateFrameStatus);
-      fabricCanvas.on('canvas:cleared', updateFrameStatus);
+      fabricCanvas.on("path:created", updateFrameStatus);
+      fabricCanvas.on("object:removed", updateFrameStatus);
+      fabricCanvas.on("canvas:cleared", updateFrameStatus);
 
       fabricCanvasRef.current[index] = fabricCanvas;
     };

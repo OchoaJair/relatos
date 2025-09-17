@@ -175,11 +175,15 @@ function History() {
       </main>
 
       <div className={styles.waves}>
-        <WaveAnimation numWaves={7} height="80px" violenceTypes={item.violencia} />
+        <WaveAnimation
+          numWaves={7}
+          height="80px"
+          violenceTypes={item.violencia}
+        />
       </div>
 
       <div className={styles.forest}>
-        <Bosque treeImage={treeImage} />
+        <Bosque />
       </div>
 
       {/* Navegación entre ítems */}

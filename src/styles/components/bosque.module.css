@@ -8,6 +8,13 @@
   background: transparent;
 }
 
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+  .bosqueContainer {
+    height: 200px; /* Reducir la altura en móviles */
+  }
+}
+
 .tree {
   position: absolute;
   bottom: 0;
