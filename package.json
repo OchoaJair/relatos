@@ -10,10 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@fontsource-variable/bitter": "^5.2.9",
     "@fontsource/gabriela": "^5.2.7",
     "clsx": "^2.1.1",
     "fabric": "^6.7.1",
+    "file-saver": "^2.0.5",
+    "html2canvas": "^1.4.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.1",

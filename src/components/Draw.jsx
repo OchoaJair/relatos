@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import * as fabric from "fabric";
 import styles from "../styles/components/Draw.module.css";
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+import { fetchFile } from "@ffmpeg/util";
+import { saveAs } from "file-saver";
 
 //imágenes
 import papel from "../assets/Papel.webp";
@@ -36,7 +39,9 @@ export default function Draw() {
   const [currentFrame, setCurrentFrame] = useState(0);
   const totalFrames = 8;
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const intervalRef = useRef(null);
+  const ffmpegRef = useRef(null);
 
   const getCurrentCanvas = () => fabricCanvasRef.current[currentFrame];
 
@@ -196,6 +201,141 @@ export default function Draw() {
     return () => clearInterval(intervalRef.current);
   }, []);
 
+  // Función para capturar los fotogramas
+  const captureFrames = async () => {
+    const framesData = [];
+
+    try {
+      // Iterar por cada fotograma
+      for (let i = 0; i < totalFrames; i++) {
+        // Obtener el canvas correspondiente
+        const canvas = fabricCanvasRef.current[i];
+        if (canvas) {
+          // Convertir a imagen base64
+          const dataUrl = canvas.toDataURL({
+            format: "png",
+            quality: 1,
+          });
+          framesData.push(dataUrl);
+        }
+      }
+
+      return framesData;
+    } catch (error) {
+      console.error("Error capturando fotogramas:", error);
+      throw error;
+    }
+  };
+
+  // Función para convertir los fotogramas a video
+  const convertFramesToVideo = async (framesData) => {
+    try {
+      // Inicializar FFmpeg si no está ya inicializado
+      if (!ffmpegRef.current) {
+        ffmpegRef.current = new FFmpeg();
+      }
+
+      const ffmpeg = ffmpegRef.current;
+
+      // Cargar FFmpeg (si no está ya cargado)
+      if (!ffmpeg.loaded) {
+        await ffmpeg.load();
+      }
+
+      // Escribir los fotogramas en el sistema de archivos virtual
+      for (let i = 0; i < framesData.length; i++) {
+        const data = framesData[i].split(",")[1]; // Remover el prefijo data:image/png;base64,
+        const binary = atob(data);
+        const array = new Uint8Array(binary.length);
+
+        for (let j = 0; j < binary.length; j++) {
+          array[j] = binary.charCodeAt(j);
+        }
+
+        await ffmpeg.writeFile(
+          `frame_${i.toString().padStart(3, "0")}.png`,
+          array
+        );
+      }
+
+      // Ejecutar comando de FFmpeg para crear video
+      // 8 fotogramas a 3.33 fps (8 fotogramas en 2.4 segundos, similar a la vista previa)
+      const result = await ffmpeg.exec([
+        "-r",
+        "3.33",
+        "-i",
+        "frame_%03d.png",
+        "-c:v",
+        "libx264",
+        "-pix_fmt",
+        "yuv420p",
+        "-y",
+        "output.mp4",
+      ]);
+
+      if (result !== 0) {
+        throw new Error(`FFmpeg exec failed with code ${result}`);
+      }
+
+      // Verificar si el archivo de salida existe
+      try {
+        // Leer el archivo de video resultante
+        const videoData = await ffmpeg.readFile("output.mp4");
+
+        // Crear blob del video
+        const videoBlob = new Blob([videoData], { type: "video/mp4" });
+
+        return videoBlob;
+      } catch (readError) {
+        console.error("Error leyendo el archivo de video:", readError);
+        throw new Error("No se pudo leer el archivo de video generado.");
+      }
+    } catch (error) {
+      console.error("Error convirtiendo a video:", error);
+      throw error;
+    }
+  };
+
+  // Función para descargar el video
+  const downloadVideo = async () => {
+    try {
+      // Mostrar mensaje de carga
+      setIsProcessing(true);
+
+      // Capturar fotogramas
+      const framesData = await captureFrames();
+
+      // Verificar que tengamos fotogramas
+      if (framesData.length === 0) {
+        throw new Error("No se encontraron fotogramas para convertir.");
+      }
+
+      // Convertir a video
+      const videoBlob = await convertFramesToVideo(framesData);
+
+      // Verificar que el blob sea válido
+      if (!videoBlob || videoBlob.size === 0) {
+        throw new Error(
+          "No se pudo generar el video. El archivo resultante está vacío."
+        );
+      }
+
+      // Descargar archivo
+      saveAs(videoBlob, "animacion-relatos.mp4");
+
+      // Ocultar mensaje de carga
+      setIsProcessing(false);
+    } catch (error) {
+      console.error("Error en la descarga:", error);
+      // Mostrar mensaje de error al usuario
+      setIsProcessing(false);
+      // Mostrar mensaje de error al usuario
+      alert(
+        `Error al descargar el video: ${error.message || "Error desconocido"}`
+      );
+    }
+  };
+
   return (
     <>
       <div className={styles.draw}>
@@ -345,9 +485,23 @@ export default function Draw() {
               </button>
             </div>
           </aside>
+
+          <aside className={styles.drawOptionsElements}>
+            <p>Descargar</p>
+            <div className={styles.drawOptionsElementsButtons}>
+              <button
+                onClick={downloadVideo}
+                disabled={isProcessing}
+                className={styles.downloadButton}
+              >
+                {isProcessing ? "Procesando..." : "Descargar MP4"}
+              </button>
+            </div>
+          </aside>
         </section>
       </aside>
       <aside className={styles.frames}>
+        {console.log("Renderizando frames y botón de descarga")}
         {Array.from({ length: totalFrames }).map((_, i) => (
           <button
             key={i}
