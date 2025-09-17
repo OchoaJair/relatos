@@ -5,6 +5,7 @@ import Filters from "../components/Filters.jsx";
 import Draw from "../components/Draw.jsx";
 import Waves from "../components/Waves.jsx";
 import StoryPoint from "../components/StoryPoint.jsx";
+import AnimatedRivers from "../components/AnimatedRivers.jsx";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
@@ -30,6 +31,7 @@ function Interactive() {
 
   return (
     <div className={styles.root}>
+      <AnimatedRivers />
       <header className={styles.header}>
         <BurgerButton />
         <Link to="/">
@@ -73,15 +75,7 @@ function Interactive() {
                     src={arbolCenital}
                     alt="Arbol"
                   />
-                  <div className={styles.storyPointOverlay}>
-                    <StoryPoint
-                      x={sizes[item.id] / 2}
-                      y={sizes[item.id] / 2}
-                      width={sizes[item.id]}
-                      height={sizes[item.id]}
-                      size={5}
-                    />
-                  </div>
+                  <div className={styles.storyPointOverlay}></div>
                 </div>
               </article>
             </Link>

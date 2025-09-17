@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Interactive from "./pages/Interactive";
 import History from "./pages/History";
+import RiverTest from "./components/RiverTest";
 import { DataProvider } from "./context/DataContext";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/About" element={<About />} />
           <Route path="/Interactive" element={<Interactive />} />
+          <Route path="/RiverTest" element={<RiverTest />} />
           <Route path="/:id" element={<History />} />
         </Routes>
       </Router>
