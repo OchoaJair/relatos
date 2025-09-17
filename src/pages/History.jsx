@@ -5,6 +5,7 @@ import VideoPlayer from "../components/VideoPlayer";
 import styles from "../styles/pages/history.module.css";
 import BurgerButton from "../components/BurgerButton.jsx";
 import Draw from "../components/Draw.jsx";
+import WaveAnimation from "../components/WaveAnimation";
 
 // Imágenes
 import tree1 from "../assets/trees/1.webp";
@@ -171,6 +172,10 @@ function History() {
           <Draw />
         </section>
       </main>
+
+      <div className={styles.waves}>
+        <WaveAnimation numWaves={7} height="80px" />
+      </div>
 
       {/* Navegación entre ítems */}
       <section className={styles.navButtons}>

@@ -256,6 +256,12 @@
   height: 100%;
 }
 
+.waves {
+  position: absolute;
+  width: 100%;
+  top: 90%;
+}
+
 @media screen and (width >= 768px) {
   .resume {
     flex-wrap: wrap;
