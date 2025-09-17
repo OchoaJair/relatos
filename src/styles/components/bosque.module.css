@@ -1,0 +1,17 @@
+.bosqueContainer {
+  width: 100%;
+  height: 250px;
+  position: relative;
+  overflow: visible;
+  margin: 20px 0;
+  /* Eliminar el fondo */
+  background: transparent;
+}
+
+.tree {
+  position: absolute;
+  bottom: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Eliminar el efecto de niebla */

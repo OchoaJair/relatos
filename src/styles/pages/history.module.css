@@ -262,6 +262,13 @@
   top: 90%;
 }
 
+.forest {
+  position: absolute;
+  width: 100%;
+  top: 75%;
+  right: 0;
+}
+
 @media screen and (width >= 768px) {
   .resume {
     flex-wrap: wrap;

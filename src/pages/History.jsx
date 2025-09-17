@@ -6,6 +6,7 @@ import styles from "../styles/pages/history.module.css";
 import BurgerButton from "../components/BurgerButton.jsx";
 import Draw from "../components/Draw.jsx";
 import WaveAnimation from "../components/WaveAnimation";
+import Bosque from "../components/Bosque.jsx";
 
 // Imágenes
 import tree1 from "../assets/trees/1.webp";
@@ -175,6 +176,10 @@ function History() {
 
       <div className={styles.waves}>
         <WaveAnimation numWaves={7} height="80px" />
+      </div>
+
+      <div className={styles.forest}>
+        <Bosque treeImage={treeImage} />
       </div>
 
       {/* Navegación entre ítems */}
