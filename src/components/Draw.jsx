@@ -100,7 +100,7 @@ export default function Draw() {
           break;
       }
 
-      brush.color = hexToRgba("#9e9e9e", brushOpacity);
+      brush.color = hexToRgba("#000000", brushOpacity);
       brush.width = brushSize;
 
       fabricCanvas.freeDrawingBrush = brush;
@@ -114,7 +114,7 @@ export default function Draw() {
             newFramesDrawn[index] = fabricCanvas.getObjects().length > 0;
             return newFramesDrawn;
           });
-          
+
           // Marcar que se ha comenzado a dibujar si aún no se ha hecho
           if (!hasStartedDrawing && fabricCanvas.getObjects().length > 0) {
             setHasStartedDrawing(true);
@@ -162,7 +162,7 @@ export default function Draw() {
       brush.color = "#fff";
     } else {
       brush = new fabric.PencilBrush(canvas);
-      brush.color = hexToRgba("#9e9e9e", brushOpacity);
+      brush.color = hexToRgba("#000000", brushOpacity);
     }
 
     brush.width = brushSize;
@@ -191,7 +191,7 @@ export default function Draw() {
         break;
     }
 
-    brush.color = hexToRgba("#9e9e9e", brushOpacity);
+    brush.color = hexToRgba("#000000", brushOpacity);
     brush.width = brushSize;
 
     canvas.freeDrawingBrush = brush;
@@ -209,7 +209,7 @@ export default function Draw() {
   const updateBrushOpacity = (opacity) => {
     const canvas = getCurrentCanvas();
     if (canvas?.freeDrawingBrush) {
-      canvas.freeDrawingBrush.color = hexToRgba("#9e9e9e", opacity);
+      canvas.freeDrawingBrush.color = hexToRgba("#000000", opacity);
     }
   };
 
@@ -389,15 +389,22 @@ export default function Draw() {
         <aside className={styles.drawAside}>
           <div className={styles.instructionStep}>
             <span className={styles.stepNumber}>1️⃣</span>
-            <p><strong>Dibuja</strong> sobre cada fotograma (uno por uno).</p>
+            <p>
+              <strong>Dibuja</strong> sobre cada fotograma (uno por uno).
+            </p>
           </div>
           <div className={styles.instructionStep}>
             <span className={styles.stepNumber}>2️⃣</span>
-            <p><strong>Previsualiza</strong> tu animación.</p>
+            <p>
+              <strong>Previsualiza</strong> tu animación.
+            </p>
           </div>
           <div className={styles.instructionStep}>
             <span className={styles.stepNumber}>3️⃣</span>
-            <p><strong>Descarga y comparte</strong> con el hashtag <strong>#relatosdereconciliacion</strong>.</p>
+            <p>
+              <strong>Descarga y comparte</strong> con el hashtag{" "}
+              <strong>#relatosdereconciliacion</strong>.
+            </p>
           </div>
         </aside>
       </div>
@@ -584,14 +591,12 @@ export default function Draw() {
                   [styles.current]: i === currentFrame,
                 })}
               >
-                {framesDrawn[i] && (
-                  <span className={styles.checkMark}>✓</span>
-                )}
+                {framesDrawn[i] && <span className={styles.checkMark}>✓</span>}
               </div>
             ))}
           </div>
         </div>
-        
+
         {/* Fotogramas */}
         <div className={styles.frames}>
           {Array.from({ length: totalFrames }).map((_, i) => (
@@ -604,9 +609,7 @@ export default function Draw() {
               })}
             >
               <img src={frames[i]} alt={`Fotograma ${i + 1}`} />
-              {framesDrawn[i] && (
-                <div className={styles.frameCheck}>✓</div>
-              )}
+              {framesDrawn[i] && <div className={styles.frameCheck}>✓</div>}
             </button>
           ))}
         </div>
