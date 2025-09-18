@@ -257,14 +257,36 @@ export default function Draw() {
         // Obtener el canvas correspondiente
         const canvas = fabricCanvasRef.current[i];
         if (canvas) {
+          // Guardar el color de fondo original
+          const originalBackgroundColor = canvas.backgroundColor;
+
+          // Establecer fondo blanco temporalmente
+          canvas.backgroundColor = "#FFFFFF";
+          canvas.renderAll();
+
           // Convertir a imagen base64
           const dataUrl = canvas.toDataURL({
             format: "png",
             quality: 1,
           });
           framesData.push(dataUrl);
+
+          // Restaurar el color de fondo original
+          canvas.backgroundColor = originalBackgroundColor;
+          canvas.renderAll();
         }
       }
+      
+      // Agregar un fotograma en blanco adicional al final
+      // Crear un canvas temporal con fondo blanco
+      const tempCanvas = document.createElement("canvas");
+      const tempCtx = tempCanvas.getContext("2d");
+      tempCanvas.width = fabricCanvasRef.current[0]?.width || 700;
+      tempCanvas.height = fabricCanvasRef.current[0]?.height || 450;
+      tempCtx.fillStyle = "#FFFFFF";
+      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      const blankFrameDataUrl = tempCanvas.toDataURL("image/png");
+      framesData.push(blankFrameDataUrl);
 
       return framesData;
     } catch (error) {
@@ -308,11 +330,13 @@ export default function Draw() {
       // 8 fotogramas a 3.33 fps (8 fotogramas en 2.4 segundos, similar a la vista previa)
       const result = await ffmpeg.exec([
         "-r",
-        "3.33",
+        "1.5",
         "-i",
         "frame_%03d.png",
         "-c:v",
         "libx264",
+        "-crf",
+        "18",
         "-pix_fmt",
         "yuv420p",
         "-y",
@@ -569,7 +593,7 @@ export default function Draw() {
                   disabled={isProcessing || !areAllFramesDrawn()}
                   className={clsx(styles.downloadButton, styles.ctaButton)}
                 >
-                  {isProcessing ? "Procesando..." : "Descargar MP4"}
+                  {isProcessing ? "Procesando..." : "Descargar en MP4"}
                 </button>
               </div>
             </div>
