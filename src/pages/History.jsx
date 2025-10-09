@@ -25,24 +25,72 @@ import polaroid from "../assets/polaroid.webp";
 // Videos
 const trees = [tree1, tree2, tree3, tree4, tree5, tree6, tree7, tree8, tree9];
 
-// URLs de videos en Bunny.net (ficticias para preparación)
-const videoUrls = {
-  acacia: "https://bunnycdn.com/path/to/acacia-final.webm",
-  alamo: "https://bunnycdn.com/path/to/alamo-final.webm",
-  araucaria: "https://bunnycdn.com/path/to/araucaria-final.webm",
-  "des-esperanza": "https://bunnycdn.com/path/to/esperanza-final.webm",
-  floramarillo: "https://bunnycdn.com/path/to/floramarillo-final.webm",
-  gustavo: "https://bunnycdn.com/path/to/gustavo-final1.webm",
-  jazmin: "https://bunnycdn.com/path/to/jazmin-final.webm",
-  magnolia: "https://bunnycdn.com/path/to/magnolia-final.webm",
-  "natalia-puerto": "https://bunnycdn.com/path/to/natali-final.webm",
-  olga: "https://bunnycdn.com/path/to/olga-final.webm",
-  sauco: "https://bunnycdn.com/path/to/sauco-final.webm",
-  urapan: "https://bunnycdn.com/path/to/urapan-final.webm",
-  victor: "https://bunnycdn.com/path/to/victor-final.webm",
-  "virgelina-chara": "https://bunnycdn.com/path/to/virgelina-final.webm",
-  yovana: "https://bunnycdn.com/path/to/yovana-final.webm",
-  zilbaro: "https://bunnycdn.com/path/to/zilbaro-final.webm",
+// URLs de videos en Bunny.net - Formato: {guid}/index.m3u8 para HLS
+const bunnyVideoData = {
+  acacia: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/e3c0f7ca-4dab-4c81-beed-ea426e0de4e8/playlist.m3u8",
+  },
+  alamo: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/2c7483e3-d46c-48bf-91fd-bc8e3e211efe/playlist.m3u8",
+  },
+  araucaria: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/a60bd608-2524-4d87-ac4a-cec079bec463/playlist.m3u8",
+  },
+  "des-esperanza": {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/33f295a4-4e2f-42cb-bd8b-874e2a4413b9/playlist.m3u8",
+  },
+  floramarillo: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/fd2c8b69-2483-4373-bddc-ee44daf956ba/playlist.m3u8",
+  },
+  gustavo: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/3db28aa9-764e-4b50-90f3-af3f49e9572f/playlist.m3u8",
+  },
+  jazmin: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/7c1918b3-958d-4822-a81f-2a4dff55daf2/playlist.m3u8",
+  },
+  magnolia: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/76e60063-7bfe-4317-a55c-9d2d6b835e58/playlist.m3u8",
+  },
+  "natalia-puerto": {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/524045e5-b3bf-4e81-a8d1-65d86bcefe39/playlist.m3u8",
+  },
+  olga: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/7e51987f-c800-48c8-b025-a2a303e22a1b/playlist.m3u8",
+  },
+  sauco: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/ce1d5e8a-b65b-4bfa-b775-6fe21f7e5827/playlist.m3u8",
+  },
+  urapan: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/84d2293e-e2b6-4c4d-8cca-0ff54ddb6097/playlist.m3u8",
+  },
+  victor: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/189a5560-d7a4-44f2-b632-e5b4d32b0207/playlist.m3u8",
+  },
+  "virgelina-chara": {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/5bb2d77d-6fb2-44f1-baae-011808a5a038/playlist.m3u8",
+  },
+  yovana: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/78ac6ffd-e604-452f-9634-25626104d560/playlist.m3u8",
+  },
+  zilbaro: {
+    hlsUrl:
+      "https://vz-5504f54b-251.b-cdn.net/02f781cd-ddbe-4a0f-93ae-0953893ed805/playlist.m3u8",
+  },
 };
 
 function History() {
@@ -61,7 +109,8 @@ function History() {
   console.log("ID del item:", id);
   console.log("Índice actual:", currentIndex);
 
-  const videoUrl = videoUrls[id] || ""; // Obtiene la URL del video basado en el slug
+  const videoData = bunnyVideoData[id] || {}; // Obtiene los datos del video basado en el slug
+  const videoUrl = videoData.hlsUrl || ""; // Obtiene la URL de HLS
 
   const galleryPhotos = [];
   for (const items in item.gallery) {

@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import Hls from "hls.js";
 import styles from "../styles/components/VideoPlayer.module.css";
 import {
   loadSubtitles,
@@ -32,6 +33,56 @@ const VideoPlayer = ({ videoUrl, videoId }) => {
       setCurrentSubtitle("");
     }
   }, [videoId, selectedLanguage, showSubtitles]);
+
+  // Manejar la reproducción de video con HLS
+  useEffect(() => {
+    if (!videoRef.current || !videoUrl) return;
+
+    const video = videoRef.current;
+    let hls = null;
+
+    // Función para limpiar el reproductor
+    const cleanup = () => {
+      if (hls) {
+        hls.destroy();
+        hls = null;
+      }
+    };
+
+    // Detectar si el navegador soporta HLS de forma nativa (como Safari)
+    const isHlsSupported = () => {
+      return (
+        video.canPlayType("application/vnd.apple.mpegurl") ||
+        video.canPlayType("audio/mpegurl")
+      );
+    };
+
+    // Si el video es un stream HLS (extensión .m3u8 o URL de Bunny.net)
+    if (videoUrl.includes('.m3u8') || videoUrl.includes('bunnycdn')) {
+      if (Hls.isSupported()) {
+        hls = new Hls();
+        hls.loadSource(videoUrl);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          console.log("Manifesto HLS cargado");
+        });
+      } else if (isHlsSupported()) {
+        // Navegadores como Safari que soportan HLS de forma nativa
+        video.src = videoUrl;
+      } else {
+        console.error("Tu navegador no soporta este formato de video");
+      }
+    } else {
+      // Si es un video directo (mp4, webm, etc.)
+      video.src = videoUrl;
+    }
+
+    // Cleanup al desmontar
+    return () => {
+      cleanup();
+    };
+  }, [videoUrl]);
 
   // Manejar la actualización de subtítulos durante la reproducción
   useEffect(() => {
@@ -80,7 +131,6 @@ const VideoPlayer = ({ videoUrl, videoId }) => {
         <div className={styles.videoContainer}>
           <video
             ref={videoRef}
-            src={videoUrl}
             controls
             className={styles.videoElement}
           />
