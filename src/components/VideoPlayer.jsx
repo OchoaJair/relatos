@@ -8,21 +8,43 @@ import {
 } from "../utils/subtitleLoader";
 import { getCurrentSubtitle } from "../utils/srtParser";
 
-const VideoPlayer = ({ videoUrl, videoId }) => {
+const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
   const videoRef = useRef(null);
   const [subtitles, setSubtitles] = useState([]);
   const [currentSubtitle, setCurrentSubtitle] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("es");
   const [showSubtitles, setShowSubtitles] = useState(true);
 
-  // Puntos de salto (puedes personalizarlos)
-  const jumpPoints = [
-    { time: 15, label: "Intro" },
-    { time: 30, label: "Demo" },
-    { time: 45, label: "Explicación" },
-    { time: 60, label: "Conclusión" },
-    { time: 70, label: "Conclusión" },
-  ];
+  // Usar los datos del themeStr para los puntos de salto
+  const jumpPoints = themeStr && Array.isArray(themeStr) 
+    ? themeStr
+        .map((theme, index) => {
+          // Verificar que el objeto tenga las propiedades necesarias
+          // Probar ambas variantes: startTime (minúscula) y StartTime (mayúscula)
+          const hasValidProps = ('startTime' in theme || 'StartTime' in theme) && 'text' in theme;
+          if (!theme || typeof theme !== 'object' || !hasValidProps) {
+            console.warn(`Elemento de themeStr en índice ${index} no tiene estructura válida:`, theme);
+            return null;
+          }
+          
+          // Usar startTime si existe, de lo contrario usar StartTime
+          const timeValue = 'startTime' in theme ? theme.startTime : theme.StartTime;
+          
+          return {
+            time: parseFloat(timeValue),
+            label: theme.text
+          };
+        })
+        .filter(item => 
+          item !== null && 
+          !isNaN(item.time) && 
+          isFinite(item.time) && 
+          item.time >= 0
+        )
+    : [];
+    
+  console.log("themeStr recibido:", themeStr);
+  console.log("jumpPoints generados:", jumpPoints);
 
   // Cargar subtítulos cuando cambia el video o el idioma
   useEffect(() => {
@@ -105,8 +127,13 @@ const VideoPlayer = ({ videoUrl, videoId }) => {
 
   const handleJump = (seconds) => {
     if (videoRef.current) {
-      videoRef.current.currentTime = seconds;
-      videoRef.current.play();
+      const timeToSet = parseFloat(seconds);
+      if (typeof timeToSet === 'number' && !isNaN(timeToSet) && isFinite(timeToSet) && timeToSet >= 0) {
+        videoRef.current.currentTime = timeToSet;
+        videoRef.current.play();
+      } else {
+        console.warn(`Tiempo no válido para salto: ${seconds} (convertido a: ${timeToSet})`);
+      }
     }
   };
 

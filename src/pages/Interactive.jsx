@@ -6,7 +6,7 @@ import Draw from "../components/Draw.jsx";
 import StoryPoint from "../components/StoryPoint.jsx";
 import AnimatedRivers from "../components/AnimatedRivers.jsx";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import WaveAnimation from "../components/WaveAnimation";
 
 //imágenes
@@ -14,9 +14,10 @@ import relatosLogoNegro from "../assets/RelatosLogo.svg";
 import arbolCenital from "../assets/arbolCenital.png";
 
 function Interactive() {
-  const { data, selectedItems } = useData();
+  const { data, selectedItems, setSelectedViolenceInContext } = useData();
   const [sizes, setSizes] = useState({});
   const [positions, setPositions] = useState({});
+  const hasInitialized = useRef(false);
 
   useEffect(() => {
     const calculatedSizes = {};
@@ -27,7 +28,13 @@ function Interactive() {
     });
     setSizes(calculatedSizes);
     setPositions(calculatedPositions);
-  }, [data]);
+    
+    // Limpiar los datos de violencia seleccionada solo en la primera carga
+    if (!hasInitialized.current) {
+      setSelectedViolenceInContext([]);
+      hasInitialized.current = true;
+    }
+  }, [data, setSelectedViolenceInContext]);
 
   return (
     <div className={styles.root}>

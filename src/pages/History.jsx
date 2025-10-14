@@ -100,27 +100,45 @@ function History() {
   const item = data.find((item) => item.slug === id);
 
   // Crear array con enlaces de videos basados en los slugs relacionados con la violencia
-  const violenceVideoLinks = violenceSlugs.map(slug => {
-    const videoData = bunnyVideoData[slug] || {};
-    return {
-      slug: slug,
-      videoUrl: videoData.hlsUrl || "",
-      title: data.find(item => item.slug === slug)?.title || slug
-    };
-  }).filter(video => video.videoUrl !== ""); // Filtrar para incluir solo videos que existen
+  const violenceVideoLinks = violenceSlugs
+    .map((slug) => {
+      const videoData = bunnyVideoData[slug] || {};
+      return {
+        slug: slug,
+        videoUrl: videoData.hlsUrl || "",
+        title: data.find((item) => item.slug === slug)?.title || slug,
+      };
+    })
+    .filter((video) => video.videoUrl !== ""); // Filtrar para incluir solo videos que existen
   // Mostrar en consola la violencia seleccionada y los slugs cuando se carga la página
   console.log("Violencias seleccionadas:", selectedViolence);
-  console.log("Slugs relacionados con las violencias seleccionadas:", violenceSlugs);
-  console.log("Enlaces de videos relacionados con la violencia:", violenceVideoLinks);
+  console.log(
+    "Slugs relacionados con las violencias seleccionadas:",
+    violenceSlugs
+  );
+  console.log(
+    "Enlaces de videos relacionados con la violencia:",
+    violenceVideoLinks
+  );
   // Usar violenceSlugs para calcular la navegación entre elementos relacionados con la violencia
-  const currentIndex = violenceSlugs.findIndex(slug => slug === id);
-  const nextIndex = (currentIndex + 1) % violenceSlugs.length;
-  const prevIndex = (currentIndex - 1 + violenceSlugs.length) % violenceSlugs.length;
-  
-  const nextItem = data.find((item) => item.slug === violenceSlugs[nextIndex]);
-  const prevItem = data.find((item) => item.slug === violenceSlugs[prevIndex]);
+  // Si no hay violencias seleccionadas (array vacío), usar navegación normal
+  let nextItem, prevItem;
+  if (violenceSlugs.length > 0) {
+    const currentIndex = violenceSlugs.findIndex((slug) => slug === id);
+    const nextIndex = (currentIndex + 1) % violenceSlugs.length;
+    const prevIndex =
+      (currentIndex - 1 + violenceSlugs.length) % violenceSlugs.length;
 
-  // console.log(item);
+    nextItem = data.find((item) => item.slug === violenceSlugs[nextIndex]);
+    prevItem = data.find((item) => item.slug === violenceSlugs[prevIndex]);
+  } else {
+    // Navegación normal si no hay violencias seleccionadas
+    const currentIndex = data.findIndex((item) => item.slug === id);
+    nextItem = data[(currentIndex + 1) % data.length];
+    prevItem = data[(currentIndex - 1 + data.length) % data.length];
+  }
+
+  console.log(item);
 
   // Imprimir el item en consola para depuración
   // console.log("Item actual:", item);
@@ -197,7 +215,14 @@ function History() {
         {/* Mostrar el VideoPlayer con la URL dinámica */}
         <section className={styles.videoContainer}>
           {videoUrl ? (
-            <VideoPlayer videoUrl={videoUrl} videoId={id} />
+            <>
+              {console.log("themeStr del item actual:", item.themesSrt)}
+              <VideoPlayer
+                videoUrl={videoUrl}
+                videoId={id}
+                themeStr={item.themesSrt}
+              />
+            </>
           ) : (
             <div className={styles.videoPlaceholder}>
               <p>Video no disponible para este ítem</p>

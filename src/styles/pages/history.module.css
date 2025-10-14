@@ -142,7 +142,7 @@
 
 .videoContainer {
   display: flex;
-  height: calc(100dvh + 20px);
+  min-height: calc(100dvh + 20px);
   background-color: #333;
   width: calc(100% + 40px);
 }
