@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "../styles/components/Filters.module.css";
 
 function Filters() {
-  const { extraData, setSelectedItemsInContext } = useData();
+  const { extraData, setSelectedItemsInContext, setSelectedViolenceInContext } = useData();
   const [selectedItem, setSelectedItem] = useState([]);
 
   const colors = ["#57aed2", "#2888d6", "#2d9696", "#24a1e6", "#4d5bd6"];
@@ -11,15 +11,29 @@ function Filters() {
   const handleItemClick = (item) => {
     const isItemSelected = selectedItem.some((selected) => selected === item);
 
+    let newSelectedItem;
     if (isItemSelected) {
-      setSelectedItem(selectedItem.filter((selected) => selected !== item));
+      newSelectedItem = selectedItem.filter((selected) => selected !== item);
     } else {
-      setSelectedItem([...selectedItem, item]);
+      newSelectedItem = [...selectedItem, item];
     }
+    
+    setSelectedItem(newSelectedItem);
+    
+    // Verificar si el ítem es una violencia (buscando en extraData.violencia)
+    const isViolence = extraData.violencia && extraData.violencia.some(v => v.id === item);
+    
+    // Actualizar las violencias seleccionadas basándose en todas las selecciones actuales
+    const currentViolences = newSelectedItem.filter(selected => 
+      extraData.violencia && extraData.violencia.some(v => v.id === selected)
+    );
+    
+    setSelectedViolenceInContext(currentViolences);
   };
 
   const handleResetFilters = () => {
     setSelectedItem([]); // Limpia la selección
+    setSelectedViolenceInContext([]); // Limpia las violencias seleccionadas
   };
 
   useEffect(() => {

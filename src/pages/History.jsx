@@ -95,19 +95,26 @@ const bunnyVideoData = {
 
 function History() {
   const { id } = useParams();
-  const { data } = useData();
+  const { data, selectedViolence, violenceSlugs } = useData();
 
   const item = data.find((item) => item.slug === id);
+
+  // Mostrar en consola la violencia seleccionada y los slugs cuando se carga la página
+  console.log("Violencias seleccionadas:", selectedViolence);
+  console.log(
+    "Slugs relacionados con las violencias seleccionadas:",
+    violenceSlugs
+  );
   const currentIndex = data.findIndex((item) => item.slug === id);
   const nextItem = data[(currentIndex + 1) % data.length];
   const prevItem = data[(currentIndex - 1 + data.length) % data.length];
 
-  console.log(item);
+  // console.log(item);
 
   // Imprimir el item en consola para depuración
-  console.log("Item actual:", item);
-  console.log("ID del item:", id);
-  console.log("Índice actual:", currentIndex);
+  // console.log("Item actual:", item);
+  // console.log("ID del item:", id);
+  // console.log("Índice actual:", currentIndex);
 
   const videoData = bunnyVideoData[id] || {}; // Obtiene los datos del video basado en el slug
   const videoUrl = videoData.hlsUrl || ""; // Obtiene la URL de HLS

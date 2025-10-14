@@ -48,17 +48,17 @@ const AnimatedRivers = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
-      console.log("Canvas no disponible");
+      // console.log("Canvas no disponible");
       return;
     }
 
     const ctx = canvas.getContext("2d");
     if (!ctx) {
-      console.log("Contexto 2D no disponible");
+      // console.log("Contexto 2D no disponible");
       return;
     }
 
-    console.log("Dimensiones del canvas:", dimensions.width, dimensions.height);
+    // console.log("Dimensiones del canvas:", dimensions.width, dimensions.height);
     canvas.width = dimensions.width;
     canvas.height = dimensions.height;
 
@@ -69,7 +69,7 @@ const AnimatedRivers = () => {
     const createRivers = () => {
       const numRivers = 50; // Aumentamos a 80 ríos (4 veces más)
       const pad = dimensions.width / numRivers;
-      console.log("Creando ríos. Pad:", pad, "Ancho:", dimensions.width);
+      // console.log("Creando ríos. Pad:", pad, "Ancho:", dimensions.width);
 
       for (let i = 0; i < numRivers; i++) {
         const baseX = pad * i;
@@ -89,13 +89,13 @@ const AnimatedRivers = () => {
         const color =
           riverColors[Math.floor(Math.random() * riverColors.length)];
 
-        console.log("Creando río en:", x, y, "con color:", color);
+        // console.log("Creando río en:", x, y, "con color:", color);
 
         riversRef.current.push(
           new River(x + rStep / 2, y, rStep, perlinRef.current, ctx, color)
         );
       }
-      console.log("Ríos creados:", riversRef.current.length);
+      // console.log("Ríos creados:", riversRef.current.length);
     };
 
     createRivers();

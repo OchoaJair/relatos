@@ -58,14 +58,14 @@ const VideoPlayer = ({ videoUrl, videoId }) => {
     };
 
     // Si el video es un stream HLS (extensión .m3u8 o URL de Bunny.net)
-    if (videoUrl.includes('.m3u8') || videoUrl.includes('bunnycdn')) {
+    if (videoUrl.includes(".m3u8") || videoUrl.includes("bunnycdn")) {
       if (Hls.isSupported()) {
         hls = new Hls();
         hls.loadSource(videoUrl);
         hls.attachMedia(video);
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          console.log("Manifesto HLS cargado");
+          // console.log("Manifesto HLS cargado");
         });
       } else if (isHlsSupported()) {
         // Navegadores como Safari que soportan HLS de forma nativa
@@ -129,11 +129,7 @@ const VideoPlayer = ({ videoUrl, videoId }) => {
     <div className={styles.videoPlayerContainer}>
       <div className={styles.videoWrapper}>
         <div className={styles.videoContainer}>
-          <video
-            ref={videoRef}
-            controls
-            className={styles.videoElement}
-          />
+          <video ref={videoRef} controls className={styles.videoElement} />
           {showSubtitles && currentSubtitle && (
             <div className={styles.subtitleOverlay}>{currentSubtitle}</div>
           )}

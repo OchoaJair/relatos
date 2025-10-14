@@ -15,10 +15,43 @@ export const DataProvider = ({ children }) => {
     const savedExtraData = localStorage.getItem("extraData");
     return savedExtraData ? JSON.parse(savedExtraData) : [];
   });
-  const [selectedItems, setSelectedItems] = useState([]); // Estado para los elementos seleccionados
+  const [selectedItems, setSelectedItems] = useState(() => {
+    const savedSelectedItems = localStorage.getItem("selectedItems");
+    return savedSelectedItems ? JSON.parse(savedSelectedItems) : [];
+  }); // Estado para los elementos seleccionados
+  const [selectedViolenceIds, setSelectedViolenceIds] = useState(() => {
+    const savedSelectedViolenceIds = localStorage.getItem("selectedViolenceIds");
+    return savedSelectedViolenceIds ? JSON.parse(savedSelectedViolenceIds) : [];
+  }); // Estado para las violencias seleccionadas
+  const [violenceSlugs, setViolenceSlugs] = useState(() => {
+    const savedViolenceSlugs = localStorage.getItem("violenceSlugs");
+    return savedViolenceSlugs ? JSON.parse(savedViolenceSlugs) : [];
+  }); // Estado para almacenar los slugs basados en las violencias seleccionadas
 
   const setSelectedItemsInContext = (items) => {
     setSelectedItems(items); // Actualiza los elementos seleccionados
+    localStorage.setItem("selectedItems", JSON.stringify(items));
+  };
+
+  const setSelectedViolenceInContext = (violenceIds) => {
+    setSelectedViolenceIds(violenceIds);
+    localStorage.setItem("selectedViolenceIds", JSON.stringify(violenceIds));
+    
+    // Calcular los slugs basados en la intersección de todas las violencias seleccionadas
+    if (violenceIds && violenceIds.length > 0) {
+      const slugs = data.filter(item => 
+        item.violencia && 
+        violenceIds.every(violenceId => item.violencia.includes(violenceId))
+      ).map(item => item.slug);
+      
+      setViolenceSlugs(slugs);
+      localStorage.setItem("violenceSlugs", JSON.stringify(slugs));
+      console.log(`Slugs para la intersección de violencias ID [${violenceIds.join(', ')}]:`, slugs);
+    } else {
+      // Si no hay violencias seleccionadas, limpiar los slugs
+      setViolenceSlugs([]);
+      localStorage.setItem("violenceSlugs", JSON.stringify([]));
+    }
   };
 
   useEffect(() => {
@@ -33,6 +66,17 @@ export const DataProvider = ({ children }) => {
         setData(projects);
         localStorage.setItem("data", JSON.stringify(projects));
         localStorage.setItem("imgs", JSON.stringify(images));
+        
+        // Si ya había violencias seleccionadas, recalcular los slugs con los nuevos datos
+        if (selectedViolenceIds.length > 0) {
+          const slugs = projects.filter(item => 
+            item.violencia && 
+            selectedViolenceIds.every(violenceId => item.violencia.includes(violenceId))
+          ).map(item => item.slug);
+          
+          setViolenceSlugs(slugs);
+          localStorage.setItem("violenceSlugs", JSON.stringify(slugs));
+        }
       } catch (error) {
         console.log(error);
       }
@@ -53,7 +97,7 @@ export const DataProvider = ({ children }) => {
 
     if (!data.length) fetchData();
     if (!extraData.length) fetchExtraData();
-  }, [data.length, extraData.length]);
+  }, [data.length, extraData.length, selectedViolenceIds]);
 
   return (
     <DataContext.Provider
@@ -63,6 +107,9 @@ export const DataProvider = ({ children }) => {
         extraData,
         selectedItems,
         setSelectedItemsInContext,
+        selectedViolence: selectedViolenceIds, // Mantener nombre original para compatibilidad
+        setSelectedViolenceInContext,
+        violenceSlugs,
       }}
     >
       {children}
