@@ -330,7 +330,7 @@ export default function Draw() {
       // 8 fotogramas a 3.33 fps (8 fotogramas en 2.4 segundos, similar a la vista previa)
       const result = await ffmpeg.exec([
         "-r",
-        "1.5",
+        "3",
         "-i",
         "frame_%03d.png",
         "-c:v",
