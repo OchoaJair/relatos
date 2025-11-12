@@ -78,6 +78,15 @@
   background-color: #334155;
 }
 
+.removeFilterButton {
+  background-color: #991b1b; /* Rojo oscuro */
+  color: white;
+}
+
+.removeFilterButton:hover {
+  background-color: #7f1d1d; /* Rojo más oscuro al pasar el mouse */
+}
+
 .subtitleControls {
   display: flex;
   gap: 10px;

@@ -30,10 +30,10 @@ function Interactive() {
     setPositions(calculatedPositions);
     
     // Limpiar los datos de violencia seleccionada solo en la primera carga
-    if (!hasInitialized.current) {
-      setSelectedViolenceInContext([]);
-      hasInitialized.current = true;
-    }
+    // if (!hasInitialized.current) {
+    //   setSelectedViolenceInContext([]);
+    //   hasInitialized.current = true;
+    // }
   }, [data, setSelectedViolenceInContext]);
 
   return (

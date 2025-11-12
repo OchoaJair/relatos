@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useMemo } from "react";
+import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import Hls from "hls.js";
 import styles from "../styles/components/VideoPlayer.module.css";
 import {
@@ -59,9 +59,6 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
     return groups;
   }, [themeStr]);
 
-  console.log("themeStr recibido:", themeStr);
-  console.log("groupedJumpPoints generados:", groupedJumpPoints);
-
   // Sincronizar currentJumpIndexRef con currentJumpIndex
   useEffect(() => {
     currentJumpIndexRef.current = currentJumpIndex;
@@ -84,7 +81,6 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
     const video = videoRef.current;
     let hls = null;
 
-    // Función para limpiar el reproductor
     const cleanup = () => {
       if (hls) {
         hls.destroy();
@@ -92,7 +88,6 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
       }
     };
 
-    // Detectar si el navegador soporta HLS de forma nativa (como Safari)
     const isHlsSupported = () => {
       return (
         video.canPlayType("application/vnd.apple.mpegurl") ||
@@ -100,32 +95,49 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
       );
     };
 
-    // Si el video es un stream HLS (extensión .m3u8 o URL de Bunny.net)
     if (videoUrl.includes(".m3u8") || videoUrl.includes("bunnycdn")) {
       if (Hls.isSupported()) {
         hls = new Hls();
         hls.loadSource(videoUrl);
         hls.attachMedia(video);
-
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          // console.log("Manifesto HLS cargado");
-        });
       } else if (isHlsSupported()) {
-        // Navegadores como Safari que soportan HLS de forma nativa
         video.src = videoUrl;
       } else {
         console.error("Tu navegador no soporta este formato de video");
       }
     } else {
-      // Si es un video directo (mp4, webm, etc.)
       video.src = videoUrl;
     }
 
-    // Cleanup al desmontar
     return () => {
       cleanup();
     };
   }, [videoUrl]);
+
+  const handleJump = useCallback((label) => {
+    const points = groupedJumpPoints[label];
+    if (videoRef.current && points && points.length > 0) {
+      setActiveJumpLabel(label);
+      setCurrentJumpIndex(0);
+      videoRef.current.currentTime = points[0].start;
+      videoRef.current.play();
+      localStorage.setItem("lastSelectedLabel", label);
+    } else {
+      console.warn(`No se encontraron puntos de salto para la etiqueta: ${label}`);
+    }
+  }, [groupedJumpPoints]); // Dependencia de groupedJumpPoints
+
+  // Efecto para cargar el último label seleccionado desde localStorage
+  useEffect(() => {
+    const lastSelectedLabel = localStorage.getItem("lastSelectedLabel");
+    if (lastSelectedLabel && groupedJumpPoints[lastSelectedLabel]) {
+      // Pequeño retraso para asegurar que el video esté listo para buscar
+      const timer = setTimeout(() => {
+        handleJump(lastSelectedLabel);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [groupedJumpPoints, handleJump]);
 
   // Manejar la actualización de subtítulos y la lógica de salto automático durante la reproducción
   useEffect(() => {
@@ -133,31 +145,27 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
     if (!video) return;
 
     const handleTimeUpdate = () => {
-      // Lógica de subtítulos
       if (showSubtitles && subtitles.length > 0) {
-        const currentSubtitle = getCurrentSubtitle(subtitles, video.currentTime);
-        setCurrentSubtitle(currentSubtitle || "");
+        const currentSubtitleText = getCurrentSubtitle(subtitles, video.currentTime);
+        setCurrentSubtitle(currentSubtitleText || "");
       }
 
-      // Lógica de salto automático
       if (activeJumpLabel && groupedJumpPoints[activeJumpLabel]) {
-        const currentIdx = currentJumpIndexRef.current; // Usar la referencia mutable
+        const currentIdx = currentJumpIndexRef.current;
         const currentSegment = groupedJumpPoints[activeJumpLabel][currentIdx];
 
-        // Añadir tolerancia y envolver en setTimeout para evitar saltos múltiples y problemas de redondeo
         if (currentSegment && video.currentTime >= currentSegment.end - 0.05) {
           const nextIndex = currentIdx + 1;
           if (nextIndex < groupedJumpPoints[activeJumpLabel].length) {
             setTimeout(() => {
-              setCurrentJumpIndex(nextIndex); // Actualiza el estado, lo que sincronizará la ref
+              setCurrentJumpIndex(nextIndex);
               video.currentTime = groupedJumpPoints[activeJumpLabel][nextIndex].start;
               video.play();
-            }, 100); // Pequeño retraso para evitar saltos consecutivos
+            }, 100);
           } else {
-            // Fin de la secuencia, detener y limpiar
             setActiveJumpLabel(null);
             setCurrentJumpIndex(0);
-            onVideoEnd && onVideoEnd(); // Call onVideoEnd here
+            onVideoEnd && onVideoEnd();
           }
         }
       }
@@ -168,19 +176,7 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
     };
-    }, [showSubtitles, subtitles, activeJumpLabel, groupedJumpPoints, onVideoEnd, currentJumpIndex]);
-
-  const handleJump = (label) => {
-    const points = groupedJumpPoints[label];
-    if (videoRef.current && points && points.length > 0) {
-      setActiveJumpLabel(label);
-      setCurrentJumpIndex(0);
-      videoRef.current.currentTime = points[0].start;
-      videoRef.current.play();
-    } else {
-      console.warn(`No se encontraron puntos de salto para la etiqueta: ${label}`);
-    }
-  };
+  }, [showSubtitles, subtitles, activeJumpLabel, groupedJumpPoints, onVideoEnd]);
 
   const handleLanguageChange = (event) => {
     setSelectedLanguage(event.target.value);
@@ -189,15 +185,17 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
   const toggleSubtitles = () => {
     setShowSubtitles(!showSubtitles);
     if (!showSubtitles) {
-      // Si se habilitan los subtítulos, cargarlos
       loadSubtitles(videoId, selectedLanguage).then(setSubtitles);
     } else {
-      // Si se deshabilitan, limpiar el estado
       setCurrentSubtitle("");
     }
   };
 
-  // Manejar la actualización de currentTime y duration para el Timeline
+  const handleRemoveFilter = () => {
+    localStorage.removeItem("lastSelectedLabel");
+    setActiveJumpLabel(null);
+  };
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -208,7 +206,7 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
 
     const handleLoadedMetadata = () => {
       setDuration(video.duration);
-      setCurrentTime(video.currentTime); // También actualizar currentTime al cargar metadatos
+      setCurrentTime(video.currentTime);
     };
 
     const handleEnded = () => {
@@ -224,7 +222,7 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       video.removeEventListener("ended", handleEnded);
     };
-  }, [onVideoEnd]); // Add onVideoEnd to dependencies
+  }, [onVideoEnd]);
 
   return (
     <div className={styles.videoPlayerContainer}>
@@ -235,7 +233,6 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
             <div className={styles.subtitleOverlay}>{currentSubtitle}</div>
           )}
         </div>
-        {/* Integración del componente Timeline */}
         <Timeline
           intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
           currentTime={currentTime}
@@ -253,6 +250,14 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
                 {label}
               </button>
             ))}
+            {activeJumpLabel && (
+              <button
+                onClick={handleRemoveFilter}
+                className={`${styles.jumpButton} ${styles.removeFilterButton}`}
+              >
+                Remover filtro
+              </button>
+            )}
           </div>
 
           <div className={styles.subtitleControls}>
