@@ -18,20 +18,21 @@
 }
 
 .videoContainer {
-  margin-left: 3%;
+  margin-right: 3%;
   position: relative;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
 }
 
 .videoElement {
-  width: 94%;
+  width: 80%;
   background-color: #000;
 }
 
 .subtitleOverlay {
   position: absolute;
   bottom: 80px;
-  left: 10%;
+  left: 15%;
   right: 15%;
   text-align: center;
   color: white;
