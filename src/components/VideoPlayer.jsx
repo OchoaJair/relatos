@@ -16,6 +16,7 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
   const [showSubtitles, setShowSubtitles] = useState(true);
   const [activeJumpLabel, setActiveJumpLabel] = useState(null);
   const [currentJumpIndex, setCurrentJumpIndex] = useState(0);
+  const currentJumpIndexRef = useRef(currentJumpIndex);
 
   // Procesar themeStr para agrupar los puntos de salto por etiqueta
   const groupedJumpPoints = useMemo(() => {
@@ -28,20 +29,25 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
           return;
         }
 
-        const startTimeValue = 'startTime' in theme ? theme.startTime : theme.StartTime;
-        const endTimeValue = 'endTime' in theme ? theme.endTime : theme.EndTime;
-        const label = theme.text;
-
-        const start = parseFloat(startTimeValue);
-        const end = parseFloat(endTimeValue);
-
-        if (!isNaN(start) && isFinite(start) && start >= 0 && !isNaN(end) && isFinite(end) && end >= 0) {
-          if (!groups[label]) {
-            groups[label] = [];
-          }
-          groups[label].push({ start, end, label });
-        }
-      });
+              const startTimeValue = 'startTime' in theme ? theme.startTime : theme.StartTime;
+              const endTimeValue = 'endTime' in theme ? theme.endTime : theme.EndTime;
+              const rawLabels = theme.text; // Get the raw label string
+        
+              const start = parseFloat(startTimeValue);
+              const end = parseFloat(endTimeValue);
+        
+              if (!isNaN(start) && isFinite(start) && start >= 0 && !isNaN(end) && isFinite(end) && end >= 0) {
+                // Split labels by comma and trim whitespace
+                const individualLabels = rawLabels.split(',').map(l => l.trim()).filter(l => l.length > 0);
+        
+                individualLabels.forEach(label => {
+                  if (!groups[label]) {
+                    groups[label] = [];
+                  }
+                  // Add the interval to each individual label's group
+                  groups[label].push({ start, end, label });
+                });
+              }      });
     }
     // Ordenar los puntos dentro de cada grupo por tiempo de inicio
     for (const label in groups) {
@@ -52,6 +58,11 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
 
   console.log("themeStr recibido:", themeStr);
   console.log("groupedJumpPoints generados:", groupedJumpPoints);
+
+  // Sincronizar currentJumpIndexRef con currentJumpIndex
+  useEffect(() => {
+    currentJumpIndexRef.current = currentJumpIndex;
+  }, [currentJumpIndex]);
 
   // Cargar subtítulos cuando cambia el video o el idioma
   useEffect(() => {
@@ -127,13 +138,18 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
 
       // Lógica de salto automático
       if (activeJumpLabel && groupedJumpPoints[activeJumpLabel]) {
-        const currentSegment = groupedJumpPoints[activeJumpLabel][currentJumpIndex];
-        if (currentSegment && video.currentTime >= currentSegment.end) {
-          const nextIndex = currentJumpIndex + 1;
+        const currentIdx = currentJumpIndexRef.current; // Usar la referencia mutable
+        const currentSegment = groupedJumpPoints[activeJumpLabel][currentIdx];
+
+        // Añadir tolerancia y envolver en setTimeout para evitar saltos múltiples y problemas de redondeo
+        if (currentSegment && video.currentTime >= currentSegment.end - 0.05) {
+          const nextIndex = currentIdx + 1;
           if (nextIndex < groupedJumpPoints[activeJumpLabel].length) {
-            setCurrentJumpIndex(nextIndex);
-            video.currentTime = groupedJumpPoints[activeJumpLabel][nextIndex].start;
-            video.play();
+            setTimeout(() => {
+              setCurrentJumpIndex(nextIndex); // Actualiza el estado, lo que sincronizará la ref
+              video.currentTime = groupedJumpPoints[activeJumpLabel][nextIndex].start;
+              video.play();
+            }, 100); // Pequeño retraso para evitar saltos consecutivos
           } else {
             // Fin de la secuencia, detener y limpiar
             setActiveJumpLabel(null);
@@ -149,7 +165,7 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, [subtitles, showSubtitles, activeJumpLabel, currentJumpIndex, groupedJumpPoints]);
+  }, [subtitles, showSubtitles, activeJumpLabel, groupedJumpPoints]); // currentJumpIndex eliminado de las dependencias
 
   const handleJump = (label) => {
     const points = groupedJumpPoints[label];
