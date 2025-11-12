@@ -7,6 +7,7 @@ import {
   getLanguageName,
 } from "../utils/subtitleLoader";
 import { getCurrentSubtitle } from "../utils/srtParser";
+import Timeline from "./Timeline"; // Importar el componente Timeline
 
 const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
   const videoRef = useRef(null);
@@ -17,6 +18,8 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
   const [activeJumpLabel, setActiveJumpLabel] = useState(null);
   const [currentJumpIndex, setCurrentJumpIndex] = useState(0);
   const currentJumpIndexRef = useRef(currentJumpIndex);
+  const [currentTime, setCurrentTime] = useState(0); // Estado para el tiempo actual del video
+  const [duration, setDuration] = useState(0); // Estado para la duración total del video
 
   // Procesar themeStr para agrupar los puntos de salto por etiqueta
   const groupedJumpPoints = useMemo(() => {
@@ -194,6 +197,29 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
     }
   };
 
+  // Manejar la actualización de currentTime y duration para el Timeline
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(video.currentTime);
+    };
+
+    const handleLoadedMetadata = () => {
+      setDuration(video.duration);
+      setCurrentTime(video.currentTime); // También actualizar currentTime al cargar metadatos
+    };
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    return () => {
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
+  }, []); // Dependencias vacías para que se ejecute una sola vez al montar
+
   return (
     <div className={styles.videoPlayerContainer}>
       <div className={styles.videoWrapper}>
@@ -203,6 +229,12 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
             <div className={styles.subtitleOverlay}>{currentSubtitle}</div>
           )}
         </div>
+        {/* Integración del componente Timeline */}
+        <Timeline
+          intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
+          currentTime={currentTime}
+          duration={duration}
+        />
 
         <div className={styles.controls}>
           <div className={styles.jumpButtons}>
