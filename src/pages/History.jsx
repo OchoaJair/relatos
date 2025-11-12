@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useData } from "../context/DataContext";
 import { Link } from "react-router-dom";
 import VideoPlayer from "../components/VideoPlayer";
@@ -96,6 +96,7 @@ const bunnyVideoData = {
 function History() {
   const { id } = useParams();
   const { data, selectedViolence, violenceSlugs } = useData();
+  const navigate = useNavigate();
 
   const item = data.find((item) => item.slug === id);
 
@@ -110,6 +111,12 @@ function History() {
       };
     })
     .filter((video) => video.videoUrl !== ""); // Filtrar para incluir solo videos que existen
+
+  const handleVideoEnd = () => {
+    if (nextItem && nextItem.slug) {
+      navigate('/' + nextItem.slug);
+    }
+  };
   // Mostrar en consola la violencia seleccionada y los slugs cuando se carga la página
   console.log("Violencias seleccionadas:", selectedViolence);
   console.log(
@@ -221,6 +228,7 @@ function History() {
                 videoUrl={videoUrl}
                 videoId={id}
                 themeStr={item.themesSrt}
+                onVideoEnd={handleVideoEnd}
               />
             </>
           ) : (

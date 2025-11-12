@@ -9,7 +9,7 @@ import {
 import { getCurrentSubtitle } from "../utils/srtParser";
 import Timeline from "./Timeline"; // Importar el componente Timeline
 
-const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
+const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
   const videoRef = useRef(null);
   const [subtitles, setSubtitles] = useState([]);
   const [currentSubtitle, setCurrentSubtitle] = useState("");
@@ -157,7 +157,7 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
             // Fin de la secuencia, detener y limpiar
             setActiveJumpLabel(null);
             setCurrentJumpIndex(0);
-            video.pause(); // Opcional: pausar al final de la secuencia
+            onVideoEnd && onVideoEnd(); // Call onVideoEnd here
           }
         }
       }
@@ -168,7 +168,7 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, [subtitles, showSubtitles, activeJumpLabel, groupedJumpPoints]); // currentJumpIndex eliminado de las dependencias
+    }, [showSubtitles, subtitles, activeJumpLabel, groupedJumpPoints, onVideoEnd, currentJumpIndex]);
 
   const handleJump = (label) => {
     const points = groupedJumpPoints[label];
@@ -211,14 +211,20 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
       setCurrentTime(video.currentTime); // También actualizar currentTime al cargar metadatos
     };
 
+    const handleEnded = () => {
+      onVideoEnd && onVideoEnd();
+    };
+
     video.addEventListener("timeupdate", handleTimeUpdate);
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("ended", handleEnded);
 
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      video.removeEventListener("ended", handleEnded);
     };
-  }, []); // Dependencias vacías para que se ejecute una sola vez al montar
+  }, [onVideoEnd]); // Add onVideoEnd to dependencies
 
   return (
     <div className={styles.videoPlayerContainer}>

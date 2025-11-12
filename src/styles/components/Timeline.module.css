@@ -1,6 +1,7 @@
 .timelineContainer {
   position: relative;
-  width: 100%;
+  width: 91%;
+  margin-left: 3%;
   height: 20px; /* Ajusta la altura según sea necesario */
   background-color: #333;
   margin-top: 10px;
