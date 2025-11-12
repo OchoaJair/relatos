@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import Hls from "hls.js";
 import styles from "../styles/components/VideoPlayer.module.css";
 import {
@@ -14,37 +14,44 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
   const [currentSubtitle, setCurrentSubtitle] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("es");
   const [showSubtitles, setShowSubtitles] = useState(true);
+  const [activeJumpLabel, setActiveJumpLabel] = useState(null);
+  const [currentJumpIndex, setCurrentJumpIndex] = useState(0);
 
-  // Usar los datos del themeStr para los puntos de salto
-  const jumpPoints = themeStr && Array.isArray(themeStr) 
-    ? themeStr
-        .map((theme, index) => {
-          // Verificar que el objeto tenga las propiedades necesarias
-          // Probar ambas variantes: startTime (minúscula) y StartTime (mayúscula)
-          const hasValidProps = ('startTime' in theme || 'StartTime' in theme) && 'text' in theme;
-          if (!theme || typeof theme !== 'object' || !hasValidProps) {
-            console.warn(`Elemento de themeStr en índice ${index} no tiene estructura válida:`, theme);
-            return null;
+  // Procesar themeStr para agrupar los puntos de salto por etiqueta
+  const groupedJumpPoints = useMemo(() => {
+    const groups = {};
+    if (themeStr && Array.isArray(themeStr)) {
+      themeStr.forEach((theme, index) => {
+        const hasValidProps = ('startTime' in theme || 'StartTime' in theme) && 'text' in theme && ('endTime' in theme || 'EndTime' in theme);
+        if (!theme || typeof theme !== 'object' || !hasValidProps) {
+          console.warn(`Elemento de themeStr en índice ${index} no tiene estructura válida:`, theme);
+          return;
+        }
+
+        const startTimeValue = 'startTime' in theme ? theme.startTime : theme.StartTime;
+        const endTimeValue = 'endTime' in theme ? theme.endTime : theme.EndTime;
+        const label = theme.text;
+
+        const start = parseFloat(startTimeValue);
+        const end = parseFloat(endTimeValue);
+
+        if (!isNaN(start) && isFinite(start) && start >= 0 && !isNaN(end) && isFinite(end) && end >= 0) {
+          if (!groups[label]) {
+            groups[label] = [];
           }
-          
-          // Usar startTime si existe, de lo contrario usar StartTime
-          const timeValue = 'startTime' in theme ? theme.startTime : theme.StartTime;
-          
-          return {
-            time: parseFloat(timeValue),
-            label: theme.text
-          };
-        })
-        .filter(item => 
-          item !== null && 
-          !isNaN(item.time) && 
-          isFinite(item.time) && 
-          item.time >= 0
-        )
-    : [];
-    
+          groups[label].push({ start, end, label });
+        }
+      });
+    }
+    // Ordenar los puntos dentro de cada grupo por tiempo de inicio
+    for (const label in groups) {
+      groups[label].sort((a, b) => a.start - b.start);
+    }
+    return groups;
+  }, [themeStr]);
+
   console.log("themeStr recibido:", themeStr);
-  console.log("jumpPoints generados:", jumpPoints);
+  console.log("groupedJumpPoints generados:", groupedJumpPoints);
 
   // Cargar subtítulos cuando cambia el video o el idioma
   useEffect(() => {
@@ -106,34 +113,53 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
     };
   }, [videoUrl]);
 
-  // Manejar la actualización de subtítulos durante la reproducción
+  // Manejar la actualización de subtítulos y la lógica de salto automático durante la reproducción
   useEffect(() => {
-    if (!showSubtitles || subtitles.length === 0) return;
-
     const video = videoRef.current;
     if (!video) return;
 
-    const updateSubtitle = () => {
-      const currentSubtitle = getCurrentSubtitle(subtitles, video.currentTime);
-      setCurrentSubtitle(currentSubtitle || "");
+    const handleTimeUpdate = () => {
+      // Lógica de subtítulos
+      if (showSubtitles && subtitles.length > 0) {
+        const currentSubtitle = getCurrentSubtitle(subtitles, video.currentTime);
+        setCurrentSubtitle(currentSubtitle || "");
+      }
+
+      // Lógica de salto automático
+      if (activeJumpLabel && groupedJumpPoints[activeJumpLabel]) {
+        const currentSegment = groupedJumpPoints[activeJumpLabel][currentJumpIndex];
+        if (currentSegment && video.currentTime >= currentSegment.end) {
+          const nextIndex = currentJumpIndex + 1;
+          if (nextIndex < groupedJumpPoints[activeJumpLabel].length) {
+            setCurrentJumpIndex(nextIndex);
+            video.currentTime = groupedJumpPoints[activeJumpLabel][nextIndex].start;
+            video.play();
+          } else {
+            // Fin de la secuencia, detener y limpiar
+            setActiveJumpLabel(null);
+            setCurrentJumpIndex(0);
+            video.pause(); // Opcional: pausar al final de la secuencia
+          }
+        }
+      }
     };
 
-    video.addEventListener("timeupdate", updateSubtitle);
+    video.addEventListener("timeupdate", handleTimeUpdate);
 
     return () => {
-      video.removeEventListener("timeupdate", updateSubtitle);
+      video.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, [subtitles, showSubtitles]);
+  }, [subtitles, showSubtitles, activeJumpLabel, currentJumpIndex, groupedJumpPoints]);
 
-  const handleJump = (seconds) => {
-    if (videoRef.current) {
-      const timeToSet = parseFloat(seconds);
-      if (typeof timeToSet === 'number' && !isNaN(timeToSet) && isFinite(timeToSet) && timeToSet >= 0) {
-        videoRef.current.currentTime = timeToSet;
-        videoRef.current.play();
-      } else {
-        console.warn(`Tiempo no válido para salto: ${seconds} (convertido a: ${timeToSet})`);
-      }
+  const handleJump = (label) => {
+    const points = groupedJumpPoints[label];
+    if (videoRef.current && points && points.length > 0) {
+      setActiveJumpLabel(label);
+      setCurrentJumpIndex(0);
+      videoRef.current.currentTime = points[0].start;
+      videoRef.current.play();
+    } else {
+      console.warn(`No se encontraron puntos de salto para la etiqueta: ${label}`);
     }
   };
 
@@ -164,13 +190,13 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr = [] }) => {
 
         <div className={styles.controls}>
           <div className={styles.jumpButtons}>
-            {jumpPoints.map((point, index) => (
+            {Object.keys(groupedJumpPoints).map((label) => (
               <button
-                key={index}
-                onClick={() => handleJump(point.time)}
-                className={styles.jumpButton}
+                key={label}
+                onClick={() => handleJump(label)}
+                className={`${styles.jumpButton} ${activeJumpLabel === label ? styles.activeJumpButton : ''}`}
               >
-                {point.label}
+                {label}
               </button>
             ))}
           </div>
