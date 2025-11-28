@@ -1,0 +1,106 @@
+{
+    "violencia": [
+        {
+            "id": 3,
+            "name": "Delincuencia Común",
+            "slug": "delincuencia-comun"
+        },
+        {
+            "id": 46,
+            "name": "Desaparición Forzada",
+            "slug": "desaparicion-forzada"
+        },
+        {
+            "id": 7,
+            "name": "Desplazamiento",
+            "slug": "desplazamiento"
+        },
+        {
+            "id": 45,
+            "name": "Ejército",
+            "slug": "ejercito"
+        },
+        {
+            "id": 2,
+            "name": "Guerrilla",
+            "slug": "guerrilla"
+        },
+        {
+            "id": 6,
+            "name": "Maltrato Familiar",
+            "slug": "maltrato-familiar"
+        },
+        {
+            "id": 18,
+            "name": "Maltrato Infantil",
+            "slug": "maltrato-infantil"
+        },
+        {
+            "id": 26,
+            "name": "Paramilitarismo",
+            "slug": "paramilitarismo"
+        },
+        {
+            "id": 5,
+            "name": "Prostitución Forzada",
+            "slug": "prostitucion-forzada"
+        },
+        {
+            "id": 20,
+            "name": "Terrorismo",
+            "slug": "terrorismo"
+        },
+        {
+            "id": 32,
+            "name": "Victimaria",
+            "slug": "victimaria"
+        },
+        {
+            "id": 4,
+            "name": "Violencia Sexual",
+            "slug": "violencia-sexual"
+        },
+        {
+            "id": 19,
+            "name": "Violencia Social",
+            "slug": "violencia-social"
+        }
+    ],
+    "tecnicas": [
+        {
+            "id": 14,
+            "name": "3d",
+            "slug": "3d"
+        },
+        {
+            "id": 25,
+            "name": "Animación Tradicional",
+            "slug": "animacion-tradicional"
+        },
+        {
+            "id": 15,
+            "name": "Cut-Out Digital",
+            "slug": "cut-out-digital"
+        },
+        {
+            "id": 43,
+            "name": "Dibujo",
+            "slug": "dibujo"
+        },
+        {
+            "id": 16,
+            "name": "Rotoscopia",
+            "slug": "rotoscopia"
+        },
+        {
+            "id": 44,
+            "name": "Técnicas Directas",
+            "slug": "tecnicas-directas"
+        },
+        {
+            "id": 17,
+            "name": "Técnicas Mixtas",
+            "slug": "tecnicas-mixtas"
+        }
+    ]
+}

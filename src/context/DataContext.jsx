@@ -57,9 +57,7 @@ export const DataProvider = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://api.relatosdereconciliacion.com/wp-json/relatos/v1/get-all-projects"
-        );
+        const response = await fetch("/data/data.json");
         const projects = await response.json();
         const images = projects.map((project) => project.featured);
         setImgs(images);
@@ -84,9 +82,7 @@ export const DataProvider = ({ children }) => {
 
     const fetchExtraData = async () => {
       try {
-        const response = await fetch(
-          "https://api.relatosdereconciliacion.com/wp-json/relatos/v1/get-taxonomies"
-        );
+        const response = await fetch("/data/extraData.json");
         const extra = await response.json();
         setExtraData(extra);
         localStorage.setItem("extraData", JSON.stringify(extra));
