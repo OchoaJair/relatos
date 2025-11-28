@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useData } from "../context/DataContext";
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 import VideoPlayer from "../components/VideoPlayer";
 import styles from "../styles/pages/history.module.css";
 import BurgerButton from "../components/BurgerButton.jsx";
@@ -95,40 +96,33 @@ const bunnyVideoData = {
 
 function History() {
   const { id } = useParams();
-  const { data, selectedViolence, violenceSlugs } = useData();
+  const { data, selectedViolence, violenceSlugs, extraData } = useData();
   const navigate = useNavigate();
 
   const item = data.find((item) => item.slug === id);
 
-  // Crear array con enlaces de videos basados en los slugs relacionados con la violencia
-  const violenceVideoLinks = violenceSlugs
-    .map((slug) => {
-      const videoData = bunnyVideoData[slug] || {};
-      return {
-        slug: slug,
-        videoUrl: videoData.hlsUrl || "",
-        title: data.find((item) => item.slug === slug)?.title || slug,
-      };
-    })
-    .filter((video) => video.videoUrl !== ""); // Filtrar para incluir solo videos que existen
+  const relatedStories = (violenceSlugs.length > 0
+    ? violenceSlugs.map(slug => data.find(d => d.slug === slug)).filter(Boolean)
+    : (item ? [item] : [])
+  ).filter(story => story && bunnyVideoData[story.slug]?.hlsUrl);
+
+  const groupName = useMemo(() => {
+    if (!extraData || !extraData.violencia || !selectedViolence || selectedViolence.length === 0) {
+      return null;
+    }
+    const selectedNames = selectedViolence
+      .map(id => extraData.violencia.find(v => v.id === id)?.name)
+      .filter(Boolean);
+    return selectedNames.join(', ');
+  }, [extraData, selectedViolence]);
+
 
   const handleVideoEnd = () => {
     if (nextItem && nextItem.slug) {
       navigate('/' + nextItem.slug);
     }
   };
-  // Mostrar en consola la violencia seleccionada y los slugs cuando se carga la página
-  console.log("Violencias seleccionadas:", selectedViolence);
-  console.log(
-    "Slugs relacionados con las violencias seleccionadas:",
-    violenceSlugs
-  );
-  console.log(
-    "Enlaces de videos relacionados con la violencia:",
-    violenceVideoLinks
-  );
-  // Usar violenceSlugs para calcular la navegación entre elementos relacionados con la violencia
-  // Si no hay violencias seleccionadas (array vacío), usar navegación normal
+  
   let nextItem, prevItem;
   if (violenceSlugs.length > 0) {
     const currentIndex = violenceSlugs.findIndex((slug) => slug === id);
@@ -139,49 +133,31 @@ function History() {
     nextItem = data.find((item) => item.slug === violenceSlugs[nextIndex]);
     prevItem = data.find((item) => item.slug === violenceSlugs[prevIndex]);
   } else {
-    // Navegación normal si no hay violencias seleccionadas
     const currentIndex = data.findIndex((item) => item.slug === id);
     nextItem = data[(currentIndex + 1) % data.length];
     prevItem = data[(currentIndex - 1 + data.length) % data.length];
   }
 
-  console.log(item);
-
-  // Imprimir el item en consola para depuración
-  // console.log("Item actual:", item);
-  // console.log("ID del item:", id);
-  // console.log("Índice actual:", currentIndex);
-
-  const videoData = bunnyVideoData[id] || {}; // Obtiene los datos del video basado en el slug
-  const videoUrl = videoData.hlsUrl || ""; // Obtiene la URL de HLS
-
-  const galleryPhotos = [];
-  for (const items in item.gallery) {
-    galleryPhotos.push(item.gallery[items].large);
-  }
-
-  const removeHTMLTags = (html) => {
-    if (!html) return "";
-
-    return (
-      html
-        // Reemplaza etiquetas que implican saltos de línea por \n\n
-        .replace(/<\/(p|div|br|li|h[1-6])>/gi, "\n\n")
-        // Elimina todas las demás etiquetas HTML
-        .replace(/<[^>]*>/g, "")
-        // Reemplaza múltiples saltos de línea por solo dos
-        .replace(/\n{3,}/g, "\n\n")
-        // Elimina espacios extra al principio y final
-        .trim()
-    );
-  };
-
-  const randomIndex = Math.floor(Math.random() * trees.length);
-  const treeImage = trees[randomIndex];
+  const videoData = bunnyVideoData[id] || {}; 
+  const videoUrl = videoData.hlsUrl || ""; 
 
   if (!item) {
     return <div>Ítem no encontrado</div>;
   }
+
+  const galleryPhotos = item.gallery ? Object.values(item.gallery).map(g => g.large) : [];
+
+  const removeHTMLTags = (html) => {
+    if (!html) return "";
+    return html
+      .replace(/<\/(p|div|br|li|h[1-6])>/gi, "\n\n")
+      .replace(/<[^>]*>/g, "")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  };
+
+  const randomIndex = Math.floor(Math.random() * trees.length);
+  const treeImage = trees[randomIndex];
 
   return (
     <div className={styles.root}>
@@ -219,18 +195,15 @@ function History() {
           </aside>
         </section>
 
-        {/* Mostrar el VideoPlayer con la URL dinámica */}
         <section className={styles.videoContainer}>
           {videoUrl ? (
-            <>
-              {console.log("themeStr del item actual:", item.themesSrt)}
-              <VideoPlayer
-                videoUrl={videoUrl}
-                videoId={id}
-                themeStr={item.themesSrt}
-                onVideoEnd={handleVideoEnd}
-              />
-            </>
+            <VideoPlayer
+              videoUrl={videoUrl}
+              activeStory={item}
+              relatedStories={relatedStories}
+              onVideoEnd={handleVideoEnd}
+              groupName={groupName}
+            />
           ) : (
             <div className={styles.videoPlaceholder}>
               <p>Video no disponible para este ítem</p>

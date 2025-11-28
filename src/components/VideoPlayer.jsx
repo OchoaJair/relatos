@@ -1,16 +1,20 @@
 import { useRef, useState, useEffect, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import Hls from "hls.js";
 import styles from "../styles/components/VideoPlayer.module.css";
 import {
   loadSubtitles,
   availableLanguages,
-  getLanguageName,
 } from "../utils/subtitleLoader";
 import { getCurrentSubtitle } from "../utils/srtParser";
-import Timeline from "./Timeline"; // Importar el componente Timeline
+import Timeline from "./Timeline";
+import TimelineTabs from "./TimelineTabs";
+import AnnouncementBanner from "./AnnouncementBanner";
 
-const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
+const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupName }) => {
   const videoRef = useRef(null);
+  const navigate = useNavigate();
+
   const [subtitles, setSubtitles] = useState([]);
   const [currentSubtitle, setCurrentSubtitle] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("es");
@@ -18,53 +22,52 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
   const [activeJumpLabel, setActiveJumpLabel] = useState(null);
   const [currentJumpIndex, setCurrentJumpIndex] = useState(0);
   const currentJumpIndexRef = useRef(currentJumpIndex);
-  const [currentTime, setCurrentTime] = useState(0); // Estado para el tiempo actual del video
-  const [duration, setDuration] = useState(0); // Estado para la duración total del video
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
-  // Procesar themeStr para agrupar los puntos de salto por etiqueta
+  const { videoId, themesSrt } = useMemo(() => ({
+    videoId: activeStory.slug,
+    themesSrt: activeStory.themesSrt,
+  }), [activeStory]);
+
   const groupedJumpPoints = useMemo(() => {
     const groups = {};
-    if (themeStr && Array.isArray(themeStr)) {
-      themeStr.forEach((theme, index) => {
+    if (themesSrt && Array.isArray(themesSrt)) {
+      themesSrt.forEach((theme, index) => {
         const hasValidProps = ('startTime' in theme || 'StartTime' in theme) && 'text' in theme && ('endTime' in theme || 'EndTime' in theme);
         if (!theme || typeof theme !== 'object' || !hasValidProps) {
-          console.warn(`Elemento de themeStr en índice ${index} no tiene estructura válida:`, theme);
+          console.warn(`Elemento de themesSrt en índice ${index} no tiene estructura válida:`, theme);
           return;
         }
 
-              const startTimeValue = 'startTime' in theme ? theme.startTime : theme.StartTime;
-              const endTimeValue = 'endTime' in theme ? theme.endTime : theme.EndTime;
-              const rawLabels = theme.text; // Get the raw label string
-        
-              const start = parseFloat(startTimeValue);
-              const end = parseFloat(endTimeValue);
-        
-              if (!isNaN(start) && isFinite(start) && start >= 0 && !isNaN(end) && isFinite(end) && end >= 0) {
-                // Split labels by comma and trim whitespace
-                const individualLabels = rawLabels.split(',').map(l => l.trim()).filter(l => l.length > 0);
-        
-                individualLabels.forEach(label => {
-                  if (!groups[label]) {
-                    groups[label] = [];
-                  }
-                  // Add the interval to each individual label's group
-                  groups[label].push({ start, end, label });
-                });
-              }      });
+        const startTimeValue = 'startTime' in theme ? theme.startTime : theme.StartTime;
+        const endTimeValue = 'endTime' in theme ? theme.endTime : theme.EndTime;
+        const rawLabels = theme.text;
+
+        const start = parseFloat(startTimeValue);
+        const end = parseFloat(endTimeValue);
+
+        if (!isNaN(start) && isFinite(start) && start >= 0 && !isNaN(end) && isFinite(end) && end >= 0) {
+          const individualLabels = rawLabels.split(',').map(l => l.trim()).filter(l => l.length > 0);
+          individualLabels.forEach(label => {
+            if (!groups[label]) {
+              groups[label] = [];
+            }
+            groups[label].push({ start, end, label });
+          });
+        }
+      });
     }
-    // Ordenar los puntos dentro de cada grupo por tiempo de inicio
     for (const label in groups) {
       groups[label].sort((a, b) => a.start - b.start);
     }
     return groups;
-  }, [themeStr]);
+  }, [themesSrt]);
 
-  // Sincronizar currentJumpIndexRef con currentJumpIndex
   useEffect(() => {
     currentJumpIndexRef.current = currentJumpIndex;
   }, [currentJumpIndex]);
 
-  // Cargar subtítulos cuando cambia el video o el idioma
   useEffect(() => {
     if (videoId && selectedLanguage && showSubtitles) {
       loadSubtitles(videoId, selectedLanguage).then(setSubtitles);
@@ -74,33 +77,17 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
     }
   }, [videoId, selectedLanguage, showSubtitles]);
 
-  // Manejar la reproducción de video con HLS
   useEffect(() => {
     if (!videoRef.current || !videoUrl) return;
-
     const video = videoRef.current;
     let hls = null;
-
-    const cleanup = () => {
-      if (hls) {
-        hls.destroy();
-        hls = null;
-      }
-    };
-
-    const isHlsSupported = () => {
-      return (
-        video.canPlayType("application/vnd.apple.mpegurl") ||
-        video.canPlayType("audio/mpegurl")
-      );
-    };
 
     if (videoUrl.includes(".m3u8") || videoUrl.includes("bunnycdn")) {
       if (Hls.isSupported()) {
         hls = new Hls();
         hls.loadSource(videoUrl);
         hls.attachMedia(video);
-      } else if (isHlsSupported()) {
+      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
         video.src = videoUrl;
       } else {
         console.error("Tu navegador no soporta este formato de video");
@@ -110,7 +97,9 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
     }
 
     return () => {
-      cleanup();
+      if (hls) {
+        hls.destroy();
+      }
     };
   }, [videoUrl]);
 
@@ -125,13 +114,11 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
     } else {
       console.warn(`No se encontraron puntos de salto para la etiqueta: ${label}`);
     }
-  }, [groupedJumpPoints]); // Dependencia de groupedJumpPoints
+  }, [groupedJumpPoints]);
 
-  // Efecto para cargar el último label seleccionado desde localStorage
   useEffect(() => {
     const lastSelectedLabel = localStorage.getItem("lastSelectedLabel");
     if (lastSelectedLabel && groupedJumpPoints[lastSelectedLabel]) {
-      // Pequeño retraso para asegurar que el video esté listo para buscar
       const timer = setTimeout(() => {
         handleJump(lastSelectedLabel);
       }, 100);
@@ -139,7 +126,6 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
     }
   }, [groupedJumpPoints, handleJump]);
 
-  // Manejar la actualización de subtítulos y la lógica de salto automático durante la reproducción
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -172,24 +158,11 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
     };
 
     video.addEventListener("timeupdate", handleTimeUpdate);
-
-    return () => {
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-    };
+    return () => video.removeEventListener("timeupdate", handleTimeUpdate);
   }, [showSubtitles, subtitles, activeJumpLabel, groupedJumpPoints, onVideoEnd]);
 
-  const handleLanguageChange = (event) => {
-    setSelectedLanguage(event.target.value);
-  };
-
-  const toggleSubtitles = () => {
-    setShowSubtitles(!showSubtitles);
-    if (!showSubtitles) {
-      loadSubtitles(videoId, selectedLanguage).then(setSubtitles);
-    } else {
-      setCurrentSubtitle("");
-    }
-  };
+  const handleLanguageChange = (event) => setSelectedLanguage(event.target.value);
+  const toggleSubtitles = () => setShowSubtitles(!showSubtitles);
 
   const handleRemoveFilter = () => {
     localStorage.removeItem("lastSelectedLabel");
@@ -200,27 +173,18 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
     const video = videoRef.current;
     if (!video) return;
 
-    const handleTimeUpdate = () => {
-      setCurrentTime(video.currentTime);
-    };
+    const onTimeUpdate = () => setCurrentTime(video.currentTime);
+    const onLoadedMetadata = () => setDuration(video.duration);
+    const onEnded = () => onVideoEnd && onVideoEnd();
 
-    const handleLoadedMetadata = () => {
-      setDuration(video.duration);
-      setCurrentTime(video.currentTime);
-    };
-
-    const handleEnded = () => {
-      onVideoEnd && onVideoEnd();
-    };
-
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("loadedmetadata", handleLoadedMetadata);
-    video.addEventListener("ended", handleEnded);
+    video.addEventListener("timeupdate", onTimeUpdate);
+    video.addEventListener("loadedmetadata", onLoadedMetadata);
+    video.addEventListener("ended", onEnded);
 
     return () => {
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      video.removeEventListener("ended", handleEnded);
+      video.removeEventListener("timeupdate", onTimeUpdate);
+      video.removeEventListener("loadedmetadata", onLoadedMetadata);
+      video.removeEventListener("ended", onEnded);
     };
   }, [onVideoEnd]);
 
@@ -233,6 +197,13 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
             <div className={styles.subtitleOverlay}>{currentSubtitle}</div>
           )}
         </div>
+        
+        <TimelineTabs
+          stories={relatedStories}
+          displayedStory={activeStory}
+          groupName={groupName}
+        />
+
         <Timeline
           intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
           currentTime={currentTime}
@@ -280,6 +251,7 @@ const VideoPlayer = ({ videoUrl, videoId, themeStr, onVideoEnd }) => {
             )}
           </div>
         </div>
+        <AnnouncementBanner storyName={activeStory.title} />
       </div>
     </div>
   );
