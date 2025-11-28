@@ -52,7 +52,7 @@
   width: 85%;
   gap: 15px;
   width: 100%;
-  padding: 0 6% 2.5% 10%;
+  padding: 0 0 2.5% 0;
 }
 
 .jumpButtons {
@@ -129,3 +129,12 @@
   background: #111827; /* mismo fondo oscuro */
   color: #eaecef;
 }
+
+.sectionImportant{
+  display: flex;
+  flex-direction: column;
+  gap:16px;
+  padding-right: 13%;
+  padding-left: 10%;
+}
+

@@ -197,20 +197,8 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
             <div className={styles.subtitleOverlay}>{currentSubtitle}</div>
           )}
         </div>
-        
-        <TimelineTabs
-          stories={relatedStories}
-          displayedStory={activeStory}
-          groupName={groupName}
-        />
-
-        <Timeline
-          intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
-          currentTime={currentTime}
-          duration={duration}
-        />
-
-        <div className={styles.controls}>
+        <section className={styles.sectionImportant}>
+          <div className={styles.controls}>
           <div className={styles.jumpButtons}>
             {Object.keys(groupedJumpPoints).map((label) => (
               <button
@@ -251,6 +239,22 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
             )}
           </div>
         </div>
+<TimelineTabs
+          stories={relatedStories}
+          displayedStory={activeStory}
+          groupName={groupName}
+        />
+
+        <Timeline
+          intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
+          currentTime={currentTime}
+          duration={duration}
+        />
+        
+        </section>
+        
+
+        
         <AnnouncementBanner storyName={activeStory.title} />
       </div>
     </div>

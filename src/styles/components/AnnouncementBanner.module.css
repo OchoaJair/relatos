@@ -1,20 +1,30 @@
 .bannerContainer {
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 8px 16px;
+  background-color: transparent;
+  padding: 24px 13% 24px 10%;
   text-align: center;
   width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  position: relative;
   z-index: 10;
+  margin: 0 auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin-top: 20px;
 }
 
 .bannerText {
-  color: #ffffff;
-  font-size: 0.9rem;
+  color: #d1d5db;
+  font-size: 1.05rem;
   margin: 0;
+  line-height: 1.6;
+  font-family: 'Times New Roman', serif;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .bannerText strong {
-  font-weight: bold;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  
 }
