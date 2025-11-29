@@ -101,10 +101,10 @@ function History() {
 
   const item = data.find((item) => item.slug === id);
 
-  const relatedStories = (violenceSlugs.length > 0
-    ? violenceSlugs.map(slug => data.find(d => d.slug === slug)).filter(Boolean)
-    : (item ? [item] : [])
-  ).filter(story => story && bunnyVideoData[story.slug]?.hlsUrl);
+  const relatedStories = (violenceSlugs || [])
+    .map(slug => data.find(d => d.slug === slug))
+    .filter(Boolean)
+    .filter(story => story && bunnyVideoData[story.slug]?.hlsUrl);
 
   const groupName = useMemo(() => {
     if (!extraData || !extraData.violencia || !selectedViolence || selectedViolence.length === 0) {

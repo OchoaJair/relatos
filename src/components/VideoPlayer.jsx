@@ -126,6 +126,10 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
     }
   }, [groupedJumpPoints, handleJump]);
 
+  const handleStoryClick = (story) => {
+    navigate('/' + story.slug);
+  };
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -239,9 +243,10 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
             )}
           </div>
         </div>
-<TimelineTabs
+        <TimelineTabs
           stories={relatedStories}
-          displayedStory={activeStory}
+          activeStory={activeStory}
+          onStoryClick={handleStoryClick}
           groupName={groupName}
         />
 

@@ -1,25 +1,62 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from '../styles/components/TimelineTabs.module.css';
 
-const TimelineTabs = ({ stories, displayedStory, groupName }) => {
-  if (!stories || stories.length <= 1) {
+const TimelineTabs = ({ stories, activeStory, onStoryClick, groupName }) => {
+  console.log(history);
+  if (!stories || stories.length === 0) {
     return null;
   }
 
+  const activeIndex = activeStory ? stories.findIndex(story => story.slug === activeStory.slug) : -1;
+  const activeStepRef = useRef(null);
+  const timelineContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (activeStepRef.current) {
+      activeStepRef.current.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    }
+  }, [activeIndex]);
+
+  const getStepClass = (index) => {
+    if (index < activeIndex) return styles.past;
+    if (index === activeIndex) return styles.active;
+    return styles.future;
+  };
+
   return (
     <div className={styles.wrapper}>
-      <h4 className={styles.title}>
-        {groupName ? `Historias en el grupo: ${groupName}` : 'Historias en este grupo:'}
-      </h4>
-      <div className={styles.tabsContainer}>
-        {stories.map((story) => (
+      <div className={styles.header}>
+        <h4 className={styles.mainTitle}>
+          {groupName ? `Línea de tiempo: ${groupName}` : 'Línea de tiempo del relato'}
+        </h4>
+        {activeIndex !== -1 && (
+          <p className={styles.subtitle}>
+            Capítulo {activeIndex + 1} de {stories.length}: {stories[activeIndex].title}
+          </p>
+        )}
+      </div>
+      <div className={styles.timelineContainer} ref={timelineContainerRef}>
+        {stories.map((story, index) => (
           <div
             key={story.slug}
-            className={`${styles.tabItem} ${
-              story.slug === displayedStory.slug ? styles.active : ''
-            }`}
+            className={`${styles.step} ${getStepClass(index)}`}
+            ref={index === activeIndex ? activeStepRef : null}
           >
-            {story.title}
+            <div className={styles.nodeContainer}>
+              <button
+                className={styles.node}
+                onClick={() => onStoryClick(story)}
+                aria-label={`Ir a la historia: ${story.title}`}
+              />
+              {index === activeIndex && (
+                <span className={styles.statusLabel}>Estás aquí</span>
+              )}
+            </div>
+            <span className={styles.title}>{story.title}</span>
           </div>
         ))}
       </div>
