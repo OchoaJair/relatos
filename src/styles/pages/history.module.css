@@ -53,16 +53,16 @@
 
 .resumeContent h1 {
   font-size: 35px;
-  color: #fff;
-  text-shadow: 2px 1px 7px #404040;
+  color: #646464;
+  text-shadow: -5px 0px 20px rgba(255, 255, 255, 0.05);
   text-align: center;
   font-weight: 400;
 }
 
 .resumeContent p {
   font-size: 16px;
-  color: #fff;
-  text-shadow: 0px 0px 8px #000;
+  color: #646464;
+  text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.05);
   display: flex;
   align-items: center;
   gap: 15px;
