@@ -240,7 +240,7 @@ export default function Draw() {
 
     intervalRef.current = setInterval(() => {
       setCurrentFrame((prev) => (prev + 1) % totalFrames);
-    }, 300); // Cambia cada 300ms, puedes ajustar la velocidad
+    }, 150); // Cambia cada 150ms, ajustado para mayor velocidad
   };
 
   useEffect(() => {
@@ -330,7 +330,7 @@ export default function Draw() {
       // 8 fotogramas a 3.33 fps (8 fotogramas en 2.4 segundos, similar a la vista previa)
       const result = await ffmpeg.exec([
         "-r",
-        "3",
+        "5", // Aumentamos la velocidad de fotogramas
         "-i",
         "frame_%03d.png",
         "-c:v",
