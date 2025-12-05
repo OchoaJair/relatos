@@ -138,3 +138,14 @@
   padding-left: 10%;
 }
 
+.jumpButtonsExplanation {
+  font-size: 1rem;
+  color: #d1d5db;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.jumpButtonFlex {
+  display: flex;
+  flex-direction: column;
+}

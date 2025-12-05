@@ -202,8 +202,25 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
           )}
         </div>
         <section className={styles.sectionImportant}>
+           <TimelineTabs
+          stories={relatedStories}
+          activeStory={activeStory}
+          onStoryClick={handleStoryClick}
+          groupName={groupName}
+        />
+
+        <Timeline
+          intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
+          currentTime={currentTime}
+          duration={duration}
+        />
           <div className={styles.controls}>
-          <div className={styles.jumpButtons}>
+            <div className={styles.jumpButtonFlex}>
+              <p className={styles.jumpButtonsExplanation}>
+              Explora el video por temas y ve sus momentos clave.
+            </p>
+            <div className={styles.jumpButtons}>
+            
             {Object.keys(groupedJumpPoints).map((label) => (
               <button
                 key={label}
@@ -221,9 +238,11 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
                 Remover filtro
               </button>
             )}
-          </div>
+            </div>
 
-          <div className={styles.subtitleControls}>
+            </div>
+            
+           <div className={styles.subtitleControls}>
             <button onClick={toggleSubtitles} className={styles.subtitleToggle}>
               {showSubtitles ? "Ocultar subtítulos" : "Mostrar subtítulos"}
             </button>
@@ -241,21 +260,8 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
                 ))}
               </select>
             )}
-          </div>
+            </div>
         </div>
-        <TimelineTabs
-          stories={relatedStories}
-          activeStory={activeStory}
-          onStoryClick={handleStoryClick}
-          groupName={groupName}
-        />
-
-        <Timeline
-          intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
-          currentTime={currentTime}
-          duration={duration}
-        />
-        
         </section>
         
 
