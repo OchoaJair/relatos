@@ -35,8 +35,6 @@ export async function loadSubtitles(videoId, language) {
  */
 export const availableLanguages = [
   { code: "es", name: "Español" },
-  { code: "zu", name: "Zulú" },
-  { code: "nl", name: "Neerlandés" },
 ];
 
 /**
