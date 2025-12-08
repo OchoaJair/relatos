@@ -82,24 +82,39 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
     const video = videoRef.current;
     let hls = null;
 
+    const playVideo = () => {
+      const lastSelectedLabel = localStorage.getItem("lastSelectedLabel");
+      if (lastSelectedLabel) {
+        video.play().catch((error) => {
+          console.log("La reproducción automática fue prevenida:", error);
+        });
+      }
+    };
+
     if (videoUrl.includes(".m3u8") || videoUrl.includes("bunnycdn")) {
       if (Hls.isSupported()) {
         hls = new Hls();
         hls.loadSource(videoUrl);
         hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          playVideo();
+        });
       } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
         video.src = videoUrl;
+        video.addEventListener("loadedmetadata", playVideo, { once: true });
       } else {
         console.error("Tu navegador no soporta este formato de video");
       }
     } else {
       video.src = videoUrl;
+      video.addEventListener("loadedmetadata", playVideo, { once: true });
     }
 
     return () => {
       if (hls) {
         hls.destroy();
       }
+      video.removeEventListener("loadedmetadata", playVideo);
     };
   }, [videoUrl]);
 
@@ -202,70 +217,70 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
           )}
         </div>
         <section className={styles.sectionImportant}>
-           <TimelineTabs
-          stories={relatedStories}
-          activeStory={activeStory}
-          onStoryClick={handleStoryClick}
-          groupName={groupName}
-        />
+          <TimelineTabs
+            stories={relatedStories}
+            activeStory={activeStory}
+            onStoryClick={handleStoryClick}
+            groupName={groupName}
+          />
 
-        <Timeline
-          intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
-          currentTime={currentTime}
-          duration={duration}
-        />
+          <Timeline
+            intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
+            currentTime={currentTime}
+            duration={duration}
+          />
           <div className={styles.controls}>
             <div className={styles.jumpButtonFlex}>
               <p className={styles.jumpButtonsExplanation}>
-              Explora el video por temas y ve sus momentos clave.
-            </p>
-            <div className={styles.jumpButtons}>
-            
-            {Object.keys(groupedJumpPoints).map((label) => (
-              <button
-                key={label}
-                onClick={() => handleJump(label)}
-                className={`${styles.jumpButton} ${activeJumpLabel === label ? styles.activeJumpButton : ''}`}
-              >
-                {label}
-              </button>
-            ))}
-            {activeJumpLabel && (
-              <button
-                onClick={handleRemoveFilter}
-                className={`${styles.jumpButton} ${styles.removeFilterButton}`}
-              >
-                Remover filtro
-              </button>
-            )}
-            </div>
+                Explora el video por temas y ve sus momentos clave.
+              </p>
+              <div className={styles.jumpButtons}>
 
-            </div>
-            
-           <div className={styles.subtitleControls}>
-            <button onClick={toggleSubtitles} className={styles.subtitleToggle}>
-              {showSubtitles ? "Ocultar subtítulos" : "Mostrar subtítulos"}
-            </button>
-
-            {showSubtitles && (
-              <select
-                value={selectedLanguage}
-                onChange={handleLanguageChange}
-                className={styles.languageSelector}
-              >
-                {availableLanguages.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.name}
-                  </option>
+                {Object.keys(groupedJumpPoints).map((label) => (
+                  <button
+                    key={label}
+                    onClick={() => handleJump(label)}
+                    className={`${styles.jumpButton} ${activeJumpLabel === label ? styles.activeJumpButton : ''}`}
+                  >
+                    {label}
+                  </button>
                 ))}
-              </select>
-            )}
-            </div>
-        </div>
-        </section>
-        
+                {activeJumpLabel && (
+                  <button
+                    onClick={handleRemoveFilter}
+                    className={`${styles.jumpButton} ${styles.removeFilterButton}`}
+                  >
+                    Remover filtro
+                  </button>
+                )}
+              </div>
 
-        
+            </div>
+
+            <div className={styles.subtitleControls}>
+              <button onClick={toggleSubtitles} className={styles.subtitleToggle}>
+                {showSubtitles ? "Ocultar subtítulos" : "Mostrar subtítulos"}
+              </button>
+
+              {showSubtitles && (
+                <select
+                  value={selectedLanguage}
+                  onChange={handleLanguageChange}
+                  className={styles.languageSelector}
+                >
+                  {availableLanguages.map((lang) => (
+                    <option key={lang.code} value={lang.code}>
+                      {lang.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+          </div>
+        </section>
+
+
+
         <AnnouncementBanner storyName={activeStory.title} />
       </div>
     </div>

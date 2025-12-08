@@ -8,22 +8,45 @@
 .navList {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
+  /* Un poco más de aire */
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
 .navListItem {
-  font-size: 13px;
+  font-family: "Bitter Variable", system-ui, serif;
+  /* Tipografía del proyecto */
+  font-size: 14px;
+  /* Ligeramente más grande para legibilidad */
   color: #5b5f5e;
   font-weight: 500;
-  padding-bottom: 0px;
-  border-bottom: solid 2px;
+  padding: 5px 14px;
+  /* Padding equilibrado */
+  border-radius: 4px;
+  /* Bordes suaves pero no pills */
+  border: 1px solid #d0d0d0;
+  /* Borde sutil por defecto */
+  background-color: transparent;
+  /* Fondo transparente */
   cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.navListItem:hover {
+  border-color: #a0a0a0;
+  background-color: rgba(0, 0, 0, 0.03);
+  /* Sutil gris al hover */
+  transform: translateY(-1px);
 }
 
 .selected {
-  color: #2b2d2c;
-  font-weight: 700;
+  color: white !important;
+  font-weight: 600;
+  border-color: transparent !important;
+  /* El color de fondo define el borde */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* Sombra suave para elevación */
 }

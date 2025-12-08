@@ -100,12 +100,10 @@
 .exampleStroke {
   width: 100px;
   height: 4px;
-  background: linear-gradient(
-    90deg,
-    rgba(158, 158, 158, 0.7) 0%,
-    rgba(158, 158, 158, 0.7) 30%,
-    rgba(158, 158, 158, 0) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(158, 158, 158, 0.7) 0%,
+      rgba(158, 158, 158, 0.7) 30%,
+      rgba(158, 158, 158, 0) 100%);
   border-radius: 2px;
   animation: pulse 2s infinite;
 }
@@ -114,9 +112,11 @@
   0% {
     opacity: 0.7;
   }
+
   50% {
     opacity: 0.3;
   }
+
   100% {
     opacity: 0.7;
   }
@@ -220,11 +220,13 @@
   background-position: center;
 
   border: none;
-  border-radius: 0; /* o 50% si quieres redondeado */
+  border-radius: 0;
+  /* o 50% si quieres redondeado */
   cursor: pointer;
   pointer-events: auto;
 
-  margin-top: 16px; /* Alineación vertical según track height */
+  margin-top: 16px;
+  /* Alineación vertical según track height */
 }
 
 /* Firefox */
@@ -233,7 +235,8 @@
   appearance: none;
   width: 22px;
   height: 22px;
-  background-color: transparent; /* Temporal para testear */
+  background-color: transparent;
+  /* Temporal para testear */
   background-image: url("/src/assets/Dibujo/punta.webp");
   background-size: contain;
   background-repeat: no-repeat;
@@ -253,6 +256,8 @@
   height: 90% !important;
   object-fit: cover;
   opacity: 0.2;
+  z-index: 10;
+  pointer-events: none;
 }
 
 .drawOptionsElementsButtons_play {
@@ -340,7 +345,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible; /* Cambiar a visible para que no recorte el check */
+  overflow: visible;
+  /* Cambiar a visible para que no recorte el check */
 }
 
 .frameButton:hover {
@@ -348,10 +354,14 @@
 }
 
 .frameButton img {
-  width: 90%; /* Hacer la imagen un poco más pequeña */
-  height: 90%; /* Hacer la imagen un poco más pequeña */
-  object-fit: cover; /* Asegurar que las imágenes se ajusten correctamente */
-  border-radius: 4px; /* Añadir bordes redondeados suaves */
+  width: 90%;
+  /* Hacer la imagen un poco más pequeña */
+  height: 90%;
+  /* Hacer la imagen un poco más pequeña */
+  object-fit: cover;
+  /* Asegurar que las imágenes se ajusten correctamente */
+  border-radius: 4px;
+  /* Añadir bordes redondeados suaves */
 }
 
 .frameSelect {
@@ -400,7 +410,8 @@
 }
 
 .downloadButton:hover:not(:disabled) {
-  background-color: #f0f0f0; /* Gris muy suave al pasar el mouse */
+  background-color: #f0f0f0;
+  /* Gris muy suave al pasar el mouse */
 }
 
 .downloadButton:disabled {
