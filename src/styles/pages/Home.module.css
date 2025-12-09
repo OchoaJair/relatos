@@ -83,3 +83,11 @@
     width: 30%;
   }
 }
+
+@media screen and (min-width: 1100px) {
+  .header {
+    margin-top: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}

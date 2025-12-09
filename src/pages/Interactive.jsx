@@ -13,6 +13,19 @@ import WaveAnimation from "../components/WaveAnimation";
 import relatosLogoNegro from "../assets/RelatosLogo.svg";
 import arbolCenital from "../assets/arbolCenital.png";
 
+// Importar imágenes de árboles
+import tree1 from "../assets/trees/1.webp";
+import tree2 from "../assets/trees/2.webp";
+import tree3 from "../assets/trees/3.webp";
+import tree4 from "../assets/trees/4.webp";
+import tree5 from "../assets/trees/5.webp";
+import tree6 from "../assets/trees/6.webp";
+import tree7 from "../assets/trees/7.webp";
+import tree8 from "../assets/trees/8.webp";
+import tree9 from "../assets/trees/9.webp";
+
+const treeImages = [tree1, tree2, tree3, tree4, tree5, tree6, tree7, tree8, tree9];
+
 function Interactive() {
   const { data, selectedItems, setSelectedViolenceInContext } = useData();
   const [sizes, setSizes] = useState({});
@@ -24,11 +37,11 @@ function Interactive() {
     const calculatedPositions = {};
     data.forEach((item) => {
       calculatedSizes[item.id] = Math.floor(Math.random() * (80 - 40 + 1)) + 40;
-      calculatedPositions[item.id] = Math.random() * 60; // Posición en porcentaje (0% a 100%)
+      calculatedPositions[item.id] = Math.random() * 35; // Posición en porcentaje (0% a 35%)
     });
     setSizes(calculatedSizes);
     setPositions(calculatedPositions);
-    
+
     // Limpiar los datos de violencia seleccionada solo en la primera carga
     // if (!hasInitialized.current) {
     //   setSelectedViolenceInContext([]);
@@ -86,6 +99,14 @@ function Interactive() {
                   />
                   <div className={styles.storyPointOverlay}></div>
                 </div>
+                <img
+                  src={treeImages[item.id % treeImages.length]}
+                  alt="Tree decoration"
+                  className={styles.treeImage}
+                  style={{
+                    width: `${Math.floor(Math.random() * (120 - 80 + 1)) + 80}px`,
+                  }}
+                />
               </article>
             </Link>
           ))}

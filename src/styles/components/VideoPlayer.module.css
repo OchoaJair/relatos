@@ -78,6 +78,16 @@
   background-color: #334155;
 }
 
+.activeJumpButton {
+  background-color: #3b82f6; /* Azul brillante */
+  color: white;
+  border: 1px solid #60a5fa;
+}
+
+.activeJumpButton:hover {
+  background-color: #2563eb;
+}
+
 .removeFilterButton {
   background-color: #991b1b; /* Rojo oscuro */
   color: white;

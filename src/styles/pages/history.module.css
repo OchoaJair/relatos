@@ -221,14 +221,17 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0px;
-  justify-items: center; /* centra los elementos dentro de cada celda */
+  justify-items: center;
+  /* centra los elementos dentro de cada celda */
   width: 100%;
 }
 
 .polaroidContainer {
   position: relative;
-  width: 100%; /* o un valor máximo como max-width: 300px */
-  aspect-ratio: 3 / 4; /* Mantiene la proporción vertical */
+  width: 100%;
+  /* o un valor máximo como max-width: 300px */
+  aspect-ratio: 3 / 4;
+  /* Mantiene la proporción vertical */
   overflow: hidden;
 }
 
@@ -275,7 +278,7 @@
   right: 0;
 }
 
-@media screen and (width >= 768px) {
+@media screen and (width >=768px) {
   .resume {
     flex-wrap: wrap;
     align-content: flex-end;
@@ -317,8 +320,10 @@
     width: 50%;
     height: 100%;
     position: sticky;
-    top: 80px; /* margen superior antes de fijarse */
-    align-self: flex-start; /* para que respete la altura del contenido */
+    top: 80px;
+    /* margen superior antes de fijarse */
+    align-self: flex-start;
+    /* para que respete la altura del contenido */
     height: fit-content;
     z-index: 1;
   }
@@ -327,12 +332,23 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
-    justify-items: center; /* centra los elementos dentro de cada celda */
+    justify-items: center;
+    /* centra los elementos dentro de cada celda */
     width: 100%;
   }
 
   .draw_section {
     gap: 40px;
     max-width: 80%;
+  }
+}
+
+
+
+@media screen and (min-width: 1100px) {
+  .header {
+    margin-top: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
   }
 }
