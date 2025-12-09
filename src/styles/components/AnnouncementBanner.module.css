@@ -6,8 +6,8 @@
   position: relative;
   z-index: 10;
   margin: 0 auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  margin-top: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  margin-bottom: 20px;
 }
 
 .bannerText {
@@ -16,7 +16,7 @@
   margin: 0;
   line-height: 1.6;
   font-family: 'Times New Roman', serif;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .bannerText strong {
@@ -25,6 +25,4 @@
   letter-spacing: 0.5px;
 }
 
-@media (max-width: 768px) {
-  
-}
+@media (max-width: 768px) {}

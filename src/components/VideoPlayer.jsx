@@ -210,11 +210,17 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
   return (
     <div className={styles.videoPlayerContainer}>
       <div className={styles.videoWrapper}>
+        <AnnouncementBanner storyName={activeStory.title} />
         <div className={styles.videoContainer}>
           <video ref={videoRef} controls className={styles.videoElement} />
           {showSubtitles && currentSubtitle && (
             <div className={styles.subtitleOverlay}>{currentSubtitle}</div>
           )}
+          <Timeline
+            intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
+            currentTime={currentTime}
+            duration={duration}
+          />
         </div>
         <section className={styles.sectionImportant}>
           <TimelineTabs
@@ -224,11 +230,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
             groupName={groupName}
           />
 
-          <Timeline
-            intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
-            currentTime={currentTime}
-            duration={duration}
-          />
+
           <div className={styles.controls}>
             <div className={styles.jumpButtonFlex}>
               <p className={styles.jumpButtonsExplanation}>
@@ -281,7 +283,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
 
 
 
-        <AnnouncementBanner storyName={activeStory.title} />
+
       </div>
     </div>
   );
