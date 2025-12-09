@@ -29,16 +29,6 @@ const TimelineTabs = ({ stories, activeStory, onStoryClick, groupName }) => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.header}>
-        <h4 className={styles.mainTitle}>
-          {groupName ? `Línea de tiempo: ${groupName}` : 'Línea de tiempo del relato'}
-        </h4>
-        {activeIndex !== -1 && (
-          <p className={styles.subtitle}>
-            Capítulo {activeIndex + 1} de {stories.length}: {stories[activeIndex].title}
-          </p>
-        )}
-      </div>
       <div className={styles.timelineContainer} ref={timelineContainerRef}>
         {stories.map((story, index) => (
           <div
@@ -52,6 +42,7 @@ const TimelineTabs = ({ stories, activeStory, onStoryClick, groupName }) => {
                 onClick={() => onStoryClick(story)}
                 aria-label={`Ir a la historia: ${story.title}`}
               />
+              {index < stories.length - 1 && <div className={styles.line} />}
               {index === activeIndex && (
                 <span className={styles.statusLabel}>Estás aquí</span>
               )}

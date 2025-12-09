@@ -1,25 +1,5 @@
 .wrapper {
   width: 100%;
-  padding: 1rem 0;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.mainTitle {
-  font-size: 1rem;
-  color: white;
-  text-transform: uppercase;
-  margin: 0 0 4px 0;
-  font-weight: bold;
-}
-
-.subtitle {
-  font-size: 0.9rem;
-  color: #a0aec0; /* gray-400 */
-  margin: 0;
 }
 
 .timelineContainer {
@@ -27,11 +7,13 @@
   align-items: flex-start;
   overflow-x: auto;
   padding: 1rem 2rem;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .timelineContainer::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+  display: none;
+  /* Safari and Chrome */
 }
 
 .step {
@@ -55,60 +37,71 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 3px solid #4a5568; /* gray-600 */
-  background-color: #1a202c; /* gray-900 */
+  border: 3px solid #4a5568;
+  /* gray-600 */
+  background-color: #1a202c;
+  /* gray-900 */
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
 }
 
-.node::after {
-  content: '';
+.line {
   position: absolute;
-  top: 50%;
-  left: 100%;
-  width: calc(120px - 16px); /* Full step width minus node width */
+  top: 8px;
+  /* Center of the 16px node */
+  left: 50%;
+  /* Center of container */
+  margin-left: 8px;
+  /* Offset by half node width */
+  width: calc(120px - 16px);
   height: 2px;
-  background-color: #4a5568; /* gray-600 */
+  background-color: #4a5568;
+  /* gray-600 */
   transform: translateY(-50%);
   transition: background-color 0.5s ease;
+  z-index: 0;
 }
 
-.step:last-child .node::after {
-  display: none;
-}
 
 /* --- Estados --- */
 
 .past .node {
-  background-color: #38b2ac; /* teal-400 */
+  background-color: #38b2ac;
+  /* teal-400 */
   border-color: #38b2ac;
 }
 
-.past .node::after {
-  background-color: #38b2ac; /* teal-400 */
+.past .line {
+  background-color: #38b2ac;
+  /* teal-400 */
 }
 
 .active .node {
   transform: scale(1.5);
-  border-color: #63b3ed; /* blue-400 */
+  border-color: #63b3ed;
+  /* blue-400 */
   background-color: #63b3ed;
   box-shadow: 0 0 12px #63b3ed;
 }
 
-.active .node::after {
-  background-color: #38b2ac; /* Progress line continues */
+.active .line {
+  background-color: #38b2ac;
+  /* Progress line continues */
 }
 
 .future .node {
-  background-color: #1a202c; /* gray-900 */
-  border-color: #4a5568; /* gray-600 */
+  background-color: #1a202c;
+  /* gray-900 */
+  border-color: #4a5568;
+  /* gray-600 */
 }
 
 .title {
   font-size: 0.8rem;
-  color: #a0aec0; /* gray-400 */
+  color: #a0aec0;
+  /* gray-400 */
   text-align: center;
   margin-top: 8px;
   max-width: 100px;
@@ -127,8 +120,9 @@
   margin-bottom: 12px;
   font-size: 0.75rem;
   font-weight: bold;
-  color: #63b3ed; /* blue-400 */
-  
+  color: #63b3ed;
+  /* blue-400 */
+
   padding: 2px 6px;
   border-radius: 4px;
   white-space: nowrap;

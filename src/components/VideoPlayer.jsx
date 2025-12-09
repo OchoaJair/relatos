@@ -10,6 +10,7 @@ import { getCurrentSubtitle } from "../utils/srtParser";
 import Timeline from "./Timeline";
 import TimelineTabs from "./TimelineTabs";
 import AnnouncementBanner from "./AnnouncementBanner";
+import StoryTitle from "./StoryTitle";
 
 const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupName }) => {
   const videoRef = useRef(null);
@@ -223,14 +224,6 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
           />
         </div>
         <section className={styles.sectionImportant}>
-          <TimelineTabs
-            stories={relatedStories}
-            activeStory={activeStory}
-            onStoryClick={handleStoryClick}
-            groupName={groupName}
-          />
-
-
           <div className={styles.controls}>
             <div className={styles.jumpButtonFlex}>
               <p className={styles.jumpButtonsExplanation}>
@@ -279,6 +272,21 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
               )}
             </div>
           </div>
+          <TimelineTabs
+            stories={relatedStories}
+            activeStory={activeStory}
+            onStoryClick={handleStoryClick}
+            groupName={groupName}
+          />
+          <StoryTitle
+            stories={relatedStories}
+            activeStory={activeStory}
+            groupName={groupName}
+          />
+
+
+
+
         </section>
 
 
