@@ -101,8 +101,9 @@ function History() {
 
   const item = data.find((item) => item.slug === id);
 
-  const relatedStories = (violenceSlugs || [])
-    .map(slug => data.find(d => d.slug === slug))
+  const relatedStories = ((violenceSlugs && violenceSlugs.length > 0)
+    ? violenceSlugs.map(slug => data.find(d => d.slug === slug))
+    : data)
     .filter(Boolean)
     .filter(story => story && bunnyVideoData[story.slug]?.hlsUrl);
 
@@ -122,7 +123,7 @@ function History() {
       navigate('/' + nextItem.slug);
     }
   };
-  
+
   let nextItem, prevItem;
   if (violenceSlugs.length > 0) {
     const currentIndex = violenceSlugs.findIndex((slug) => slug === id);
@@ -138,14 +139,14 @@ function History() {
     prevItem = data[(currentIndex - 1 + data.length) % data.length];
   }
 
-  const videoData = bunnyVideoData[id] || {}; 
-  const videoUrl = videoData.hlsUrl || ""; 
+  const videoData = bunnyVideoData[id] || {};
+  const videoUrl = videoData.hlsUrl || "";
 
   if (!item) {
     return <div>Ítem no encontrado</div>;
   }
 
-  const galleryPhotos = item.gallery ? Object.values(item.gallery).map(g => g.large) : [];
+  const galleryPhotos = item.gallery ? Object.values(item.gallery).map(g => g.large).filter(Boolean) : [];
 
   const removeHTMLTags = (html) => {
     if (!html) return "";
