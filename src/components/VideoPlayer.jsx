@@ -16,8 +16,8 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
   const videoRef = useRef(null);
   const navigate = useNavigate();
 
+
   const [subtitles, setSubtitles] = useState([]);
-  const [currentSubtitle, setCurrentSubtitle] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("es");
   const [showSubtitles, setShowSubtitles] = useState(true);
   const [activeJumpLabel, setActiveJumpLabel] = useState(null);
@@ -25,6 +25,20 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
   const currentJumpIndexRef = useRef(currentJumpIndex);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+
+  const [subtitleUrl, setSubtitleUrl] = useState(null);
+
+  // Helper to convert internal subtitle format to WebVTT
+  const convertToVTT = (subs) => {
+    let vttContent = "WEBVTT\n\n";
+    subs.forEach((sub, index) => {
+      const start = new Date(sub.start * 1000).toISOString().substr(11, 12);
+      const end = new Date(sub.end * 1000).toISOString().substr(11, 12);
+      // Add size:80% align:center to cues
+      vttContent += `${index + 1}\n${start} --> ${end} size:80% align:center\n${sub.text}\n\n`;
+    });
+    return vttContent;
+  };
 
   const { videoId, themesSrt } = useMemo(() => ({
     videoId: activeStory.slug,
@@ -70,13 +84,32 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
   }, [currentJumpIndex]);
 
   useEffect(() => {
-    if (videoId && selectedLanguage && showSubtitles) {
-      loadSubtitles(videoId, selectedLanguage).then(setSubtitles);
+    if (videoId && selectedLanguage) {
+      loadSubtitles(videoId, selectedLanguage).then((subs) => {
+        setSubtitles(subs);
+        // Create Blob URL for WebVTT
+        const vttText = convertToVTT(subs);
+        const blob = new Blob([vttText], { type: "text/vtt" });
+        const url = URL.createObjectURL(blob);
+        setSubtitleUrl(url);
+      });
     } else {
       setSubtitles([]);
-      setCurrentSubtitle("");
+      setSubtitleUrl(null);
     }
-  }, [videoId, selectedLanguage, showSubtitles]);
+    // Cleanup blob url
+    return () => {
+      if (subtitleUrl) URL.revokeObjectURL(subtitleUrl);
+    };
+  }, [videoId, selectedLanguage]);
+
+  useEffect(() => {
+    // Control track visibility
+    if (videoRef.current && videoRef.current.textTracks[0]) {
+      videoRef.current.textTracks[0].mode = showSubtitles ? "showing" : "hidden";
+    }
+  }, [showSubtitles, subtitleUrl]);
+
 
   useEffect(() => {
     if (!videoRef.current || !videoUrl) return;
@@ -151,10 +184,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
     if (!video) return;
 
     const handleTimeUpdate = () => {
-      if (showSubtitles && subtitles.length > 0) {
-        const currentSubtitleText = getCurrentSubtitle(subtitles, video.currentTime);
-        setCurrentSubtitle(currentSubtitleText || "");
-      }
+      // NOTE: Removed custom subtitle sync logic here as native track handles it
 
       if (activeJumpLabel && groupedJumpPoints[activeJumpLabel]) {
         const currentIdx = currentJumpIndexRef.current;
@@ -179,7 +209,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
 
     video.addEventListener("timeupdate", handleTimeUpdate);
     return () => video.removeEventListener("timeupdate", handleTimeUpdate);
-  }, [showSubtitles, subtitles, activeJumpLabel, groupedJumpPoints, onVideoEnd]);
+  }, [subtitles, activeJumpLabel, groupedJumpPoints, onVideoEnd]);
 
   const handleLanguageChange = (event) => setSelectedLanguage(event.target.value);
   const toggleSubtitles = () => setShowSubtitles(!showSubtitles);
@@ -213,10 +243,18 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
       <div className={styles.videoWrapper}>
         <AnnouncementBanner storyName={activeStory.title} />
         <div className={styles.videoContainer}>
-          <video ref={videoRef} controls className={styles.videoElement} />
-          {showSubtitles && currentSubtitle && (
-            <div className={styles.subtitleOverlay}>{currentSubtitle}</div>
-          )}
+          <video ref={videoRef} controls className={styles.videoElement}>
+            {subtitleUrl && (
+              <track
+                kind="subtitles"
+                src={subtitleUrl}
+                srcLang={selectedLanguage}
+                label={availableLanguages.find(l => l.code === selectedLanguage)?.name || "Subtitles"}
+                default
+              />
+            )}
+          </video>
+
           <Timeline
             intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
             currentTime={currentTime}

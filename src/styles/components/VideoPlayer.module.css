@@ -35,21 +35,13 @@
   background-color: #000;
 }
 
-.subtitleOverlay {
-  position: absolute;
-  bottom: 80px;
-  left: 15%;
-  right: 15%;
-  text-align: center;
+.videoElement::cue {
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
   font-size: 18px;
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-  margin: 0;
-  border-radius: 5px;
-  pointer-events: none;
+  /* The size:80% is handled in the VTT file, but we can enforce other props here */
 }
 
 .controls {
