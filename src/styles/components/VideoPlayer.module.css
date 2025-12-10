@@ -82,7 +82,7 @@
   width: 85%;
   gap: 15px;
   width: 100%;
-  padding: 0 0 2.5% 0;
+  padding: 1% 0 2.5% 0;
 }
 
 .jumpButtons {
@@ -197,4 +197,34 @@
 .jumpButtonFlex {
   display: flex;
   flex-direction: column;
+}
+
+.floatingFullscreenButton {
+  position: absolute;
+  bottom: -50px;
+  right: 0;
+  padding: 8px 12px;
+  background-color: transparent;
+  border: 2px solid #94a3b8;
+  color: #eaecef;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.videoContainer:fullscreen .floatingFullscreenButton {
+  bottom: 25px;
+  right: 25px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.floatingFullscreenButton:hover {
+  background-color: #111827;
+  border: 2px solid #111827;
+}
+
+.videoContainer:fullscreen .floatingFullscreenButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: white;
 }

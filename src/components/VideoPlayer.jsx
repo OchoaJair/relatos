@@ -269,6 +269,9 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
             currentTime={currentTime}
             duration={duration}
           />
+          <button onClick={toggleFullscreen} className={styles.floatingFullscreenButton}>
+            Pantalla Completa
+          </button>
         </div>
         <section className={styles.sectionImportant}>
           <div className={styles.controls}>
@@ -300,9 +303,6 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
             </div>
 
             <div className={styles.subtitleControls}>
-              <button onClick={toggleFullscreen} className={styles.subtitleToggle}>
-                Pantalla Completa
-              </button>
               <button onClick={toggleSubtitles} className={styles.subtitleToggle}>
                 {showSubtitles ? "Ocultar subtítulos" : "Mostrar subtítulos"}
               </button>
