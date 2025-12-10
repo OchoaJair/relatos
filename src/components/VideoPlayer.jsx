@@ -18,6 +18,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
 
 
   const [subtitles, setSubtitles] = useState([]);
+  const [currentSubtitle, setCurrentSubtitle] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("es");
   const [showSubtitles, setShowSubtitles] = useState(true);
   const [activeJumpLabel, setActiveJumpLabel] = useState(null);
@@ -184,7 +185,11 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
     if (!video) return;
 
     const handleTimeUpdate = () => {
-      // NOTE: Removed custom subtitle sync logic here as native track handles it
+      // Custom subtitle logic restored
+      if (showSubtitles && subtitles.length > 0) {
+        const currentSubtitleText = getCurrentSubtitle(subtitles, video.currentTime);
+        setCurrentSubtitle(currentSubtitleText || "");
+      }
 
       if (activeJumpLabel && groupedJumpPoints[activeJumpLabel]) {
         const currentIdx = currentJumpIndexRef.current;
@@ -209,10 +214,22 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
 
     video.addEventListener("timeupdate", handleTimeUpdate);
     return () => video.removeEventListener("timeupdate", handleTimeUpdate);
-  }, [subtitles, activeJumpLabel, groupedJumpPoints, onVideoEnd]);
+  }, [showSubtitles, subtitles, activeJumpLabel, groupedJumpPoints, onVideoEnd]);
 
   const handleLanguageChange = (event) => setSelectedLanguage(event.target.value);
   const toggleSubtitles = () => setShowSubtitles(!showSubtitles);
+
+  const videoContainerRef = useRef(null);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      videoContainerRef.current.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
 
   const handleRemoveFilter = () => {
     localStorage.removeItem("lastSelectedLabel");
@@ -242,19 +259,11 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
     <div className={styles.videoPlayerContainer}>
       <div className={styles.videoWrapper}>
         <AnnouncementBanner storyName={activeStory.title} />
-        <div className={styles.videoContainer}>
-          <video ref={videoRef} controls className={styles.videoElement}>
-            {subtitleUrl && (
-              <track
-                kind="subtitles"
-                src={subtitleUrl}
-                srcLang={selectedLanguage}
-                label={availableLanguages.find(l => l.code === selectedLanguage)?.name || "Subtitles"}
-                default
-              />
-            )}
-          </video>
-
+        <div className={styles.videoContainer} ref={videoContainerRef}>
+          <video ref={videoRef} controls className={styles.videoElement} controlsList="nofullscreen" />
+          {showSubtitles && currentSubtitle && (
+            <div className={styles.subtitleOverlay}>{currentSubtitle}</div>
+          )}
           <Timeline
             intervals={activeJumpLabel ? groupedJumpPoints[activeJumpLabel] : []}
             currentTime={currentTime}
@@ -291,6 +300,9 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
             </div>
 
             <div className={styles.subtitleControls}>
+              <button onClick={toggleFullscreen} className={styles.subtitleToggle}>
+                Pantalla Completa
+              </button>
               <button onClick={toggleSubtitles} className={styles.subtitleToggle}>
                 {showSubtitles ? "Ocultar subtítulos" : "Mostrar subtítulos"}
               </button>
