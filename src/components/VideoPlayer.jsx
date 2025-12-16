@@ -292,6 +292,15 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
             currentTime={currentTime}
             duration={duration}
           />
+          {isFullscreen && (
+            <button
+              onClick={toggleFullscreen}
+              className={styles.floatingExitButton}
+              title="Salir de pantalla completa"
+            >
+              <Minimize size={24} />
+            </button>
+          )}
         </div>
 
         {/* Unified Control Bar & Jump Points */}
