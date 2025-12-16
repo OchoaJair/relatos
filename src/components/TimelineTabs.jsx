@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import styles from '../styles/components/TimelineTabs.module.css';
 
 const TimelineTabs = ({ stories, activeStory, onStoryClick, groupName }) => {
-  console.log(history);
+
   if (!stories || stories.length === 0) {
     return null;
   }

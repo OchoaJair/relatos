@@ -128,8 +128,9 @@
   white-space: nowrap;
 }
 
+/* Center alignment removed to prevent scrolling issues on overflow */
 @media (min-width: 768px) {
   .timelineContainer {
-    justify-content: center;
+    /* justify-content: center; causes clipping on start */
   }
 }
