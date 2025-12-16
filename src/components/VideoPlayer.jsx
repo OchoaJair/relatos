@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Hls from "hls.js";
+import { Maximize, Minimize, Settings, Captions, CaptionsOff, XCircle, Filter } from "lucide-react";
 import styles from "../styles/components/VideoPlayer.module.css";
 import {
   loadSubtitles,
@@ -26,6 +27,8 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
   const currentJumpIndexRef = useRef(currentJumpIndex);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const [subtitleUrl, setSubtitleUrl] = useState(null);
 
@@ -216,20 +219,38 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
     return () => video.removeEventListener("timeupdate", handleTimeUpdate);
   }, [showSubtitles, subtitles, activeJumpLabel, groupedJumpPoints, onVideoEnd]);
 
-  const handleLanguageChange = (event) => setSelectedLanguage(event.target.value);
+  const handleLanguageChange = (event) => {
+    setSelectedLanguage(event.target.value);
+    setShowSettings(false);
+  }
   const toggleSubtitles = () => setShowSubtitles(!showSubtitles);
 
   const videoContainerRef = useRef(null);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      videoContainerRef.current.requestFullscreen().catch(err => {
+      videoContainerRef.current.requestFullscreen().then(() => {
+        setIsFullscreen(true);
+      }).catch(err => {
         console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
       });
     } else {
-      document.exitFullscreen();
+      document.exitFullscreen().then(() => {
+        setIsFullscreen(false);
+      });
     }
   };
+
+  // Monitor fullscreen change events
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
 
   const handleRemoveFilter = () => {
     localStorage.removeItem("lastSelectedLabel");
@@ -255,6 +276,8 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
     };
   }, [onVideoEnd]);
 
+  const toggleSettings = () => setShowSettings(!showSettings);
+
   return (
     <div className={styles.videoPlayerContainer}>
       <div className={styles.videoWrapper}>
@@ -269,59 +292,79 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
             currentTime={currentTime}
             duration={duration}
           />
-          <button onClick={toggleFullscreen} className={styles.floatingFullscreenButton}>
-            Pantalla Completa
-          </button>
         </div>
-        <section className={styles.sectionImportant}>
-          <div className={styles.controls}>
-            <div className={styles.jumpButtonFlex}>
-              <p className={styles.jumpButtonsExplanation}>
-                Explora el video por temas y ve sus momentos clave.
-              </p>
-              <div className={styles.jumpButtons}>
 
-                {Object.keys(groupedJumpPoints).map((label) => (
+        {/* Unified Control Bar & Jump Points */}
+        <section className={styles.controlsSection}>
+          <div className={styles.controlBar}>
+            <div className={styles.leftControls}>
+              <button onClick={toggleSubtitles} className={styles.textIconButton} title={showSubtitles ? "Ocultar subtítulos" : "Mostrar subtítulos"}>
+                {showSubtitles ? <Captions size={18} /> : <CaptionsOff size={18} />}
+                <span className={styles.buttonLabel}>Subtítulos</span>
+              </button>
+
+              {/* Settings hidden for now as only Spanish is used
+              <div className={styles.settingsWrapper}>
+                <button onClick={toggleSettings} className={styles.textIconButton} title="Ajustes">
+                  <Settings size={18} />
+                  <span className={styles.buttonLabel}>Ajustes</span>
+                </button>
+                {showSettings && (
+                  <div className={styles.settingsMenu}>
+                    <label className={styles.settingsLabel}>Idioma subtítulos:</label>
+                    <select
+                      value={selectedLanguage}
+                      onChange={handleLanguageChange}
+                      className={styles.languageSelector}
+                    >
+                      {availableLanguages.map((lang) => (
+                        <option key={lang.code} value={lang.code}>
+                          {lang.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+              */}
+            </div>
+
+            <div className={styles.centerControls}>
+              <div className={styles.topicsLabel}>
+                <Filter size={14} className={styles.filterIcon} />
+                <span>Filtrar:</span>
+              </div>
+              <div className={styles.jumpPointsScrollContainer}>
+                {activeJumpLabel && (
+                  <button
+                    onClick={handleRemoveFilter}
+                    className={`${styles.chip} ${styles.activeChip} ${styles.clearFilterChip}`}
+                    title="Quitar filtro"
+                  >
+                    <XCircle size={14} className={styles.chipIcon} />
+                    <span>{activeJumpLabel}</span>
+                  </button>
+                )}
+
+                {Object.keys(groupedJumpPoints).filter(l => l !== activeJumpLabel).map((label) => (
                   <button
                     key={label}
                     onClick={() => handleJump(label)}
-                    className={`${styles.jumpButton} ${activeJumpLabel === label ? styles.activeJumpButton : ''}`}
+                    className={styles.chip}
                   >
                     {label}
                   </button>
                 ))}
-                {activeJumpLabel && (
-                  <button
-                    onClick={handleRemoveFilter}
-                    className={`${styles.jumpButton} ${styles.removeFilterButton}`}
-                  >
-                    Remover filtro
-                  </button>
-                )}
               </div>
-
             </div>
 
-            <div className={styles.subtitleControls}>
-              <button onClick={toggleSubtitles} className={styles.subtitleToggle}>
-                {showSubtitles ? "Ocultar subtítulos" : "Mostrar subtítulos"}
+            <div className={styles.rightControls}>
+              <button onClick={toggleFullscreen} className={styles.iconButton} title={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}>
+                {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
               </button>
-
-              {showSubtitles && (
-                <select
-                  value={selectedLanguage}
-                  onChange={handleLanguageChange}
-                  className={styles.languageSelector}
-                >
-                  {availableLanguages.map((lang) => (
-                    <option key={lang.code} value={lang.code}>
-                      {lang.name}
-                    </option>
-                  ))}
-                </select>
-              )}
             </div>
           </div>
+
           <TimelineTabs
             stories={relatedStories}
             activeStory={activeStory}
@@ -333,15 +376,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
             activeStory={activeStory}
             groupName={groupName}
           />
-
-
-
-
         </section>
-
-
-
-
       </div>
     </div>
   );

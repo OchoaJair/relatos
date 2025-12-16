@@ -2,40 +2,45 @@
   display: flex;
   width: 100%;
   margin: 0;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  padding: 10px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  justify-content: center;
 }
 
 .videoWrapper {
   position: relative;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: auto;
   width: 100%;
+  max-width: 1200px;
+  /* Max constraint for large screens */
   justify-content: center;
-  margin-top: 20px;
-  /* Removed margin-left to ensure centering */
+  margin-top: 10px;
 }
 
 .videoContainer {
   margin: 0 auto;
-  /* Center the container */
   width: 80%;
-  /* Fixed relative width for both video and timeline */
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  border-radius: 8px;
+  /* Slight rounding for video container */
+  overflow: hidden;
+  /* Ensure rounded corners clip video */
 }
 
 .videoElement {
   width: 100%;
-  /* Fill the container */
   background-color: #000;
+  display: block;
+  /* Remove default inline spacing */
 }
 
-/* Hide native fullscreen button to force use of custom button */
+/* Hide native fullscreen button */
 .videoElement::-webkit-media-controls-fullscreen-button {
   display: none;
 }
@@ -56,175 +61,278 @@
 
 .subtitleOverlay {
   position: absolute;
-  bottom: 80px;
-  left: 10%;
-  right: 10%;
-  width: 80%;
-  /* Explicit width just in case, though left/right handles it */
+  bottom: 60px;
+  /* Reduced to sit closer to timeline */
+  left: 5%;
+  right: 5%;
+  width: 90%;
   text-align: center;
   color: white;
-  font-size: 18px;
-  font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px 12px;
   margin: 0 auto;
-  /* Center if width is used */
-  border-radius: 5px;
+  border-radius: 6px;
   pointer-events: none;
-  z-index: 2147483647;
-  /* High z-index to stay on top in full screen */
-}
-
-.controls {
-  display: flex;
-  flex-direction: column;
-  width: 85%;
-  gap: 15px;
-  width: 100%;
-  padding: 1% 0 2.5% 0;
-}
-
-.jumpButtons {
-  margin-top: 15px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.jumpButton {
-  padding: 8px 12px;
-  background: #1f2937;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  /* border: 1px solid #3b4757; */
-}
-
-.jumpButton:hover {
-  background-color: #334155;
-}
-
-.activeJumpButton {
-  background-color: #3b82f6;
-  /* Azul brillante */
-  color: white;
-  border: 1px solid #60a5fa;
-}
-
-.activeJumpButton:hover {
-  background-color: #2563eb;
-}
-
-.removeFilterButton {
-  background-color: #991b1b;
-  /* Rojo oscuro */
-  color: white;
-}
-
-.removeFilterButton:hover {
-  background-color: #7f1d1d;
-  /* Rojo más oscuro al pasar el mouse */
-}
-
-.subtitleControls {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-  align-content: center;
-}
-
-.subtitleToggle {
-  padding: 8px 12px;
-  background-color: transparent;
-  border: 2px solid #94a3b8;
-  color: #eaecef;
-
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.subtitleToggle:hover {
-  background-color: #111827;
-  border: 2px solid #111827;
-}
-
-.languageSelector {
-  padding: 8px 12px;
-  background-color: transparent;
-  border: 2px solid #94a3b8;
-  color: #eaecef;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.languageSelector:focus {
-  background: #111827;
-  /* fondo del control mientras está abierto */
-  border: 2px solid #111827;
-}
-
-.languageSelector option,
-.languageSelector optgroup {
-  background: #111827;
-  /* mismo fondo oscuro */
-  color: #eaecef;
-}
-
-.sectionImportant {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 80%;
-  /* Match video container width */
-  margin: 0 auto;
-  /* Center the section */
-  padding: 0;
-  /* Remove asymmetric padding */
-}
-
-.jumpButtonsExplanation {
-  font-size: 1rem;
-  color: #d1d5db;
-  margin-bottom: 10px;
-  font-weight: 700;
-}
-
-.jumpButtonFlex {
-  display: flex;
-  flex-direction: column;
-}
-
-.floatingFullscreenButton {
-  position: absolute;
-  bottom: -50px;
-  right: 0;
-  padding: 8px 12px;
-  background-color: transparent;
-  border: 2px solid #94a3b8;
-  color: #eaecef;
-  border-radius: 4px;
-  cursor: pointer;
   z-index: 20;
 }
 
-.videoContainer:fullscreen .floatingFullscreenButton {
-  bottom: 25px;
-  right: 25px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-color: rgba(255, 255, 255, 0.5);
+/* --- Controls Section --- */
+
+.controlsSection {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  /* Match video container width */
+  margin: 0 auto;
+  gap: 12px;
+  padding-top: 12px;
 }
 
-.floatingFullscreenButton:hover {
-  background-color: #111827;
-  border: 2px solid #111827;
+/* Unified Control Bar */
+.controlBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(31, 41, 55, 0.4);
+  /* Subtle dark background */
+  padding: 6px 16px;
+  /* Slightly tighter vertical padding */
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  gap: 16px;
+  height: 50px;
+  /* Fixed height consistency */
 }
 
-.videoContainer:fullscreen .floatingFullscreenButton:hover {
+.leftControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  /* Keep controls from shrinking */
+}
+
+.rightControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.centerControls {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* Mask overflow */
+  margin: 0 10px;
+  gap: 12px;
+}
+
+.topicsLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #9ca3af;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.filterIcon {
+  color: #6b7280;
+}
+
+.jumpPointsScrollContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  /* For scrollbar breathing room if visible */
+
+  /* Hide scrollbar for cleaner look */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+.jumpPointsScrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* Icon Buttons (Standard) */
+.iconButton {
+  background: transparent;
+  border: none;
+  color: #d1d5db;
+  /* Gray-300 */
+  padding: 8px;
+  border-radius: 9999px;
+  /* Circle hover */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.iconButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Text Icon Buttons (Labelled) */
+.textIconButton {
+  background: transparent;
+  border: none;
+  color: #e5e7eb;
+  padding: 6px 12px;
+  border-radius: 8px;
+  /* Standard rounding, not circle */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.textIconButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.buttonLabel {
+  display: inline-block;
+}
+
+/* Responsive: Hide labels on small screens */
+@media (max-width: 768px) {
+  .buttonLabel {
+    display: none;
+  }
+
+  .textIconButton {
+    padding: 8px;
+    border-radius: 9999px;
+  }
+}
+
+/* Settings Menu (Popup) */
+.settingsWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.settingsMenu {
+  position: absolute;
+  bottom: 120%;
+  /* Show above button */
+  left: 0;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  padding: 10px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 180px;
+  z-index: 50;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.settingsLabel {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.languageSelector {
+  padding: 4px 8px;
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  color: #eaecef;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.languageSelector:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+
+/* --- Jump Points (Chips) --- */
+/* Now used inside the scroll container */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  /* More compact */
+  border-radius: 9999px;
+  /* Pill shape */
+  background-color: rgba(255, 255, 255, 0.08);
+  /* Lighter bg so it pops inside dark bar */
+  color: #e5e7eb;
+  border: 1px solid transparent;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  /* Prevent wrapping inside key */
+}
+
+.chip:hover {
   background-color: rgba(255, 255, 255, 0.2);
-  border-color: white;
+  transform: translateY(0);
 }
+
+.activeChip {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  border: 1px solid #3b82f6;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+}
+
+.activeChip:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.clearFilterChip {
+  padding-left: 8px;
+  /* Adjust for icon */
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  border-color: #ef4444;
+}
+
+.clearFilterChip:hover {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.chipIcon {
+  opacity: 0.9;
+}
+
+
+/* Hide previous classes that are no longer used or reused improperly */
+.floatingFullscreenButton {
+  display: none;
+}
+
+.sectionImportant {
+  display: none;
+}
+
+/* Replaced by controlsSection */
