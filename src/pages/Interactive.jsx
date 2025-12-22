@@ -6,7 +6,7 @@ import Draw from "../components/Draw.jsx";
 import StoryPoint from "../components/StoryPoint.jsx";
 import AnimatedRivers from "../components/AnimatedRivers.jsx";
 import { Link } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import WaveAnimation from "../components/WaveAnimation";
 
 //imágenes
@@ -32,6 +32,20 @@ function Interactive() {
   const [positions, setPositions] = useState({});
   const hasInitialized = useRef(false);
 
+  const mainRef = useRef(null);
+  const itemRefs = useRef({});
+  const [offsets, setOffsets] = useState({});
+
+  const filteredData = useMemo(() => data.filter(
+    (item) =>
+      selectedItems.length === 0 ||
+      selectedItems.every(
+        (selected) =>
+          item.violencia.includes(selected) ||
+          item.tecnicas.includes(selected)
+      )
+  ), [data, selectedItems]);
+
   useEffect(() => {
     const calculatedSizes = {};
     const calculatedPositions = {};
@@ -49,6 +63,36 @@ function Interactive() {
     // }
   }, [data, setSelectedViolenceInContext]);
 
+  useEffect(() => {
+    const calculateOffsets = () => {
+      if (!mainRef.current) return;
+      const mainRect = mainRef.current.getBoundingClientRect();
+      const newOffsets = {};
+
+      filteredData.forEach((item) => {
+        const itemEl = itemRefs.current[item.id];
+        if (itemEl) {
+          const itemRect = itemEl.getBoundingClientRect();
+          // Distance from the bottom of the item to the bottom of the container
+          const distance = mainRect.bottom - itemRect.bottom;
+          newOffsets[item.id] = distance;
+        }
+      });
+      setOffsets(newOffsets);
+    };
+
+    calculateOffsets();
+    window.addEventListener("resize", calculateOffsets);
+
+    // Recalculate after a short delay to ensure rendering is complete
+    const timeoutId = setTimeout(calculateOffsets, 100);
+
+    return () => {
+      window.removeEventListener("resize", calculateOffsets);
+      clearTimeout(timeoutId);
+    };
+  }, [filteredData, positions, sizes]);
+
   return (
     <div className={styles.root}>
       <div className={styles.riversHeader}>
@@ -63,53 +107,47 @@ function Interactive() {
       <aside className={styles.aside}>
         <Filters />
       </aside>
-      <main className={styles.main}>
-        {data
-          .filter(
-            (item) =>
-              selectedItems.length === 0 ||
-              selectedItems.every(
-                (selected) =>
-                  item.violencia.includes(selected) ||
-                  item.tecnicas.includes(selected)
-              )
-          )
-          .map((item) => (
-            <Link
-              key={item.id}
-              to={`/${item.slug}`}
-              style={{
-                display: "flex",
-                position: "relative",
-                top: `${positions[item.id]}%`,
-                height: `calc(100% - ${positions[item.id]}%)`,
-              }}
-              className={styles.item_history}
-            >
-              <article className={styles.item_history_content}>
-                <p className={styles.item_history_title}>{item.title}</p>
-                <div className={styles.storyPointContainer}>
-                  <img
-                    style={{
-                      width: `${sizes[item.id]}px`,
-                      height: "auto",
-                    }}
-                    src={arbolCenital}
-                    alt="Arbol"
-                  />
-                  <div className={styles.storyPointOverlay}></div>
-                </div>
+      <main className={styles.main} ref={mainRef}>
+        {filteredData.map((item) => (
+          <Link
+            key={item.id}
+            to={`/${item.slug}`}
+            ref={(el) => (itemRefs.current[item.id] = el)}
+            style={{
+              display: "flex",
+              position: "relative",
+              top: `${positions[item.id]}%`,
+              height: `calc(100% - ${positions[item.id]}%)`,
+            }}
+            className={styles.item_history}
+          >
+            <article className={styles.item_history_content}>
+              <p className={styles.item_history_title}>{item.title}</p>
+              <div className={styles.storyPointContainer}>
                 <img
-                  src={treeImages[item.id % treeImages.length]}
-                  alt="Tree decoration"
-                  className={styles.treeImage}
                   style={{
-                    width: `${Math.floor(Math.random() * (120 - 80 + 1)) + 80}px`,
+                    width: `${sizes[item.id]}px`,
+                    height: "auto",
                   }}
+                  src={arbolCenital}
+                  alt="Arbol"
                 />
-              </article>
-            </Link>
-          ))}
+                <div className={styles.storyPointOverlay}></div>
+              </div>
+              <img
+                src={treeImages[item.id % treeImages.length]}
+                alt="Tree decoration"
+                className={styles.treeImage}
+                style={{
+                  width: `${Math.floor(Math.random() * (120 - 80 + 1)) + 80}px`,
+                  bottom: offsets[item.id] !== undefined
+                    ? `-${offsets[item.id] + (window.innerWidth < 768 ? 110 : 30)}px`
+                    : `-${window.innerWidth < 768 ? 80 : 30}px`
+                }}
+              />
+            </article>
+          </Link>
+        ))}
       </main>
       <section className={styles.waves}>
         <WaveAnimation numWaves={10} />
