@@ -1,13 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useData } from "../context/DataContext";
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import VideoPlayer from "../components/VideoPlayer";
 import styles from "../styles/pages/history.module.css";
 import BurgerButton from "../components/BurgerButton.jsx";
 import Draw from "../components/Draw.jsx";
 import WaveAnimation from "../components/WaveAnimation";
 import Bosque from "../components/Bosque.jsx";
+import BirdAnimation from "../components/BirdAnimation.jsx";
 
 // Imágenes
 import tree1 from "../assets/trees/1.webp";
@@ -96,7 +97,7 @@ const bunnyVideoData = {
 
 function History() {
   const { id } = useParams();
-  const { data, selectedViolence, violenceSlugs, extraData } = useData();
+  const { data, selectedViolence, violenceSlugs, extraData, drawnFrames } = useData();
   const navigate = useNavigate();
 
   const item = data.find((item) => item.slug === id);
@@ -157,8 +158,10 @@ function History() {
       .trim();
   };
 
-  const randomIndex = Math.floor(Math.random() * trees.length);
-  const treeImage = trees[randomIndex];
+  const treeImage = useMemo(() => {
+    const randomIndex = Math.floor(Math.random() * trees.length);
+    return trees[randomIndex];
+  }, []);
 
   return (
     <div className={styles.root}>
@@ -193,6 +196,9 @@ function History() {
                 />
               ))}
             </section>
+            {/* Animación del dibujo del usuario */}
+            {/* Animación del dibujo del usuario */}
+            <BirdAnimation frames={drawnFrames} />
           </aside>
         </section>
 

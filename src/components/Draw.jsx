@@ -5,6 +5,7 @@ import styles from "../styles/components/Draw.module.css";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
 import { saveAs } from "file-saver";
+import { useData } from "../context/DataContext";
 
 //imágenes
 import papel from "../assets/Papel.webp";
@@ -46,6 +47,7 @@ export default function Draw() {
   const [hasStartedDrawing, setHasStartedDrawing] = useState(false);
   const intervalRef = useRef(null);
   const ffmpegRef = useRef(null);
+  const { setDrawnFrames } = useData();
 
   const getCurrentCanvas = () => fabricCanvasRef.current[currentFrame];
 
@@ -83,27 +85,10 @@ export default function Draw() {
         isDrawingMode: true,
       });
 
-      let brush;
-      switch (brushType) {
-        case "spray":
-          brush = new fabric.SprayBrush(fabricCanvas);
-          break;
-        case "circle":
-          brush = new fabric.CircleBrush(fabricCanvas);
-          break;
-        case "pattern":
-          brush = new fabric.PatternBrush(fabricCanvas);
-          break;
-        case "pencil":
-        default:
-          brush = new fabric.PencilBrush(fabricCanvas);
-          break;
-      }
+      fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(fabricCanvas); // Default placeholder
+      fabricCanvas.freeDrawingBrush.width = brushSize;
 
-      brush.color = hexToRgba("#000000", brushOpacity);
-      brush.width = brushSize;
-
-      fabricCanvas.freeDrawingBrush = brush;
+      // La configuración real se aplicará vía useEffect
 
       // Agregar listeners para detectar cambios en el canvas
       const updateFrameStatus = () => {
@@ -152,49 +137,43 @@ export default function Draw() {
     }
   };
 
-  const selectTool = (selectedTool) => {
+  // Efecto para aplicar la configuración del pincel al canvas actual
+  useEffect(() => {
     const canvas = getCurrentCanvas();
     if (!canvas) return;
 
     let brush;
-    if (selectedTool === "eraser") {
+    if (tool === "eraser") {
       brush = new fabric.PencilBrush(canvas);
-      brush.color = "#fff";
+      brush.color = "#fff"; // Borrador pinta en blanco
     } else {
-      brush = new fabric.PencilBrush(canvas);
+      switch (brushType) {
+        case "spray":
+          brush = new fabric.SprayBrush(canvas);
+          break;
+        case "circle":
+          brush = new fabric.CircleBrush(canvas);
+          break;
+        case "pattern":
+          brush = new fabric.PatternBrush(canvas);
+          break;
+        case "pencil":
+        default:
+          brush = new fabric.PencilBrush(canvas);
+          break;
+      }
       brush.color = hexToRgba("#000000", brushOpacity);
     }
 
     brush.width = brushSize;
     canvas.freeDrawingBrush = brush;
+  }, [currentFrame, tool, brushType, brushSize, brushOpacity]); // Se ejecuta cuando cambia cualquier configuración o el frame
+
+  const selectTool = (selectedTool) => {
     setTool(selectedTool);
   };
 
   const changeBrush = (type) => {
-    const canvas = getCurrentCanvas();
-    if (!canvas) return;
-
-    let brush;
-    switch (type) {
-      case "spray":
-        brush = new fabric.SprayBrush(canvas);
-        break;
-      case "circle":
-        brush = new fabric.CircleBrush(canvas);
-        break;
-      case "pattern":
-        brush = new fabric.PatternBrush(canvas);
-        break;
-      case "pencil":
-      default:
-        brush = new fabric.PencilBrush(canvas);
-        break;
-    }
-
-    brush.color = hexToRgba("#000000", brushOpacity);
-    brush.width = brushSize;
-
-    canvas.freeDrawingBrush = brush;
     setBrushType(type);
     setTool("pencil");
   };
@@ -206,27 +185,12 @@ export default function Draw() {
     return `rgba(${r},${g},${b},${alpha})`;
   }
 
-  const updateBrushOpacity = (opacity) => {
-    const canvas = getCurrentCanvas();
-    if (canvas?.freeDrawingBrush) {
-      canvas.freeDrawingBrush.color = hexToRgba("#000000", opacity);
-    }
-  };
-
   const handleBrushOpacityChange = (e) => {
-    const newOpacity = parseFloat(e.target.value);
-    setBrushOpacity(newOpacity);
-    updateBrushOpacity(newOpacity);
+    setBrushOpacity(parseFloat(e.target.value));
   };
 
   const handleBrushSizeChange = (e) => {
-    const newSize = parseInt(e.target.value);
-    setBrushSize(newSize);
-
-    const canvas = getCurrentCanvas();
-    if (canvas?.freeDrawingBrush) {
-      canvas.freeDrawingBrush.width = newSize;
-    }
+    setBrushSize(parseInt(e.target.value));
   };
 
   const startPreview = () => {
@@ -248,7 +212,7 @@ export default function Draw() {
   }, []);
 
   // Función para capturar los fotogramas
-  const captureFrames = async () => {
+  const captureFrames = async (isTransparent = false) => {
     const framesData = [];
 
     try {
@@ -260,8 +224,12 @@ export default function Draw() {
           // Guardar el color de fondo original
           const originalBackgroundColor = canvas.backgroundColor;
 
-          // Establecer fondo blanco temporalmente
-          canvas.backgroundColor = "#FFFFFF";
+          // Establecer fondo según el modo (blanco para video, transparente para UI)
+          if (!isTransparent) {
+            canvas.backgroundColor = "#FFFFFF";
+          } else {
+            canvas.backgroundColor = null; // Transparente
+          }
           canvas.renderAll();
 
           // Convertir a imagen base64
@@ -276,15 +244,20 @@ export default function Draw() {
           canvas.renderAll();
         }
       }
-      
+
       // Agregar un fotograma en blanco adicional al final
       // Crear un canvas temporal con fondo blanco
       const tempCanvas = document.createElement("canvas");
       const tempCtx = tempCanvas.getContext("2d");
       tempCanvas.width = fabricCanvasRef.current[0]?.width || 700;
       tempCanvas.height = fabricCanvasRef.current[0]?.height || 450;
-      tempCtx.fillStyle = "#FFFFFF";
-      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+      if (!isTransparent) {
+        tempCtx.fillStyle = "#FFFFFF";
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      }
+      // Si es transparente, no necesitamos llenar el rect, ya es transparente por defecto
+
       const blankFrameDataUrl = tempCanvas.toDataURL("image/png");
       framesData.push(blankFrameDataUrl);
 
@@ -294,6 +267,28 @@ export default function Draw() {
       throw error;
     }
   };
+
+  // Efecto para guardar los frames en el contexto cuando todos estén dibujados
+  useEffect(() => {
+    const saveFramesToContext = async () => {
+      if (areAllFramesDrawn()) {
+        try {
+          // Capturar frames con fondo transparente para la animación en la UI
+          const frames = await captureFrames(true);
+          // Eliminamos el último frame (blanco/transparente) que captureFrames agrega para el video
+          const validFrames = frames.slice(0, totalFrames);
+          setDrawnFrames(validFrames);
+          console.log("Frames guardados en el contexto");
+        } catch (error) {
+          console.error("Error guardando frames en contexto:", error);
+        }
+      }
+    };
+
+    // Debounce pequeño para evitar múltiples llamadas seguidas
+    const timeoutId = setTimeout(saveFramesToContext, 500);
+    return () => clearTimeout(timeoutId);
+  }, [framesDrawn]);
 
   // Función para convertir los fotogramas a video
   const convertFramesToVideo = async (framesData) => {
@@ -372,8 +367,10 @@ export default function Draw() {
       // Mostrar mensaje de carga
       setIsProcessing(true);
 
-      // Capturar fotogramas
-      const framesData = await captureFrames();
+      setIsProcessing(true);
+
+      // Capturar fotogramas (con fondo blanco para el video)
+      const framesData = await captureFrames(false);
 
       // Verificar que tengamos fotogramas
       if (framesData.length === 0) {

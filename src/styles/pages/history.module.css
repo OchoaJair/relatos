@@ -99,6 +99,8 @@
   height: 100%;
   left: 0;
   position: absolute;
+  overflow: hidden;
+  /* Para que la animación no salga del contenedor */
 }
 
 .galleryStack {

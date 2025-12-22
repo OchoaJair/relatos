@@ -28,6 +28,8 @@ export const DataProvider = ({ children }) => {
     return savedViolenceSlugs ? JSON.parse(savedViolenceSlugs) : [];
   }); // Estado para almacenar los slugs basados en las violencias seleccionadas
 
+  const [drawnFrames, setDrawnFrames] = useState([]); // Estado para los frames dibujados por el usuario
+
   const setSelectedItemsInContext = (items) => {
     setSelectedItems(items); // Actualiza los elementos seleccionados
     localStorage.setItem("selectedItems", JSON.stringify(items));
@@ -36,14 +38,14 @@ export const DataProvider = ({ children }) => {
   const setSelectedViolenceInContext = (violenceIds) => {
     setSelectedViolenceIds(violenceIds);
     localStorage.setItem("selectedViolenceIds", JSON.stringify(violenceIds));
-    
+
     // Calcular los slugs basados en la intersección de todas las violencias seleccionadas
     if (violenceIds && violenceIds.length > 0) {
-      const slugs = data.filter(item => 
-        item.violencia && 
+      const slugs = data.filter(item =>
+        item.violencia &&
         violenceIds.every(violenceId => item.violencia.includes(violenceId))
       ).map(item => item.slug);
-      
+
       setViolenceSlugs(slugs);
       localStorage.setItem("violenceSlugs", JSON.stringify(slugs));
       console.log(`Slugs para la intersección de violencias ID [${violenceIds.join(', ')}]:`, slugs);
@@ -64,14 +66,14 @@ export const DataProvider = ({ children }) => {
         setData(projects);
         localStorage.setItem("data", JSON.stringify(projects));
         localStorage.setItem("imgs", JSON.stringify(images));
-        
+
         // Si ya había violencias seleccionadas, recalcular los slugs con los nuevos datos
         if (selectedViolenceIds.length > 0) {
-          const slugs = projects.filter(item => 
-            item.violencia && 
+          const slugs = projects.filter(item =>
+            item.violencia &&
             selectedViolenceIds.every(violenceId => item.violencia.includes(violenceId))
           ).map(item => item.slug);
-          
+
           setViolenceSlugs(slugs);
           localStorage.setItem("violenceSlugs", JSON.stringify(slugs));
         }
@@ -106,6 +108,8 @@ export const DataProvider = ({ children }) => {
         selectedViolence: selectedViolenceIds, // Mantener nombre original para compatibilidad
         setSelectedViolenceInContext,
         violenceSlugs,
+        drawnFrames,
+        setDrawnFrames
       }}
     >
       {children}
