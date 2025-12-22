@@ -30,7 +30,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
   width: 100%;
-  min-height: calc(100vh - 277px);
+  min-height: calc(100vh - 450px);
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 20px;
@@ -128,7 +128,7 @@ a {
 
 .treeImage {
   position: absolute;
-  bottom: 150px;
+  bottom: 0px;
   left: 50%;
   transform: translateX(-50%);
   pointer-events: none;
