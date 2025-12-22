@@ -197,8 +197,6 @@ function History() {
               ))}
             </section>
             {/* Animación del dibujo del usuario */}
-            {/* Animación del dibujo del usuario */}
-            <BirdAnimation frames={drawnFrames} />
           </aside>
         </section>
 
@@ -291,6 +289,9 @@ function History() {
           </svg>
         </Link>
       </section>
+
+      {/* Animación global del pájaro */}
+      <BirdAnimation frames={drawnFrames} />
     </div>
   );
 }
