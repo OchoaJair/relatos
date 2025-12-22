@@ -32,6 +32,11 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
 
   const [subtitleUrl, setSubtitleUrl] = useState(null);
 
+  const capitalizeFirstLetter = (string) => {
+    if (!string) return "";
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   // Helper to convert internal subtitle format to WebVTT
   const convertToVTT = (subs) => {
     let vttContent = "WEBVTT\n\n";
@@ -351,7 +356,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
                     title="Quitar filtro"
                   >
                     <XCircle size={14} className={styles.chipIcon} />
-                    <span>{activeJumpLabel}</span>
+                    <span>{capitalizeFirstLetter(activeJumpLabel)}</span>
                   </button>
                 )}
 
@@ -361,7 +366,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
                     onClick={() => handleJump(label)}
                     className={styles.chip}
                   >
-                    {label}
+                    {capitalizeFirstLetter(label)}
                   </button>
                 ))}
               </div>
