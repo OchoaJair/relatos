@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width: 546px;
+  max-width: 100%;
 }
 
 .navList {
@@ -22,7 +22,7 @@
   /* Ligeramente más grande para legibilidad */
   color: #5b5f5e;
   font-weight: 500;
-  padding: 5px 14px;
+  padding: 4px 10px;
   /* Padding equilibrado */
   border-radius: 4px;
   /* Bordes suaves pero no pills */
@@ -49,4 +49,10 @@
   /* El color de fondo define el borde */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   /* Sombra suave para elevación */
+}
+
+@media screen and (width >=768px) {
+  .nav {
+    max-width: 60%;
+  }
 }

@@ -30,7 +30,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
   width: 100%;
-  min-height: calc(100vh - 450px);
+  min-height: calc(100vh - 320px);
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 20px;
@@ -45,7 +45,7 @@ a {
   display: flex;
   width: 100%;
   position: absolute;
-  top: calc(100% + 20px);
+  top: calc(100% + 200px);
 }
 
 .draw {
@@ -97,6 +97,9 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
 }
 
 .storyPointContainer img {
@@ -142,9 +145,72 @@ a {
   left: 0;
 }
 
+.aside {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  /* Added to contain the absolute button */
+}
+
+.storyExplanation {
+  position: absolute;
+  top: 100%;
+  /* Positions it right below the filters without taking space in the flex flow */
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: "Bitter Variable", system-ui;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #2d9696;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid #2d9696;
+  padding: 10px 24px;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(45, 150, 150, 0.15);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideInUp 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.storyExplanation svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.4s ease;
+}
+
+.storyExplanation:hover {
+  background-color: #2d9696;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(45, 150, 150, 0.3);
+}
+
+.storyExplanation:hover svg {
+  transform: scale(1.1);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media screen and (width >=768px) {
   .waves {
-    top: calc(100% - 90px);
+    top: calc(100% - 0px);
   }
 
   .draw {
@@ -158,6 +224,10 @@ a {
     margin-top: 20px;
     padding-left: 40px;
     padding-right: 40px;
+  }
+
+  .waves {
+    top: calc(100% - 60px);
   }
 
   .aside {

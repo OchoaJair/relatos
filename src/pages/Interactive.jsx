@@ -5,13 +5,14 @@ import Filters from "../components/Filters.jsx";
 import Draw from "../components/Draw.jsx";
 import StoryPoint from "../components/StoryPoint.jsx";
 import AnimatedRivers from "../components/AnimatedRivers.jsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef, useMemo } from "react";
 import WaveAnimation from "../components/WaveAnimation";
 
 //imágenes
 import relatosLogoNegro from "../assets/RelatosLogo.svg";
 import arbolCenital from "../assets/arbolCenital.png";
+import { Play } from "lucide-react";
 
 // Importar imágenes de árboles
 import tree1 from "../assets/trees/1.webp";
@@ -31,6 +32,7 @@ function Interactive() {
   const [sizes, setSizes] = useState({});
   const [positions, setPositions] = useState({});
   const hasInitialized = useRef(false);
+  const navigate = useNavigate(); // Hook for navigation
 
   const mainRef = useRef(null);
   const itemRefs = useRef({});
@@ -50,7 +52,7 @@ function Interactive() {
     const calculatedSizes = {};
     const calculatedPositions = {};
     data.forEach((item) => {
-      calculatedSizes[item.id] = Math.floor(Math.random() * (80 - 40 + 1)) + 40;
+      calculatedSizes[item.id] = Math.floor(Math.random() * (95 - 25 + 1)) + 25;
       calculatedPositions[item.id] = Math.random() * 35; // Posición en porcentaje (0% a 35%)
     });
     setSizes(calculatedSizes);
@@ -106,6 +108,15 @@ function Interactive() {
       </header>
       <aside className={styles.aside}>
         <Filters />
+        {selectedItems.length > 0 && filteredData.length > 0 && (
+          <button
+            className={styles.storyExplanation}
+            onClick={() => navigate(`/${filteredData[0].slug}`)}
+          >
+            <Play size={18} fill="currentColor" />
+            <span>mira tu largometraje</span>
+          </button>
+        )}
       </aside>
       <main className={styles.main} ref={mainRef}>
         {filteredData.map((item) => (
