@@ -130,7 +130,7 @@ function Interactive() {
             onClick={() => navigate(`/${filteredData[0].slug}`)}
           >
             <Play size={18} fill="currentColor" />
-            <span>mira tu largometraje</span>
+            <span>Mira tu largometraje</span>
           </button>
         )}
       </aside>

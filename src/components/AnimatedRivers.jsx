@@ -141,7 +141,7 @@ const AnimatedRivers = () => {
         width: "100%",
         height: "100%",
         overflow: "hidden",
-        zIndex: 9999999, // Aseguramos que esté detrás de todos los elementos
+        zIndex: 0, // Aseguramos que esté detrás de todos los elementos
         pointerEvents: "none", // Evitamos que intercepte eventos del mouse
       }}
     >
