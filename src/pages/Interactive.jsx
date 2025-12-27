@@ -37,6 +37,7 @@ function Interactive() {
   const mainRef = useRef(null);
   const itemRefs = useRef({});
   const [offsets, setOffsets] = useState({});
+  const [mainBottomInRoot, setMainBottomInRoot] = useState(0);
 
   const filteredData = useMemo(() => data.filter(
     (item) =>
@@ -69,6 +70,14 @@ function Interactive() {
     const calculateOffsets = () => {
       if (!mainRef.current) return;
       const mainRect = mainRef.current.getBoundingClientRect();
+
+      // Loggear dimensiones de main
+      console.log("Main element dimensions:", {
+        height: mainRect.height,
+        topRelativeToViewport: mainRect.top,
+        absoluteTop: mainRect.top + window.scrollY
+      });
+
       const newOffsets = {};
 
       filteredData.forEach((item) => {
@@ -81,6 +90,13 @@ function Interactive() {
         }
       });
       setOffsets(newOffsets);
+
+      // Calcular el final de main relativo al contenedor root
+      const parentEl = mainRef.current.parentElement;
+      if (parentEl) {
+        const parentRect = parentEl.getBoundingClientRect();
+        setMainBottomInRoot(mainRect.bottom - parentRect.top);
+      }
     };
 
     calculateOffsets();
@@ -151,16 +167,22 @@ function Interactive() {
                 className={styles.treeImage}
                 style={{
                   width: `${Math.floor(Math.random() * (120 - 80 + 1)) + 80}px`,
-                  bottom: offsets[item.id] !== undefined
-                    ? `-${offsets[item.id] + (window.innerWidth < 768 ? 110 : 30)}px`
-                    : `-${window.innerWidth < 768 ? 80 : 30}px`
+                  top: offsets[item.id] !== undefined
+                    ? `calc(100% + ${offsets[item.id]}px)`
+                    : "100%",
+                  bottom: "auto"
                 }}
               />
             </article>
           </Link>
         ))}
       </main>
-      <section className={styles.waves}>
+      <section
+        className={styles.waves}
+        style={{
+          top: `${mainBottomInRoot + (window.innerWidth < 768 ? 50 : 30)}px`
+        }}
+      >
         <WaveAnimation numWaves={10} />
       </section>
       <section className={styles.draw}>

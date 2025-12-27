@@ -11,6 +11,9 @@
   background-image: url("/src/assets/clean-gray-paper.png");
   color: black;
   font-family: "Bitter Variable", system-ui;
+  position: relative;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .header {
@@ -30,7 +33,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
   width: 100%;
-  min-height: calc(100vh - 320px);
+  min-height: calc(100vh - 420px);
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 20px;
@@ -45,7 +48,6 @@ a {
   display: flex;
   width: 100%;
   position: absolute;
-  top: calc(100% + 200px);
 }
 
 .draw {
@@ -209,10 +211,6 @@ a {
 }
 
 @media screen and (width >=768px) {
-  .waves {
-    top: calc(100% - 0px);
-  }
-
   .draw {
     gap: 50px;
     max-width: 80%;
@@ -224,10 +222,6 @@ a {
     margin-top: 20px;
     padding-left: 40px;
     padding-right: 40px;
-  }
-
-  .waves {
-    top: calc(100% - 60px);
   }
 
   .aside {
