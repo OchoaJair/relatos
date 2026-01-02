@@ -90,11 +90,7 @@ function Interactive() {
       if (!mainRef.current) return;
       const mainRect = mainRef.current.getBoundingClientRect();
 
-      console.log("Main element dimensions:", {
-        height: mainRect.height,
-        topRelativeToViewport: mainRect.top,
-        absoluteTop: mainRect.top + window.scrollY
-      });
+
 
       const computedStyle = window.getComputedStyle(mainRef.current);
       const columns = computedStyle.gridTemplateColumns.split(" ").length;
@@ -103,7 +99,7 @@ function Interactive() {
       const children = Array.from(mainRef.current.children);
       // Count unique vertical positions to determine rows
       const gridRows = new Set(children.map((child) => child.offsetTop)).size;
-      console.log(`Grid Layout: ${columns} Columns, ${gridRows} Rows`);
+      // console.log(`Grid Layout: ${columns} Columns, ${gridRows} Rows`);
 
       const newOffsets = {};
 

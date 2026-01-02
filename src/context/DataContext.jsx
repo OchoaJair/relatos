@@ -48,7 +48,7 @@ export const DataProvider = ({ children }) => {
 
       setViolenceSlugs(slugs);
       localStorage.setItem("violenceSlugs", JSON.stringify(slugs));
-      console.log(`Slugs para la intersección de violencias ID [${violenceIds.join(', ')}]:`, slugs);
+      // console.log(`Slugs para la intersección de violencias ID [${violenceIds.join(', ')}]:`, slugs);
     } else {
       // Si no hay violencias seleccionadas, limpiar los slugs
       setViolenceSlugs([]);
@@ -78,7 +78,7 @@ export const DataProvider = ({ children }) => {
           localStorage.setItem("violenceSlugs", JSON.stringify(slugs));
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
 
@@ -89,7 +89,7 @@ export const DataProvider = ({ children }) => {
         setExtraData(extra);
         localStorage.setItem("extraData", JSON.stringify(extra));
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
 
