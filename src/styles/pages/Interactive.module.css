@@ -76,7 +76,7 @@ a {
 .item_history {
   display: flex;
   justify-content: center;
-  width: fit-content;
+  width: 100%;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
   transition: border-color ease-in-out 0.3s;
@@ -229,6 +229,7 @@ a {
 
   .aside {
     position: relative;
-    top: -80px;
+    margin-top: -60px;
+    margin-bottom: 20px;
   }
 }

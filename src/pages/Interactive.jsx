@@ -31,6 +31,7 @@ function Interactive() {
   const { data, selectedItems, setSelectedViolenceInContext } = useData();
   const [sizes, setSizes] = useState({});
   const [positions, setPositions] = useState({});
+  const [rotations, setRotations] = useState({});
   const hasInitialized = useRef(false);
   const navigate = useNavigate(); // Hook for navigation
 
@@ -38,6 +39,7 @@ function Interactive() {
   const itemRefs = useRef({});
   const [offsets, setOffsets] = useState({});
   const [mainBottomInRoot, setMainBottomInRoot] = useState(0);
+  const [gridColumns, setGridColumns] = useState(0);
 
   const filteredData = useMemo(() => data.filter(
     (item) =>
@@ -49,15 +51,32 @@ function Interactive() {
       )
   ), [data, selectedItems]);
 
+  const visibleTreeIds = useMemo(() => {
+    if (gridColumns <= 0 || filteredData.length === 0) return new Set();
+    const selectedIds = new Set();
+    for (let c = 0; c < gridColumns; c++) {
+      const candidates = filteredData.filter((_, index) => index % gridColumns === c);
+      if (candidates.length > 0) {
+        const winner = candidates[Math.floor(Math.random() * candidates.length)];
+        selectedIds.add(winner.id);
+      }
+    }
+    return selectedIds;
+  }, [filteredData, gridColumns]);
+
   useEffect(() => {
     const calculatedSizes = {};
     const calculatedPositions = {};
+    const calculatedRotations = {};
     data.forEach((item) => {
       calculatedSizes[item.id] = Math.floor(Math.random() * (95 - 25 + 1)) + 25;
       calculatedPositions[item.id] = Math.random() * 35; // Posición en porcentaje (0% a 35%)
+      // Random rotation 0 to 360 degrees
+      calculatedRotations[item.id] = Math.floor(Math.random() * 360);
     });
     setSizes(calculatedSizes);
     setPositions(calculatedPositions);
+    setRotations(calculatedRotations);
 
     // Limpiar los datos de violencia seleccionada solo en la primera carga
     // if (!hasInitialized.current) {
@@ -71,12 +90,20 @@ function Interactive() {
       if (!mainRef.current) return;
       const mainRect = mainRef.current.getBoundingClientRect();
 
-      // Loggear dimensiones de main
       console.log("Main element dimensions:", {
         height: mainRect.height,
         topRelativeToViewport: mainRect.top,
         absoluteTop: mainRect.top + window.scrollY
       });
+
+      const computedStyle = window.getComputedStyle(mainRef.current);
+      const columns = computedStyle.gridTemplateColumns.split(" ").length;
+      setGridColumns(columns);
+
+      const children = Array.from(mainRef.current.children);
+      // Count unique vertical positions to determine rows
+      const gridRows = new Set(children.map((child) => child.offsetTop)).size;
+      console.log(`Grid Layout: ${columns} Columns, ${gridRows} Rows`);
 
       const newOffsets = {};
 
@@ -155,24 +182,27 @@ function Interactive() {
                   style={{
                     width: `${sizes[item.id]}px`,
                     height: "auto",
+                    transform: `rotate(${rotations[item.id] || 0}deg)`,
                   }}
                   src={arbolCenital}
                   alt="Arbol"
                 />
                 <div className={styles.storyPointOverlay}></div>
               </div>
-              <img
-                src={treeImages[item.id % treeImages.length]}
-                alt="Tree decoration"
-                className={styles.treeImage}
-                style={{
-                  width: `${Math.floor(Math.random() * (120 - 80 + 1)) + 80}px`,
-                  top: offsets[item.id] !== undefined
-                    ? `calc(100% + ${offsets[item.id]}px)`
-                    : "100%",
-                  bottom: "auto"
-                }}
-              />
+              {visibleTreeIds.has(item.id) && (
+                <img
+                  src={treeImages[item.id % treeImages.length]}
+                  alt="Tree decoration"
+                  className={styles.treeImage}
+                  style={{
+                    width: `${Math.floor(Math.random() * (120 - 80 + 1)) + 80}px`,
+                    top: offsets[item.id] !== undefined
+                      ? `calc(100% + ${offsets[item.id]}px)`
+                      : "100%",
+                    bottom: "auto"
+                  }}
+                />
+              )}
             </article>
           </Link>
         ))}
@@ -188,7 +218,7 @@ function Interactive() {
       <section className={styles.draw}>
         <Draw />
       </section>
-    </div>
+    </div >
   );
 }
 

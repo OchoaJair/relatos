@@ -1,15 +1,31 @@
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   max-width: 100%;
+}
+
+.filtersSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionTitle {
+  font-family: "Bitter Variable", system-ui, serif;
+  font-size: 14px;
+  color: #888;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-left: 2px;
 }
 
 .navList {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  /* Un poco más de aire */
   list-style: none;
   padding: 0;
   margin: 0;
@@ -17,19 +33,14 @@
 
 .navListItem {
   font-family: "Bitter Variable", system-ui, serif;
-  /* Tipografía del proyecto */
   font-size: 14px;
-  /* Ligeramente más grande para legibilidad */
   color: #5b5f5e;
   font-weight: 500;
-  padding: 4px 10px;
-  /* Padding equilibrado */
-  border-radius: 4px;
-  /* Bordes suaves pero no pills */
+  padding: 6px 14px;
+  border-radius: 20px;
+  /* More pill-like */
   border: 1px solid #d0d0d0;
-  /* Borde sutil por defecto */
-  background-color: transparent;
-  /* Fondo transparente */
+  background-color: #ebebeb;
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
@@ -37,8 +48,30 @@
 
 .navListItem:hover {
   border-color: #a0a0a0;
-  background-color: rgba(0, 0, 0, 0.03);
-  /* Sutil gris al hover */
+  background-color: #dcdcdc;
+  transform: translateY(-1px);
+}
+
+/* Technique filters specific styles */
+.techniqueItem {
+  font-family: "Bitter Variable", system-ui, serif;
+  font-size: 13px;
+  color: #444;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 6px;
+  /* Slightly more rectangular */
+  border: 1px dashed #b0b0b0;
+  /* Dashed border to signify "technique/draft" */
+  background-color: #e2e2e2;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.techniqueItem:hover {
+  border-color: #888;
+  background-color: #d5d5d5;
   transform: translateY(-1px);
 }
 
@@ -46,9 +79,15 @@
   color: white !important;
   font-weight: 600;
   border-color: transparent !important;
-  /* El color de fondo define el borde */
+  border-style: solid !important;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  /* Sombra suave para elevación */
+}
+
+.divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 4px 0;
+  width: 100%;
 }
 
 @media screen and (width >=768px) {

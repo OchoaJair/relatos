@@ -48,55 +48,60 @@ function Filters() {
 
   return (
     <nav className={styles.nav}>
-      <ul className={styles.navList}>
-        <li
-          onClick={() => handleResetFilters()}
-          className={`${styles.navListItem} ${selectedItem.length === 0 ? styles.selected : ""
-            }`}
-          style={
-            selectedItem.length === 0
-              ? { backgroundColor: "#2d9696" } // Color por defecto para "Todos"
-              : {}
-          }
-        >
-          Todos
-        </li>
-        {extraData.violencia.map((item, index) => {
-          const active = isSelected(item.id);
-          // Asigna un color consistente basado en el índice o id, o mantén el aleatorio si se prefiere,
-          // pero para UX estable es mejor un color fijo o determinista. 
-          // Usaremos el array colors cíclicamente para consistencia visual en estado activo.
-          const activeColor = colors[index % colors.length];
+      <div className={styles.filtersSection}>
+        <ul className={styles.navList}>
+          <li
+            onClick={() => handleResetFilters()}
+            className={`${styles.navListItem} ${selectedItem.length === 0 ? styles.selected : ""
+              }`}
+            style={
+              selectedItem.length === 0
+                ? { backgroundColor: "#2d9696" } // Color por defecto para "Todos"
+                : {}
+            }
+          >
+            Todos
+          </li>
+          {extraData.violencia.map((item, index) => {
+            const active = isSelected(item.id);
+            const activeColor = colors[index % colors.length];
 
-          return (
-            <li
-              key={item.id}
-              onClick={() => handleItemClick(item.id)}
-              className={`${styles.navListItem} ${active ? styles.selected : ""}`}
-              style={active ? { backgroundColor: activeColor } : {}}
-            >
-              {item.name}
-            </li>
-          );
-        })}
-      </ul>
-      <ul className={styles.navList}>
-        {extraData.tecnicas.map((item, index) => {
-          const active = isSelected(item.id);
-          const activeColor = colors[(index + 3) % colors.length];
+            return (
+              <li
+                key={item.id}
+                onClick={() => handleItemClick(item.id)}
+                className={`${styles.navListItem} ${active ? styles.selected : ""}`}
+                style={active ? { backgroundColor: activeColor } : {}}
+              >
+                {item.name}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
-          return (
-            <li
-              key={item.id}
-              onClick={() => handleItemClick(item.id)}
-              className={`${styles.navListItem} ${active ? styles.selected : ""}`}
-              style={active ? { backgroundColor: activeColor } : {}}
-            >
-              {item.name}
-            </li>
-          );
-        })}
-      </ul>
+      <div className={styles.divider}></div>
+
+      <div className={styles.filtersSection}>
+
+        <ul className={styles.navList}>
+          {extraData.tecnicas.map((item, index) => {
+            const active = isSelected(item.id);
+            const activeColor = colors[(index + 3) % colors.length];
+
+            return (
+              <li
+                key={item.id}
+                onClick={() => handleItemClick(item.id)}
+                className={`${styles.techniqueItem} ${active ? styles.selected : ""}`}
+                style={active ? { backgroundColor: activeColor } : {}}
+              >
+                {item.name}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </nav>
   );
 }

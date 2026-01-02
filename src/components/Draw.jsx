@@ -35,8 +35,8 @@ export default function Draw() {
   const fabricCanvasRef = useRef([]);
   const [tool, setTool] = useState("pencil");
   const [brushType, setBrushType] = useState("spray");
-  const [brushSize, setBrushSize] = useState(1);
-  const [brushOpacity, setBrushOpacity] = useState(0.3);
+  const [brushSize, setBrushSize] = useState(4);
+  const [brushOpacity, setBrushOpacity] = useState(0.6);
   const [currentFrame, setCurrentFrame] = useState(0);
   const totalFrames = 8;
   const [isPlaying, setIsPlaying] = useState(false);
@@ -561,7 +561,7 @@ export default function Draw() {
                 <input
                   type="range"
                   min="0.1"
-                  max="0.25"
+                  max="0.8"
                   step="0.01"
                   value={brushOpacity}
                   onChange={handleBrushOpacityChange}
