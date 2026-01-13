@@ -17,6 +17,7 @@
   /* Max constraint for large screens */
   justify-content: center;
   margin-top: 10px;
+  z-index: 60;
 }
 
 .videoContainer {

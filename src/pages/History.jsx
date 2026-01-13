@@ -8,7 +8,6 @@ import BurgerButton from "../components/BurgerButton.jsx";
 import Draw from "../components/Draw.jsx";
 import WaveAnimation from "../components/WaveAnimation";
 import Bosque from "../components/Bosque.jsx";
-import BirdAnimation from "../components/BirdAnimation.jsx";
 
 // Imágenes
 import tree1 from "../assets/trees/1.webp";
@@ -97,7 +96,7 @@ const bunnyVideoData = {
 
 function History() {
   const { id } = useParams();
-  const { data, selectedViolence, violenceSlugs, extraData, drawnFrames } = useData();
+  const { data, selectedViolence, violenceSlugs, extraData } = useData();
   const navigate = useNavigate();
 
   const item = data.find((item) => item.slug === id);
@@ -289,9 +288,6 @@ function History() {
           </svg>
         </Link>
       </section>
-
-      {/* Animación global del pájaro */}
-      <BirdAnimation frames={drawnFrames} />
     </div>
   );
 }

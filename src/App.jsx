@@ -4,11 +4,14 @@ import About from "./pages/About";
 import Interactive from "./pages/Interactive";
 import History from "./pages/History";
 import RiverTest from "./components/RiverTest";
-import { DataProvider } from "./context/DataContext";
+import BirdAnimation from "./components/BirdAnimation";
+import { DataProvider, useData } from "./context/DataContext";
 
-function App() {
+function AppContent() {
+  const { drawnFrames } = useData();
+
   return (
-    <DataProvider>
+    <>
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -18,6 +21,15 @@ function App() {
           <Route path="/:id" element={<History />} />
         </Routes>
       </Router>
+      <BirdAnimation frames={drawnFrames} />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <DataProvider>
+      <AppContent />
     </DataProvider>
   );
 }

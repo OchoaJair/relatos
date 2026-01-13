@@ -122,16 +122,16 @@ const SingleBird = ({ frames }) => {
 };
 
 const BirdAnimation = ({ frames, count = 6 }) => {
-    if (!frames || frames.length === 0) return null;
+    if (!frames || frames.length < 8) return null;
 
     return (
         <div
             style={{
-                position: "absolute",
+                position: "fixed",
                 top: 0,
                 left: 0,
                 width: "100vw",
-                height: "85dvh",
+                height: "100dvh",
                 zIndex: 50,
                 pointerEvents: "none",
                 overflow: "hidden",
