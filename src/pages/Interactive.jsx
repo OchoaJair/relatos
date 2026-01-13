@@ -139,11 +139,15 @@ function Interactive() {
       <div className={styles.riversHeader}>
         <AnimatedRivers />
       </div>
-      <header className={styles.header}>
+      <div className={styles.burgerButtonContainer}>
         <BurgerButton />
+      </div>
+      <div className={styles.logoContainer}>
         <Link to="/">
           <img src={relatosLogoNegro} alt="Logo de Relatos" />
         </Link>
+      </div>
+      <header className={styles.header}>
       </header>
       <aside className={styles.aside}>
         <Filters />
