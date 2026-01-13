@@ -28,7 +28,10 @@ export const DataProvider = ({ children }) => {
     return savedViolenceSlugs ? JSON.parse(savedViolenceSlugs) : [];
   }); // Estado para almacenar los slugs basados en las violencias seleccionadas
 
-  const [drawnFrames, setDrawnFrames] = useState([]); // Estado para los frames dibujados por el usuario
+  const [drawnFrames, setDrawnFrames] = useState(() => {
+    const savedFrames = localStorage.getItem("drawnFrames");
+    return savedFrames ? JSON.parse(savedFrames) : [];
+  }); // Estado para los frames dibujados por el usuario
 
   const setSelectedItemsInContext = (items) => {
     setSelectedItems(items); // Actualiza los elementos seleccionados
@@ -96,6 +99,13 @@ export const DataProvider = ({ children }) => {
     if (!data.length) fetchData();
     if (!extraData.length) fetchExtraData();
   }, [data.length, extraData.length, selectedViolenceIds]);
+
+  // Persistir drawnFrames cuando cambien
+  useEffect(() => {
+    if (drawnFrames.length > 0) {
+      localStorage.setItem("drawnFrames", JSON.stringify(drawnFrames));
+    }
+  }, [drawnFrames]);
 
   return (
     <DataContext.Provider

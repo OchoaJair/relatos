@@ -290,8 +290,7 @@ function History() {
         </Link>
       </section>
 
-      {/* Animación global del pájaro */}
-      <BirdAnimation frames={drawnFrames} />
+
     </div>
   );
 }

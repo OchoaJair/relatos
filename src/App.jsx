@@ -5,10 +5,12 @@ import Interactive from "./pages/Interactive";
 import History from "./pages/History";
 import RiverTest from "./components/RiverTest";
 import { DataProvider } from "./context/DataContext";
+import GlobalEffects from "./components/GlobalEffects";
 
 function App() {
   return (
     <DataProvider>
+      <GlobalEffects />
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />

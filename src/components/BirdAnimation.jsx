@@ -16,7 +16,9 @@ const SingleBird = ({ frames }) => {
         frequency: 0,
         time: 0,
         isFlying: false,
-        scale: 0.5,
+        isFlying: false,
+        targetScale: 0.5,
+        currentScale: 0,
     });
 
     useEffect(() => {
@@ -37,7 +39,9 @@ const SingleBird = ({ frames }) => {
             // Frecuencia baja para que sea un barrido largo y dramático de lado a lado, no un zig-zag rápido
             state.frequency = Math.random() * 0.005 + 0.005;
             state.time = Math.random() * 1000;
-            state.scale = Math.random() * 0.4 + 0.6; // Un poco más grande (0.6 a 1.0)
+            state.time = Math.random() * 1000;
+            state.targetScale = Math.random() * 0.4 + 0.6; // Escala objetivo
+            state.currentScale = 0; // Iniciar desde 0 para efecto de escala
             state.isFlying = true;
         };
 
@@ -63,7 +67,12 @@ const SingleBird = ({ frames }) => {
 
                 // 4. Aplicar transformación SOLO A LA IMAGEN
                 // scale(x, y) -> Invertimos X si direction es -1
-                element.style.transform = `translate3d(${state.x}px, ${state.y}px, 0) scale(${state.scale * direction}, ${state.scale})`;
+                // 4. Aplicar transformación SOLO A LA IMAGEN
+                // Efecto de escala suave (entrance)
+                state.currentScale += (state.targetScale - state.currentScale) * 0.02;
+
+                // scale(x, y) -> Invertimos X si direction es -1
+                element.style.transform = `translate3d(${state.x}px, ${state.y}px, 0) scale(${state.currentScale * direction}, ${state.currentScale})`;
 
                 // 5. Verificar límites
                 if (state.y < -200) {
@@ -127,12 +136,12 @@ const BirdAnimation = ({ frames, count = 6 }) => {
     return (
         <div
             style={{
-                position: "absolute",
+                position: "fixed",
                 top: 0,
                 left: 0,
                 width: "100vw",
-                height: "85dvh",
-                zIndex: 50,
+                height: "100vh",
+                zIndex: 9999,
                 pointerEvents: "none",
                 overflow: "hidden",
             }}

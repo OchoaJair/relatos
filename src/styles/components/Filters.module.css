@@ -5,6 +5,16 @@
   max-width: 100%;
 }
 
+.explanation {
+  font-family: "Bitter Variable", system-ui, serif;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  margin-top: -30px;
+  padding: 0 4px;
+}
+
 .filtersSection {
   display: flex;
   flex-direction: column;
