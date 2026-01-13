@@ -22,7 +22,7 @@
   align-items: center;
   width: 100%;
   position: relative;
-  z-index: 50;
+  z-index: 10;
 }
 
 .header img {
