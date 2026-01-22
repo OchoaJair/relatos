@@ -54,9 +54,11 @@
 .drawSectionCanvas {
   display: flex;
   flex-direction: column;
-  height: fit-content;
-  width: fit-content;
+  height: 500px;
+  width: 709px;
+  max-width: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 .drawSectionCanvas img {
@@ -73,6 +75,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 700px;
+  height: 450px;
+  max-width: 90%;
+  max-height: 90%;
 }
 
 .canvasOverlay {
@@ -433,6 +439,37 @@
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.3s;
+}
+
+@media screen and (max-width: 768px) {
+  .drawSectionCanvas {
+    height: 400px;
+    width: 100%;
+  }
+
+  .drawCanvas {
+    width: 90%;
+    height: 350px;
+  }
+
+  .drawSection {
+    gap: 15px;
+  }
+
+  .drawOptionsElements {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .toolGroupTitle {
+    width: 80px;
+    font-size: 14px;
+  }
+
+  .frames {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 @media screen and (min-width: 769px) {

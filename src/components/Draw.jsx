@@ -64,16 +64,30 @@ export default function Draw() {
   };
 
   useEffect(() => {
-    const maxWidth = 700;
-    const maxHeight = 450;
+    const calculateDimensions = () => {
+      const maxWidth = 700;
+      const maxHeight = 450;
 
-    const canvasEl = canvasRef.current[0]?.parentElement;
-    const container = canvasEl?.parentElement?.parentElement;
-    const width = Math.min(container?.clientWidth || maxWidth, maxWidth);
-    const height = Math.min(
-      container?.clientHeight || window.innerHeight * 0.6,
-      maxHeight
-    );
+      const canvasEl = canvasRef.current[0]?.parentElement;
+      const container = canvasEl?.parentElement?.parentElement;
+
+      const isMobile = window.innerWidth <= 768;
+
+      const width = isMobile
+        ? Math.min(container?.clientWidth || maxWidth, maxWidth * 0.9)
+        : Math.min(container?.clientWidth || maxWidth, maxWidth);
+
+      const height = isMobile
+        ? Math.min(container?.clientHeight || 350, 350)
+        : Math.min(
+            container?.clientHeight || window.innerHeight * 0.6,
+            maxHeight
+          );
+
+      return { width, height };
+    };
+
+    const { width, height } = calculateDimensions();
 
     const initCanvas = (index) => {
       const el = canvasRef.current[index];
@@ -85,14 +99,10 @@ export default function Draw() {
         isDrawingMode: true,
       });
 
-      fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(fabricCanvas); // Default placeholder
+      fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(fabricCanvas);
       fabricCanvas.freeDrawingBrush.width = brushSize;
 
-      // La configuración real se aplicará vía useEffect
-
-      // Agregar listeners para detectar cambios en el canvas
       const updateFrameStatus = () => {
-        // Usar un timeout para asegurarnos de que los cambios se hayan aplicado
         setTimeout(() => {
           setFramesDrawn((prev) => {
             const newFramesDrawn = [...prev];
@@ -100,7 +110,6 @@ export default function Draw() {
             return newFramesDrawn;
           });
 
-          // Marcar que se ha comenzado a dibujar si aún no se ha hecho
           if (!hasStartedDrawing && fabricCanvas.getObjects().length > 0) {
             setHasStartedDrawing(true);
           }
@@ -118,7 +127,21 @@ export default function Draw() {
       initCanvas(i);
     }
 
+    const handleResize = () => {
+      const { width: newWidth, height: newHeight } = calculateDimensions();
+
+      fabricCanvasRef.current.forEach((canvas) => {
+        if (canvas) {
+          canvas.setDimensions({ width: newWidth, height: newHeight });
+          canvas.renderAll();
+        }
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+
     return () => {
+      window.removeEventListener("resize", handleResize);
       fabricCanvasRef.current.forEach((canvas) => canvas?.dispose());
     };
   }, []);
