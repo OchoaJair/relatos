@@ -231,6 +231,16 @@ a {
   }
 }
 
+@media screen and (max-width: 767px) {
+  .main {
+    display: none;
+  }
+
+  .main.hasFilters {
+    display: grid;
+  }
+}
+
 @media screen and (width >=768px) {
   .draw {
     gap: 50px;

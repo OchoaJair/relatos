@@ -161,7 +161,7 @@ function Interactive() {
           </button>
         )}
       </aside>
-      <main className={styles.main} ref={mainRef}>
+      <main className={`${styles.main} ${selectedItems.length > 0 ? styles.hasFilters : ""}`} ref={mainRef}>
         {filteredData.map((item) => (
           <Link
             key={item.id}
@@ -210,7 +210,7 @@ function Interactive() {
       <section
         className={styles.waves}
         style={{
-          top: `${mainBottomInRoot + (window.innerWidth < 768 ? 50 : 30)}px`
+          top: (window.innerWidth < 768 && selectedItems.length === 0) ? "35%" : `${mainBottomInRoot + (window.innerWidth < 768 ? 50 : 30)}px`
         }}
       >
         <WaveAnimation numWaves={10} />
