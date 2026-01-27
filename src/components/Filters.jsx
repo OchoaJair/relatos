@@ -49,7 +49,7 @@ function Filters() {
   return (
     <nav className={styles.nav}>
       <p className={styles.explanation}>
-        Puedes escoger entre los tipos de violencia para formar tu largometraje o escoge la técnica de animación.
+        Para que tu largometraje se vuelva interactivo debes seleccionar: &nbsp;&nbsp; 1. Tipo de violencia &nbsp;&nbsp;&nbsp;&nbsp; 2. Técnica de animación
       </p>
       <div className={styles.filtersSection}>
         <ul className={styles.navList}>
