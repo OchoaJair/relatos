@@ -239,9 +239,41 @@ a {
   .main.hasFilters {
     display: grid;
   }
+
+  .mobileRandomTrees {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 0 20px;
+    margin-top: 50px;
+    /* Adjust spacing as needed */
+    position: absolute;
+    min-height: 200px;
+    top: 29%;
+  }
+
+  .mobileTreeWrapper {
+    position: relative;
+    width: 25%;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .mobileTreeImage {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+  }
 }
 
 @media screen and (width >=768px) {
+  .mobileRandomTrees {
+    display: none !important;
+  }
+
   .draw {
     gap: 50px;
     max-width: 80%;

@@ -161,6 +161,13 @@ function Interactive() {
           </button>
         )}
       </aside>
+      <div className={styles.mobileRandomTrees} style={{ display: selectedItems.length === 0 ? undefined : 'none' }}>
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className={styles.mobileTreeWrapper}>
+            <img src={treeImages[i]} alt="Tree decoration" className={styles.mobileTreeImage} />
+          </div>
+        ))}
+      </div>
       <main className={`${styles.main} ${selectedItems.length > 0 ? styles.hasFilters : ""}`} ref={mainRef}>
         {filteredData.map((item) => (
           <Link
