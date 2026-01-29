@@ -36,10 +36,19 @@ function Interactive() {
   const navigate = useNavigate(); // Hook for navigation
 
   const mainRef = useRef(null);
+  const mobileStoryGridRef = useRef(null);
   const itemRefs = useRef({});
   const [offsets, setOffsets] = useState({});
   const [mainBottomInRoot, setMainBottomInRoot] = useState(0);
+  const [mobileGridBottom, setMobileGridBottom] = useState(0);
   const [gridColumns, setGridColumns] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const filteredData = useMemo(() => data.filter(
     (item) =>
@@ -87,38 +96,43 @@ function Interactive() {
 
   useEffect(() => {
     const calculateOffsets = () => {
-      if (!mainRef.current) return;
-      const mainRect = mainRef.current.getBoundingClientRect();
+      // Desktop Calculation
+      if (!isMobile && mainRef.current) {
+        const mainRect = mainRef.current.getBoundingClientRect();
 
+        const computedStyle = window.getComputedStyle(mainRef.current);
+        const columns = computedStyle.gridTemplateColumns.split(" ").length;
+        setGridColumns(columns);
 
+        const newOffsets = {};
 
-      const computedStyle = window.getComputedStyle(mainRef.current);
-      const columns = computedStyle.gridTemplateColumns.split(" ").length;
-      setGridColumns(columns);
+        filteredData.forEach((item) => {
+          const itemEl = itemRefs.current[item.id];
+          if (itemEl) {
+            const itemRect = itemEl.getBoundingClientRect();
+            // Distance from the bottom of the item to the bottom of the container
+            const distance = mainRect.bottom - itemRect.bottom;
+            newOffsets[item.id] = distance;
+          }
+        });
+        setOffsets(newOffsets);
 
-      const children = Array.from(mainRef.current.children);
-      // Count unique vertical positions to determine rows
-      const gridRows = new Set(children.map((child) => child.offsetTop)).size;
-      // console.log(`Grid Layout: ${columns} Columns, ${gridRows} Rows`);
-
-      const newOffsets = {};
-
-      filteredData.forEach((item) => {
-        const itemEl = itemRefs.current[item.id];
-        if (itemEl) {
-          const itemRect = itemEl.getBoundingClientRect();
-          // Distance from the bottom of the item to the bottom of the container
-          const distance = mainRect.bottom - itemRect.bottom;
-          newOffsets[item.id] = distance;
+        // Calcular el final de main relativo al contenedor root
+        const parentEl = mainRef.current.parentElement;
+        if (parentEl) {
+          const parentRect = parentEl.getBoundingClientRect();
+          setMainBottomInRoot(mainRect.bottom - parentRect.top);
         }
-      });
-      setOffsets(newOffsets);
+      }
 
-      // Calcular el final de main relativo al contenedor root
-      const parentEl = mainRef.current.parentElement;
-      if (parentEl) {
-        const parentRect = parentEl.getBoundingClientRect();
-        setMainBottomInRoot(mainRect.bottom - parentRect.top);
+      // Mobile Calculation
+      if (isMobile && mobileStoryGridRef.current) {
+        const gridRect = mobileStoryGridRef.current.getBoundingClientRect();
+        const parentEl = mobileStoryGridRef.current.parentElement;
+        if (parentEl) {
+          const parentRect = parentEl.getBoundingClientRect();
+          setMobileGridBottom(gridRect.bottom - parentRect.top);
+        }
       }
     };
 
@@ -132,7 +146,7 @@ function Interactive() {
       window.removeEventListener("resize", calculateOffsets);
       clearTimeout(timeoutId);
     };
-  }, [filteredData, positions, sizes]);
+  }, [filteredData, positions, sizes, isMobile]);
 
   return (
     <div className={styles.root}>
@@ -161,63 +175,97 @@ function Interactive() {
           </button>
         )}
       </aside>
-      <div className={styles.mobileRandomTrees} style={{ display: selectedItems.length === 0 ? undefined : 'none' }}>
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className={styles.mobileTreeWrapper}>
-            <img src={treeImages[i]} alt="Tree decoration" className={styles.mobileTreeImage} />
-          </div>
-        ))}
-      </div>
-      <main className={`${styles.main} ${selectedItems.length > 0 ? styles.hasFilters : ""}`} ref={mainRef}>
-        {filteredData.map((item) => (
-          <Link
-            key={item.id}
-            to={`/${item.slug}`}
-            ref={(el) => (itemRefs.current[item.id] = el)}
-            style={{
-              display: "flex",
-              position: "relative",
-              top: `${positions[item.id]}%`,
-              height: `calc(100% - ${positions[item.id]}%)`,
-            }}
-            className={styles.item_history}
-          >
-            <article className={styles.item_history_content}>
-              <p className={styles.item_history_title}>{item.title}</p>
-              <div className={styles.storyPointContainer}>
-                <img
-                  style={{
-                    width: `${sizes[item.id]}px`,
-                    height: "auto",
-                    transform: `rotate(${rotations[item.id] || 0}deg)`,
-                  }}
-                  src={arbolCenital}
-                  alt="Arbol"
-                />
-                <div className={styles.storyPointOverlay}></div>
-              </div>
-              {visibleTreeIds.has(item.id) && (
+
+      {/* MOBILE: No Filters -> Random Trees Container */}
+      {isMobile && selectedItems.length === 0 && (
+        <div className={styles.mobileRandomTrees}>
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className={styles.mobileTreeWrapper}>
+              <img src={treeImages[i]} alt="Tree decoration" className={styles.mobileTreeImage} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* MOBILE: Filters Active -> Mobile Story Grid (New System) */}
+      {isMobile && selectedItems.length > 0 && (
+        <div className={styles.mobileStoryGrid} ref={mobileStoryGridRef}>
+          {filteredData.map((item) => (
+            <Link
+              key={item.id}
+              to={`/${item.slug}`}
+              className={styles.mobileStoryItem}
+            >
+              <div className={styles.mobileStoryImageContainer}>
                 <img
                   src={treeImages[item.id % treeImages.length]}
-                  alt="Tree decoration"
-                  className={styles.treeImage}
-                  style={{
-                    width: `${Math.floor(Math.random() * (120 - 80 + 1)) + 80}px`,
-                    top: offsets[item.id] !== undefined
-                      ? `calc(100% + ${offsets[item.id]}px)`
-                      : "100%",
-                    bottom: "auto"
-                  }}
+                  alt=""
+                  className={styles.mobileStoryImageMain}
                 />
-              )}
-            </article>
-          </Link>
-        ))}
-      </main>
+              </div>
+              <span className={styles.mobileStoryTitle}>{item.title}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* DESKTOP: Original Main Content */}
+      {!isMobile && (
+        <main className={`${styles.main} ${selectedItems.length > 0 ? styles.hasFilters : ""}`} ref={mainRef}>
+          {filteredData.map((item) => (
+            <Link
+              key={item.id}
+              to={`/${item.slug}`}
+              ref={(el) => (itemRefs.current[item.id] = el)}
+              style={{
+                display: "flex",
+                position: "relative",
+                top: `${positions[item.id]}%`,
+                height: `calc(100% - ${positions[item.id]}%)`,
+              }}
+              className={styles.item_history}
+            >
+              <article className={styles.item_history_content}>
+                <p className={styles.item_history_title}>{item.title}</p>
+                <div className={styles.storyPointContainer}>
+                  <img
+                    style={{
+                      width: `${sizes[item.id]}px`,
+                      height: "auto",
+                      transform: `rotate(${rotations[item.id] || 0}deg)`,
+                    }}
+                    src={arbolCenital}
+                    alt="Arbol"
+                  />
+                  <div className={styles.storyPointOverlay}></div>
+                </div>
+                {visibleTreeIds.has(item.id) && (
+                  <img
+                    src={treeImages[item.id % treeImages.length]}
+                    alt="Tree decoration"
+                    className={styles.treeImage}
+                    style={{
+                      width: `${Math.floor(Math.random() * (120 - 80 + 1)) + 80}px`,
+                      top: offsets[item.id] !== undefined
+                        ? `calc(100% + ${offsets[item.id]}px)`
+                        : "100%",
+                      bottom: "auto"
+                    }}
+                  />
+                )}
+              </article>
+            </Link>
+          ))}
+        </main>
+      )}
       <section
         className={styles.waves}
         style={{
-          top: (window.innerWidth < 768 && selectedItems.length === 0) ? "35%" : `${mainBottomInRoot + (window.innerWidth < 768 ? 50 : 30)}px`
+          top: (isMobile && selectedItems.length > 0)
+            ? `${mobileGridBottom + 40}px`
+            : (isMobile && selectedItems.length === 0)
+              ? "35%"
+              : `${mainBottomInRoot + (window.innerWidth < 768 ? 50 : 30)}px`
         }}
       >
         <WaveAnimation numWaves={10} />
