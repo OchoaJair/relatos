@@ -270,7 +270,7 @@ function Interactive() {
       >
         <WaveAnimation numWaves={10} />
       </section>
-      <section className={styles.draw}>
+      <section className={`${styles.draw} ${isMobile && selectedItems.length > 0 ? styles.drawWithFilters : ""}`}>
         <Draw />
       </section>
     </div >
