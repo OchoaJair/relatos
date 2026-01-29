@@ -49,9 +49,10 @@ function Filters() {
   return (
     <nav className={styles.nav}>
       <p className={styles.explanation}>
-        Para que tu largometraje se vuelva interactivo debes seleccionar: &nbsp;&nbsp; 1. Tipo de violencia &nbsp;&nbsp;&nbsp;&nbsp; 2. Técnica de animación
+        Para que tu largometraje se vuelva interactivo debes seleccionar:
       </p>
       <div className={styles.filtersSection}>
+        <p className={styles.sectionHeader}>1. Tipo de violencia</p>
         <ul className={styles.navList}>
           <li
             onClick={() => handleResetFilters()}
@@ -86,6 +87,7 @@ function Filters() {
       <div className={styles.divider}></div>
 
       <div className={styles.filtersSection}>
+        <p className={styles.sectionHeader}>2. Técnica de animación</p>
 
         <ul className={styles.navList}>
           {extraData.tecnicas.map((item, index) => {
