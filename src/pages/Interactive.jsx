@@ -262,7 +262,7 @@ function Interactive() {
         className={styles.waves}
         style={{
           top: (isMobile && selectedItems.length > 0)
-            ? `${mobileGridBottom + 40}px`
+            ? `${mobileGridBottom + -120}px`
             : (isMobile && selectedItems.length === 0)
               ? "35%"
               : `${mainBottomInRoot + (window.innerWidth < 768 ? 50 : 30)}px`

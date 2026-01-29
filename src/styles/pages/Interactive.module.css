@@ -269,20 +269,29 @@ a {
   /* NEW MOBILE STORY GRID STYLES */
   .mobileStoryGrid {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
     width: 100%;
-    gap: 30px;
-    padding-top: 40px;
-    padding-bottom: 80px;
+    gap: 20px;
+    padding: 40px 20px 80px 20px;
     z-index: 10;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    /* Hide scrollbar for cleaner look, can optionally keep it */
+    scrollbar-width: none;
+  }
+
+  .mobileStoryGrid::-webkit-scrollbar {
+    display: none;
   }
 
   .mobileStoryItem {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 40%;
+    flex: 0 0 140px;
+    /* Fixed width for items in carousel */
     text-align: center;
     gap: 10px;
     text-decoration: none;
@@ -309,6 +318,10 @@ a {
     font-family: "Bitter Variable", system-ui;
     font-size: 14px;
     font-weight: 500;
+  }
+
+  .draw {
+    padding-top: 20px;
   }
 }
 
