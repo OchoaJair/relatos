@@ -8,6 +8,8 @@ import BurgerButton from "../components/BurgerButton.jsx";
 import Draw from "../components/Draw.jsx";
 import WaveAnimation from "../components/WaveAnimation";
 import Bosque from "../components/Bosque.jsx";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 // Imágenes
 import tree1 from "../assets/trees/1.webp";
@@ -98,6 +100,73 @@ function History() {
   const { id } = useParams();
   const { data, selectedViolence, violenceSlugs, extraData } = useData();
   const navigate = useNavigate();
+
+  const [isTutorialSeen, setTutorialSeen] = useState(() => {
+    return sessionStorage.getItem("historyTutorialSeen") === "true";
+  });
+
+  useEffect(() => {
+    if (!isTutorialSeen) {
+      // Scroll to video section
+      const videoSection = document.getElementById("video-zone");
+      if (videoSection) {
+        videoSection.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      const driverObj = driver({
+        showProgress: true,
+        animate: true,
+        allowClose: false,
+        doneBtnText: "Entendido",
+        nextBtnText: "Siguiente",
+        prevBtnText: "Anterior",
+        steps: [
+          {
+            element: "#main-video",
+            popover: {
+              title: "Video interactivo",
+              description: "Este video no es lineal: puedes explorar diferentes narrativas.",
+              side: "bottom",
+              align: 'center'
+            },
+          },
+          {
+            element: "#video-controls",
+            popover: {
+              title: "Controles del video",
+              description: "Usa estos controles para activar subtítulos y navegar por el contenido.",
+              side: "top",
+              align: 'start'
+            },
+          },
+          {
+            element: "#thematic-axes",
+            popover: {
+              title: "Ejes temáticos",
+              description: "Aquí puedes navegar entre los ejes temáticos del largometraje.",
+              side: "top",
+              align: 'center'
+            },
+          },
+          {
+            element: "#selected-shorts",
+            popover: {
+              title: "Cortos seleccionados",
+              description: "Estos son los cortos que elegiste en la página de inicio. Puedes cambiar entre ellos.",
+              side: "top",
+              align: 'center'
+            },
+          },
+        ],
+        onDestroy: () => {
+          sessionStorage.setItem("historyTutorialSeen", "true");
+          setTutorialSeen(true);
+        },
+      });
+
+      driverObj.drive();
+    }
+  }, [isTutorialSeen]);
 
   const item = data.find((item) => item.slug === id);
 
@@ -199,7 +268,7 @@ function History() {
           </aside>
         </section>
 
-        <section className={styles.videoContainer}>
+        <section className={styles.videoContainer} id="video-zone">
           {videoUrl ? (
             <VideoPlayer
               videoUrl={videoUrl}
@@ -207,6 +276,7 @@ function History() {
               relatedStories={relatedStories}
               onVideoEnd={handleVideoEnd}
               groupName={groupName}
+              allowAutoplay={isTutorialSeen}
             />
           ) : (
             <div className={styles.videoPlaceholder}>

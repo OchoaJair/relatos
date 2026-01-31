@@ -29,7 +29,7 @@ const TimelineTabs = ({ stories, activeStory, onStoryClick, groupName }) => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.timelineContainer} ref={timelineContainerRef}>
+      <div className={styles.timelineContainer} ref={timelineContainerRef} id="selected-shorts">
         {stories.map((story, index) => (
           <div
             key={story.slug}

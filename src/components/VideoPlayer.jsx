@@ -13,7 +13,7 @@ import TimelineTabs from "./TimelineTabs";
 import AnnouncementBanner from "./AnnouncementBanner";
 import StoryTitle from "./StoryTitle";
 
-const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupName }) => {
+const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupName, allowAutoplay = true }) => {
   const videoRef = useRef(null);
   const navigate = useNavigate();
 
@@ -127,7 +127,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
 
     const playVideo = () => {
       const lastSelectedLabel = localStorage.getItem("lastSelectedLabel");
-      if (lastSelectedLabel) {
+      if (lastSelectedLabel && allowAutoplay) {
         video.play().catch((error) => {
           console.log("La reproducción automática fue prevenida:", error);
         });
@@ -288,7 +288,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
       <div className={styles.videoWrapper}>
         <AnnouncementBanner storyName={activeStory.title} />
         <div className={styles.videoContainer} ref={videoContainerRef}>
-          <video ref={videoRef} controls className={styles.videoElement} controlsList="nofullscreen" />
+          <video id="main-video" ref={videoRef} controls className={styles.videoElement} controlsList="nofullscreen" />
           {showSubtitles && currentSubtitle && (
             <div className={styles.subtitleOverlay}>{currentSubtitle}</div>
           )}
@@ -311,7 +311,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
         {/* Unified Control Bar & Jump Points */}
         <section className={styles.controlsSection}>
           <div className={styles.controlBar}>
-            <div className={styles.leftControls}>
+            <div className={styles.leftControls} id="video-controls">
               <button onClick={toggleSubtitles} className={styles.textIconButton} title={showSubtitles ? "Ocultar subtítulos" : "Mostrar subtítulos"}>
                 {showSubtitles ? <Captions size={18} /> : <CaptionsOff size={18} />}
                 <span className={styles.buttonLabel}>Subtítulos</span>
@@ -343,7 +343,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
               */}
             </div>
 
-            <div className={styles.centerControls}>
+            <div className={styles.centerControls} id="thematic-axes">
               <div className={styles.topicsLabel}>
                 <Filter size={14} className={styles.filterIcon} />
                 <span>Filtrar:</span>

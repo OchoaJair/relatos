@@ -15,6 +15,7 @@
     "@fontsource-variable/bitter": "^5.2.10",
     "@fontsource/gabriela": "^5.2.8",
     "clsx": "^2.1.1",
+    "driver.js": "^1.4.0",
     "fabric": "^6.9.0",
     "file-saver": "^2.0.5",
     "hls.js": "^1.6.15",
