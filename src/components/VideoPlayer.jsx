@@ -126,7 +126,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
     let hls = null;
 
     const playVideo = () => {
-      const lastSelectedLabel = localStorage.getItem("lastSelectedLabel");
+      const lastSelectedLabel = sessionStorage.getItem("lastSelectedLabel");
       if (lastSelectedLabel && allowAutoplay) {
         video.play().catch((error) => {
           console.log("La reproducción automática fue prevenida:", error);
@@ -168,14 +168,14 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
       setCurrentJumpIndex(0);
       videoRef.current.currentTime = points[0].start;
       videoRef.current.play();
-      localStorage.setItem("lastSelectedLabel", label);
+      sessionStorage.setItem("lastSelectedLabel", label);
     } else {
       console.warn(`No se encontraron puntos de salto para la etiqueta: ${label}`);
     }
   }, [groupedJumpPoints]);
 
   useEffect(() => {
-    const lastSelectedLabel = localStorage.getItem("lastSelectedLabel");
+    const lastSelectedLabel = sessionStorage.getItem("lastSelectedLabel");
     if (lastSelectedLabel && groupedJumpPoints[lastSelectedLabel]) {
       const timer = setTimeout(() => {
         handleJump(lastSelectedLabel);
@@ -258,7 +258,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
   }, []);
 
   const handleRemoveFilter = () => {
-    localStorage.removeItem("lastSelectedLabel");
+    sessionStorage.removeItem("lastSelectedLabel");
     setActiveJumpLabel(null);
   };
 
