@@ -9,7 +9,7 @@ const AnnouncementBanner = ({ storyName }) => {
   return (
     <div className={styles.bannerContainer}>
       <p className={styles.bannerText}>
-        Estás viendo la historia de <strong>{storyName}</strong>. Explora sus secciones o navega por otras narrativas relacionadas utilizando las felchas de navegación.
+        Estás viendo la historia de <strong>{storyName}</strong>. Explora sus secciones o navega por otras narrativas relacionadas utilizando las flechas de navegación.
       </p>
     </div>
   );
