@@ -8,6 +8,8 @@ import BurgerButton from "../components/BurgerButton.jsx";
 import Draw from "../components/Draw.jsx";
 import WaveAnimation from "../components/WaveAnimation";
 import Bosque from "../components/Bosque.jsx";
+import SEO from "../components/SEO.jsx";
+import { getCanonicalUrl, siteConfig } from "../utils/seoConfig.js";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 
@@ -231,8 +233,47 @@ function History() {
     return trees[randomIndex];
   }, []);
 
+  // Structured Data para la historia
+  const historyStructuredData = {
+    "@context": "https://schema.org",
+    "@type": ["VideoObject", "Article"],
+    name: `${item.title} - Relatos de Reconciliación`,
+    description: item.quote || `Testimonio de ${item.title}`,
+    url: getCanonicalUrl(`/${id}`),
+    thumbnailUrl: galleryPhotos[0] || "",
+    uploadDate: "2018-01-01",
+    duration: "PT9M",
+    author: {
+      "@type": "Person",
+      name: item.title,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.siteName,
+      url: siteConfig.siteUrl,
+    },
+    isPartOf: {
+      "@type": "CollectionPage",
+      name: "Relatos de Reconciliación",
+      url: siteConfig.siteUrl,
+    },
+  };
+
   return (
-    <div className={styles.root}>
+    <>
+      <SEO
+        title={`${item.title} - Testimonio`}
+        description={
+          item.quote ||
+          `Testimonio de ${item.title} sobre reconciliación y memoria histórica en Colombia.`
+        }
+        keywords={`${item.title}, testimonio, víctima, reconciliación, Colombia, memoria histórica`}
+        url={getCanonicalUrl(`/${id}`)}
+        image={galleryPhotos[0]}
+        type="article"
+        structuredData={historyStructuredData}
+      />
+      <div className={styles.root}>
       <header className={styles.header}>
         <BurgerButton />
         <Link to="/">
@@ -261,6 +302,7 @@ function History() {
                   alt={`Imagen de la galería ${idx + 1}`}
                   className={styles.galleryStackImg}
                   style={{ zIndex: idx }}
+                  loading={idx > 0 ? "lazy" : "eager"}
                 />
               ))}
             </section>
@@ -304,11 +346,13 @@ function History() {
                     src={imgSrc}
                     alt={`foto-${index}`}
                     className={styles.innerPhoto}
+                    loading={index > 0 ? "lazy" : "eager"}
                   />
                   <img
                     src={polaroid}
                     alt="polaroid"
                     className={styles.polaroidFrame}
+                    loading="lazy"
                   />
                 </div>
               ))}
@@ -359,6 +403,7 @@ function History() {
         </Link>
       </section>
     </div>
+    </>
   );
 }
 

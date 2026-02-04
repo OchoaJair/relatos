@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /RiverTest
+
+# Sitemap
+Sitemap: https://relatosdereconciliacion.com/sitemap.xml

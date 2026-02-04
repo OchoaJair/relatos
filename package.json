@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prerender": "node scripts/prerender.js"
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.15",
@@ -21,8 +22,10 @@
     "hls.js": "^1.6.15",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.561.0",
+    "prop-types": "^15.8.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
+    "react-helmet-async": "^2.0.5",
     "react-router-dom": "^7.10.1",
     "react-sketch-canvas": "^6.2.0",
     "react-youtube": "^10.1.0"
@@ -36,6 +39,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "puppeteer": "^24.36.1",
     "vite": "^7.2.7"
   }
 }

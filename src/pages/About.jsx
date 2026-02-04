@@ -1,6 +1,8 @@
 import style from "../styles/pages/About.module.css";
 import { Link } from "react-router-dom";
 import YouTube from "react-youtube";
+import SEO from "../components/SEO.jsx";
+import { seoConfig, getCanonicalUrl, siteConfig } from "../utils/seoConfig.js";
 
 //imágenes
 import Logo from "../assets/RelatosLogo.svg";
@@ -18,8 +20,43 @@ function About() {
     return <YouTube videoId={videoId} opts={opts} />;
   };
 
+  // Structured Data para la página About
+  const aboutStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "Sobre el Proyecto",
+    description: seoConfig.about.description,
+    url: getCanonicalUrl("/About"),
+    mainEntity: {
+      "@type": "Organization",
+      name: siteConfig.siteName,
+      description: seoConfig.about.description,
+      url: siteConfig.siteUrl,
+      member: [
+        {
+          "@type": "Person",
+          name: "Carlos Santa",
+          jobTitle: "Director",
+        },
+        {
+          "@type": "Person",
+          name: "Rubén Monroy",
+          jobTitle: "Director",
+        },
+      ],
+    },
+  };
+
   return (
-    <div className={style.root}>
+    <>
+      <SEO
+        title="Sobre el Proyecto"
+        description={seoConfig.about.description}
+        keywords={seoConfig.about.keywords}
+        url={getCanonicalUrl("/About")}
+        structuredData={aboutStructuredData}
+      />
+      <div className={style.root}>
       <header className={style.header}>
         <Link to="/">
           <img src={Logo} alt="Logo de Relatos" />
@@ -72,6 +109,7 @@ function About() {
         </section>
       </main>
     </div>
+    </>
   );
 }
 

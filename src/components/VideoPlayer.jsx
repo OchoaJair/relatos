@@ -288,7 +288,7 @@ const VideoPlayer = ({ videoUrl, onVideoEnd, activeStory, relatedStories, groupN
       <div className={styles.videoWrapper}>
         <AnnouncementBanner storyName={activeStory.title} />
         <div className={styles.videoContainer} ref={videoContainerRef}>
-          <video id="main-video" ref={videoRef} controls className={styles.videoElement} controlsList="nofullscreen" />
+          <video id="main-video" ref={videoRef} controls className={styles.videoElement} controlsList="nofullscreen" preload="metadata" />
           {showSubtitles && currentSubtitle && (
             <div className={styles.subtitleOverlay}>{currentSubtitle}</div>
           )}

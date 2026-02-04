@@ -5,9 +5,11 @@ import Filters from "../components/Filters.jsx";
 import Draw from "../components/Draw.jsx";
 import StoryPoint from "../components/StoryPoint.jsx";
 import AnimatedRivers from "../components/AnimatedRivers.jsx";
+import SEO from "../components/SEO.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef, useMemo } from "react";
 import WaveAnimation from "../components/WaveAnimation";
+import { seoConfig, getCanonicalUrl, siteConfig } from "../utils/seoConfig.js";
 
 //imágenes
 import relatosLogoNegro from "../assets/RelatosLogo.svg";
@@ -148,8 +150,35 @@ function Interactive() {
     };
   }, [filteredData, positions, sizes, isMobile]);
 
+  // Structured Data para la página Interactive
+  const interactiveStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Visualización Interactiva",
+    description: seoConfig.interactive.description,
+    url: getCanonicalUrl("/Interactive"),
+    isPartOf: {
+      "@type": "WebSite",
+      name: siteConfig.siteName,
+      url: siteConfig.siteUrl,
+    },
+    about: {
+      "@type": "Thing",
+      name: "Testimonios de Reconciliación",
+      description: "Historias de víctimas del conflicto armado en Colombia",
+    },
+  };
+
   return (
-    <div className={styles.root}>
+    <>
+      <SEO
+        title="Visualización Interactiva"
+        description={seoConfig.interactive.description}
+        keywords={seoConfig.interactive.keywords}
+        url={getCanonicalUrl("/Interactive")}
+        structuredData={interactiveStructuredData}
+      />
+      <div className={styles.root}>
       <div className={styles.riversHeader}>
         <AnimatedRivers />
       </div>
@@ -273,7 +302,8 @@ function Interactive() {
       <section className={`${styles.draw} ${isMobile && selectedItems.length > 0 ? styles.drawWithFilters : ""}`}>
         <Draw />
       </section>
-    </div >
+    </div>
+    </>
   );
 }
 
