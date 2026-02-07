@@ -2,6 +2,7 @@ import style from "../styles/pages/About.module.css";
 import { Link } from "react-router-dom";
 import YouTube from "react-youtube";
 import SEO from "../components/SEO.jsx";
+import Credits from "../components/Credits.jsx";
 import { seoConfig, getCanonicalUrl, siteConfig } from "../utils/seoConfig.js";
 
 //imágenes
@@ -82,22 +83,7 @@ function About() {
         </section>
         <section className={style.section}>
           <h2>Créditos</h2>
-          <p>
-            <strong>Dirección:</strong> Carlos Santa y Rubén Monroy
-          </p>
-          <p>
-            <strong>Dirección Multimedia:</strong> Juan Camilo Gonzalez y Rubén
-            Monroy
-          </p>
-          <p>
-            <strong>Composición Musical:</strong> Fabio Miguel Fuentes.
-          </p>
-          <p>
-            <strong>Diseño gráfico:</strong> Gustavo Cardenas y Rubén Monroy
-          </p>
-          <p>
-            <strong>Desarrollo web:</strong> Jair Leonardo Ochoa Medina
-          </p>
+          <Credits />
         </section>
         <section className={style.section}>
           <h2>Making-of</h2>
