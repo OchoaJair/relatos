@@ -388,7 +388,7 @@ export const creditsData = {
     },
     disenoWeb: {
         title: "Diseño y Programación WEB",
-        names: ["JUAN CAMILO GONZÁLEZ JIMÉNEZ", "JAIR LEONARDO OCHOA MEDINA"],
+        names: ["JAIR LEONARDO OCHOA MEDINA", "JUAN CAMILO GONZÁLEZ JIMÉNEZ"],
     },
     agradecimientos: {
         title: "Agradecimientos",
